@@ -31,10 +31,15 @@
     "postcss-flexbugs-fixes": "3.2.0",
     "postcss-loader": "2.0.8",
     "promise": "8.0.1",
+    "prop-types": "^15.6.1",
     "raf": "3.4.0",
     "react": "^16.3.2",
     "react-dev-utils": "^5.0.1",
     "react-dom": "^16.3.2",
+    "react-redux": "^5.0.7",
+    "react-router": "3",
+    "react-router-redux": "^4.0.8",
+    "redux": "^4.0.0",
     "resolve": "1.6.0",
     "style-loader": "0.19.0",
     "sw-precache-webpack-plugin": "0.11.4",
@@ -90,5 +95,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "redux-immutable-state-invariant": "^2.1.0"
   }
 }
