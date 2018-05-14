@@ -152,7 +152,7 @@ module.exports = {
             },
           },
           // "postcss" loader applies autoprefixer to our CSS.
-          // "css" loader resolves paths in CSS and adds assets as dependencies.
+          // "style" loader resolves paths in CSS and adds assets as dependencies.
           // "style" loader turns CSS into JS modules that inject <style> tags.
           // In production, we use a plugin to extract that CSS to a file, but
           // in development "style" loader enables hot editing of CSS.
@@ -161,7 +161,7 @@ module.exports = {
             use: [
               require.resolve('style-loader'),
               {
-                loader: require.resolve('css-loader'),
+                loader: require.resolve('style-loader'),
                 options: {
                   importLoaders: 1,
                 },
@@ -194,7 +194,7 @@ module.exports = {
           // This loader doesn't use a "test" so it will catch all modules
           // that fall through the other loaders.
           {
-            // Exclude `js` files to keep "css" loader working as it injects
+            // Exclude `js` files to keep "style" loader working as it injects
             // its runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.

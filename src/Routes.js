@@ -5,7 +5,7 @@ import { combineReducers } from 'redux'
 
 import { syncHistoryWithStore } from 'react-router-redux'
 
-import App from './pages/App.js'
+import homepage from './pages/Homepage/homepage'
 import store from './Store.js'
 
 const createElement = (Component, props) => {
@@ -39,17 +39,44 @@ const getCounterPage = async (nextState, callback) => {
   callback(null, page)
 }
 
-const getNotFoundPage = async (nextState, callback) => callback(null, (await ('./pages/NotFound')).default)
+const getNotFoundPage = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "NotFound" */'./pages/NotFound.js')).default,
+)
+
+const getLoginPage = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "Login" */'./pages/Auth/Login.js')).page,
+  )
+}
+
+const getRegisterPage = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "Register" */'./pages/Auth/Register.js')).page,
+  )
+}
+
+const getForgetPassword = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "Register" */'./pages/Auth/ForgetPassword.js')).page,
+  )
+}
 
 const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (
   <Router history={ history } createElement={ createElement }>
-    <Route path="/" component={ App }>
+    <Route path="/" component={ homepage }>
       <IndexRoute getComponent={ getHomePage }/>
       <Route path="home" getComponent={ getHomePage }/>
       <Route path="counter" getComponent={ getCounterPage }/>
       <Route path="about" getComponent={ getAboutPage }/>
+      <Route path="login" getComponent={ getLoginPage }/>
+      <Route path="register" getComponent={ getRegisterPage }/>
+      <Route path="forget-password" getComponent={ getForgetPassword }/>
       <Route path="*" getComponent={ getNotFoundPage }/>
     </Route>
   </Router>

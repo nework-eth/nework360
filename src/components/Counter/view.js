@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import {bindActionCreators} from 'redux';
-import {increment, decrement} from './actions.js';
+import {asyncIncrement, decrement} from './actions.js';
 import {connect} from 'react-redux';
 
 const buttonStyle = {
@@ -31,7 +31,7 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = (dispatch) => bindActionCreators({
-  onIncrement: increment,
+  onIncrement: asyncIncrement,
   onDecrement: decrement
 }, dispatch);
 
