@@ -6,7 +6,7 @@ body {
     margin: 0;
     color: #092235;
     font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB",
-    "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif!important;
+    "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif !important;
 }
 
 h1 {
@@ -41,8 +41,13 @@ button {
     background-color: #008bf7;
 }
 
-a, a:hover {
+a {
     color: #008bf7;
+    text-decoration: underline;
+}
+
+a:hover {
+    color: #007dde;
 }
 
 input {

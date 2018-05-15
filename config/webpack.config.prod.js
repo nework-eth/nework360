@@ -153,6 +153,19 @@ module.exports = {
               compact: true,
             },
           },
+          {
+            test: /\.(less)$/,
+            use: [
+              'style-loader',
+              'css-loader',
+              {
+                loader: 'less-loader',
+                options: {
+                  javascriptEnabled: true,
+                },
+              },
+            ],
+          },
           // The notation here is somewhat confusing.
           // "postcss" loader applies autoprefixer to our CSS.
           // "style" loader resolves paths in CSS and adds assets as dependencies.
@@ -198,7 +211,7 @@ module.exports = {
                               '>1%',
                               'last 4 versions',
                               'Firefox ESR',
-                              'not ie < 9', // React doesn't support IE8 anyway
+                              'not ie < 10', // React doesn't support IE8 anyway
                             ],
                             flexbox: 'no-2009',
                           }),

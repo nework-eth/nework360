@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Input, Button } from 'antd'
-import './static/style/auth.css'
+import './static/style/auth.less'
 import {Link} from 'react-router'
 
 const FormItem = Form.Item

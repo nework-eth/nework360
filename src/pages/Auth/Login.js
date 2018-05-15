@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Input, Button } from 'antd'
-import './static/style/auth.css'
+import './static/style/auth.less'
 import {Link} from 'react-router';
 
 const FormItem = Form.Item
@@ -33,7 +33,7 @@ class Page extends Component {
             rules: [ { required: true, message: 'Please input your username!' } ],
           })(
             <Input
-              placeholder="Username"
+              placeholder="输入手机号"
               className="form-input"
             />,
           ) }
@@ -49,7 +49,7 @@ class Page extends Component {
           })(
             <Input
               type="password"
-              placeholder="Password"
+              placeholder="输入密码"
               className="form-input"
             />,
           ) }
