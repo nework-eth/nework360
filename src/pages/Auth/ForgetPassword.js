@@ -1,15 +1,11 @@
 import React, { Component } from 'react'
 import { Form, Icon, Input, Button } from 'antd'
-import './static/style/auth.less'
+import './static/style/index.less'
 
 import { Link } from 'react-router'
 
 const FormItem = Form.Item
-const footerLink = {
-  display: 'flex',
-  color: '#092235',
-  textDecoration: 'none',
-}
+const InputGroup = Input.Group
 
 @Form.create()
 class Page extends Component {
@@ -48,15 +44,24 @@ class Page extends Component {
           colon={ false }
           required={ false }
         >
-          { getFieldDecorator('验证码', {
-            rules: [ { required: true, message: 'Please input your Password!' } ],
-          })(
-            <Input
-              type="password"
-              placeholder="4位数字短信验证码"
-              className="form-input"
-            />,
-          ) }
+          <InputGroup compact>
+            { getFieldDecorator('message', {
+              rules: [ { required: true, message: 'Please input your Password!' } ],
+            })(
+              <Input
+                placeholder="4位数字短信验证码"
+                className="form-input"
+                style={ {
+                  width: '70%',
+                  borderRight: 'none',
+                } }
+              />,
+            ) }
+            <Button
+              className="get-message-button">
+              获取验证码
+            </Button>
+          </InputGroup>
         </FormItem>
         <FormItem
           label="新密码"
@@ -86,7 +91,7 @@ class Page extends Component {
           </Button>
         </FormItem>
         <Link
-          style={ footerLink }
+          className="footer-link"
           to="/login"
         >
           <Icon

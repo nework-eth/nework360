@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
-import { Form, Input, Button } from 'antd'
-import './static/style/auth.less'
-import {Link} from 'react-router'
+import { Form, Input, Button, Select } from 'antd'
+import './static/style/index.less'
+import { Link } from 'react-router'
 
 const FormItem = Form.Item
+const InputGroup = Input.Group
+const Option = Select.Option
 
 @Form.create()
 class Page extends Component {
@@ -24,8 +26,8 @@ class Page extends Component {
         <FormItem
           label="姓名"
           className="form-item"
-          colon={false}
-          required={false}
+          colon={ false }
+          required={ false }
         >
           { getFieldDecorator('userName', {
             rules: [ { required: true, message: 'Please input your username!' } ],
@@ -39,8 +41,8 @@ class Page extends Component {
         <FormItem
           label="密码"
           className="form-item"
-          colon={false}
-          required={false}
+          colon={ false }
+          required={ false }
         >
           { getFieldDecorator('password', {
             rules: [ { required: true, message: 'Please input your Password!' } ],
@@ -55,33 +57,53 @@ class Page extends Component {
         <FormItem
           label="手机号码"
           className="form-item"
-          colon={false}
-          required={false}
+          colon={ false }
+          required={ false }
         >
-          { getFieldDecorator('mobile', {
-            rules: [ { required: true, message: 'Please input your Password!' } ],
-          })(
-            <Input
-              type="number"
-              placeholder="手机号码"
-              className="form-input"
-            />,
-          ) }
+          <InputGroup compact>
+            <Select
+              defaultValue="Zhejiang"
+              className="region-select"
+              dropdownClassName="drop-down"
+            >
+              <Option value="Zhejiang">Zhejiang</Option>
+              <Option value="Jiangsu">Jiangsu</Option>
+            </Select>
+            { getFieldDecorator('mobile', {
+              rules: [ { required: true, message: 'Please input your Password!' } ],
+            })(
+              <Input
+                placeholder="输入手机号"
+                className="form-input"
+                style={ { width: '69.2%' } }
+              />,
+            ) }
+          </InputGroup>
         </FormItem>
         <FormItem
           label="短信验证码"
           className="form-item"
-          colon={false}
-          required={false}
+          colon={ false }
+          required={ false }
         >
-          { getFieldDecorator('message', {
-            rules: [ { required: true, message: 'Please input your Password!' } ],
-          })(
-            <Input
-              placeholder="4位数字短信验证码"
-              className="form-input"
-            />,
-          ) }
+          <InputGroup compact>
+            { getFieldDecorator('message', {
+              rules: [ { required: true, message: 'Please input your Password!' } ],
+            })(
+              <Input
+                placeholder="4位数字短信验证码"
+                className="form-input"
+                style={ {
+                  width: '70%',
+                  borderRight: 'none',
+                } }
+              />,
+            ) }
+            <Button
+              className="get-message-button">
+              获取验证码
+            </Button>
+          </InputGroup>
         </FormItem>
         <span className="captions middle-captions">点击注册或继续即表示我同意Nework的 <Link>服务条款</Link> 和 <Link>隐私政策</Link>。</span>
         <FormItem

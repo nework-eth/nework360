@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { view as TopMenu } from '../../components/TopMenu'
+import { view as TopMenu } from '../../components/NavMenu'
 import backgroundImage from './static/images/login-bg.png'
 
 const containerStyle = {
@@ -10,7 +10,7 @@ const containerStyle = {
   backgroundSize: 'cover',
 }
 
-const App = ({ children }) => {
+const Page = ({ children }) => {
   return (
     <div style={ containerStyle }>
       <TopMenu/>
@@ -21,4 +21,5 @@ const App = ({ children }) => {
   )
 }
 
-export default App
+export { Page as page }
+

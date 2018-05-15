@@ -5,7 +5,8 @@ import { combineReducers } from 'redux'
 
 import { syncHistoryWithStore } from 'react-router-redux'
 
-import homepage from './pages/Homepage/homepage'
+import { page as AuthPage } from './pages/Auth/Auth'
+import { page as Homepage } from './pages/Homepage/Homepage'
 import store from './Store.js'
 
 const createElement = (Component, props) => {
@@ -65,11 +66,18 @@ const getForgetPassword = async (nextState, callback) => {
   )
 }
 
+const getSearchPage = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "Search" */'./pages/Homepage/Search.js')).page,
+  )
+}
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (
   <Router history={ history } createElement={ createElement }>
-    <Route path="/" component={ homepage }>
+    <Route path="/auth" component={ AuthPage }>
       <IndexRoute getComponent={ getHomePage }/>
       <Route path="home" getComponent={ getHomePage }/>
       <Route path="counter" getComponent={ getCounterPage }/>
@@ -78,6 +86,10 @@ const Routes = () => (
       <Route path="register" getComponent={ getRegisterPage }/>
       <Route path="forget-password" getComponent={ getForgetPassword }/>
       <Route path="*" getComponent={ getNotFoundPage }/>
+    </Route>
+    <Route path="/" component={ Homepage }>
+      <IndexRoute getComponent={ getSearchPage }/>
+      <Route path="search" getComponent={ getSearchPage }/>
     </Route>
   </Router>
 )

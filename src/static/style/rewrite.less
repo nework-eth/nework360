@@ -7,9 +7,10 @@
 @item-hover-bg: #007DDE;
 
 @btn-border-radius-base: 2px;
-@btn-border-radius-sm: 2px;
 
 @input-border-color: #9ca6ae;
+@input-height-base: 50px;
+@input-hover-border-color: #008bf7;
 
 @heading-color: #092235;
 
@@ -25,4 +26,40 @@
     background-color: #007dde;
     border-color: #007dde;
   }
+}
+
+.ant-btn {
+  border-color: #9ca6ae;
+  &:hover, &:focus {
+    color: #007dde;
+    border-color: #007dde;
+  }
+}
+
+.ant-input {
+  &:focus {
+    box-shadow: none;
+    border-color: #008bf7;
+  }
+  &:hover {
+    border-color: #008bf7;
+  }
+}
+
+.ant-select-selection {
+  border-color: #9ca6ae;
+  &:hover, &:focus, &:active {
+    border-color: #008bf7;
+  }
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+ol, ul, dl {
+  margin-bottom: 0;
+}
+
+body {
+  line-height: 1;
 }
