@@ -6,7 +6,7 @@ const containerStyle = {
   minHeight: '100%',
 }
 
-const Page = ({ children }) => {
+const Homepage = ({ children }) => {
   return (
     <div style={ containerStyle }>
       <TopMenu/>
@@ -17,4 +17,4 @@ const Page = ({ children }) => {
   )
 }
 
-export { Page as page }
+export { Homepage as page }

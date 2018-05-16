@@ -69,7 +69,7 @@ const getForgetPassword = async (nextState, callback) => {
 const getSearchPage = async (nextState, callback) => {
   callback(
     null,
-    (await import(/* webpackChunkName: "Search" */'./pages/Homepage/Search.js')).page,
+    (await import(/* webpackChunkName: "Search" */'./pages/Homepage/SearchPage.js')).page,
   )
 }
 
