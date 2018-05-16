@@ -9,7 +9,7 @@ const specialLinkStyle = {
   textDecoration: 'none',
 }
 
-const view = () => {
+const NavMenu = () => {
   return (
     <div className="top-nav-container">
       <ul>
@@ -33,4 +33,4 @@ const view = () => {
   )
 }
 
-export { view }
+export { NavMenu as view }

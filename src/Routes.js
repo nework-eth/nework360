@@ -7,6 +7,8 @@ import { syncHistoryWithStore } from 'react-router-redux'
 
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Homepage } from './pages/Homepage/Homepage'
+import { view as SelectCity } from './pages/SelectCity/SelectCity'
+
 import store from './Store.js'
 
 const createElement = (Component, props) => {
@@ -73,6 +75,13 @@ const getSearchPage = async (nextState, callback) => {
   )
 }
 
+const getFirstClassPage = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "FirstClass" */'./pages/Homepage/FirstClass.js')).view,
+  )
+}
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (
@@ -87,9 +96,11 @@ const Routes = () => (
       <Route path="forget-password" getComponent={ getForgetPassword }/>
       <Route path="*" getComponent={ getNotFoundPage }/>
     </Route>
+    <Route path="/select-city" component={ SelectCity }/>
     <Route path="/" component={ Homepage }>
-      <IndexRoute getComponent={ getSearchPage }/>
-      <Route path="search" getComponent={ getSearchPage }/>
+      <Route path="search" getComponent={ getSearchPage }>
+        <Route path="first-class" getComponent={ getFirstClassPage }/>
+      </Route>
     </Route>
   </Router>
 )
