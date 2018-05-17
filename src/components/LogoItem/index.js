@@ -13,7 +13,7 @@ function LogoItem ({ imgSrc, title, extraStyle = {} }) {
           alt={ title }
           height={ 50 }
         />
-        <div>{ title }</div>
+        <div className="title">{ title }</div>
       </div>
     </div>
   )

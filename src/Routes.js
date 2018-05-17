@@ -7,7 +7,6 @@ import { syncHistoryWithStore } from 'react-router-redux'
 
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Homepage } from './pages/Homepage/Homepage'
-import { view as SelectCity } from './pages/SelectCity/SelectCity'
 
 import store from './Store.js'
 
@@ -82,6 +81,20 @@ const getFirstClassPage = async (nextState, callback) => {
   )
 }
 
+const getSelectCityPage = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "SelectCity" */'./pages/SelectCity/SelectCity.js')).view,
+  )
+}
+
+const getHome = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "Home" */'./pages/Homepage/Home.js')).view,
+  )
+}
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (
@@ -96,10 +109,11 @@ const Routes = () => (
       <Route path="forget-password" getComponent={ getForgetPassword }/>
       <Route path="*" getComponent={ getNotFoundPage }/>
     </Route>
-    <Route path="/select-city" component={ SelectCity }/>
     <Route path="/" component={ Homepage }>
+      <Route path="select-city" getComponent={ getSelectCityPage }/>
       <Route path="search" getComponent={ getSearchPage }>
-        <Route path="first-class" getComponent={ getFirstClassPage }/>
+        { /*<Route path="first-class" getComponent={ getFirstClassPage }/>*/ }
+        <Route path="home" getComponent={ getHome }/>
       </Route>
     </Route>
   </Router>

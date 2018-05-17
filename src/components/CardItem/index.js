@@ -1,5 +1,6 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Card } from 'antd'
+import './static/style/index.less'
 
 const { Meta } = Card
 
@@ -7,8 +8,9 @@ function CardItem ({ imgSrc, title, count }) {
   return (
     <Card
       hoverable
-      style={ { width: '250px', height: '230px' } }
       cover={ <img alt="example" src={ imgSrc } width={ 250 } height={ 168 }/> }
+      bordered={false}
+      className="reset-card"
     >
       <Meta
         title={ <h3>{ title }</h3> }
