@@ -3,6 +3,8 @@
 @font-family: "Helvetica Neue", Helvetica, Arial, "PingFang SC", "Hiragino Sans GB",
 "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
 
+@error-color: #f70000;
+
 @item-active-bg: #007DDE;
 @item-hover-bg: #007DDE;
 
@@ -66,4 +68,23 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   margin-bottom: 0;
+}
+
+.ant-message-notice-content {
+  padding: 0;
+  box-shadow: none;
+  .ant-message-custom-content {
+    color: #fff;
+    padding: 15px 30px;
+    background: #008BF7;
+    box-shadow: 0 10px 20px 0 rgba(0,139,247,0.25);
+    border-radius: 100px;
+  }
+  .ant-message-error {
+    background: #F70000;
+    box-shadow: 0 10px 20px 0 rgba(247,0,0,0.25);
+  }
+  .anticon {
+    display: none;
+  }
 }

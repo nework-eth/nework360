@@ -1,15 +1,33 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import './static/style/search.less'
-import { Input, Icon, Carousel } from 'antd'
+import { bindActionCreators } from 'redux'
+import { Input, Icon } from 'antd'
 import { view as IconItem } from '../../components/LogoItem'
+import { setCity } from './actions'
 import { view as Home } from './Home'
-import { view as FirstClass } from './FirstClass'
+// import { view as FirstClass } from './FirstClass'
+import * as actions from './actions.js'
+import reducer from './reducer.js'
+import { connect } from 'react-redux'
 
 const Search = Input.Search
 
+const stateKey = 'city'
+const initialState = '北京'
+
+const mapState = (state) => ({
+  city: state[ stateKey ] || '北京',
+})
+
+const mapDispatch = (dispatch) => bindActionCreators({
+  setCity: setCity,
+}, dispatch)
+
+@connect(mapState, mapDispatch)
 class SearchPage extends Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
       iconListUrl: [
         './images/category-home.png',
@@ -30,14 +48,14 @@ class SearchPage extends Component {
 
   render () {
     return (
-      <div className="search-container">
+      <div className="search-service-container">
         <div>
           <i
             className="iconfont icon-logo"
             style={ { fontSize: '40px', lineHeight: '50px' } }
           />
         </div>
-        <h1 style={{marginBottom: '30px'}}>找到所有本地专业服务</h1>
+        <h1 style={ { marginBottom: '30px' } }>找到所有本地专业服务</h1>
         <Search
           prefix={ <Icon type="search" style={ { fontSize: '18px', color: '#9ca6ae', paddingLeft: '10px' } }/> }
           className="search-input"
@@ -65,28 +83,28 @@ class SearchPage extends Component {
             <img
               src="./images/home-faqs.png"
               alt="需求问券"
-              width={120}
-              height={120}
+              width={ 120 }
+              height={ 120 }
             />
             <h3>回答需求问卷</h3>
             <p>耗时1min左右，需要您简单选择几个问题，以便于服务人员清楚您的需要</p>
           </div>
           <div className="introduce-card">
             <img
-              src="./images/home-faqs.png"
+              src="./images/home-price.png"
               alt="需求问券"
-              width={120}
-              height={120}
+              width={ 120 }
+              height={ 120 }
             />
             <h3>服务人员报价</h3>
             <p>服务人员将根据您的回答响应您的诉求，我们将推荐1位或者更多供您选择</p>
           </div>
           <div className="introduce-card">
             <img
-              src="./images/home-price.png"
+              src="./images/home-onsite.png"
               alt="需求问券"
-              width={120}
-              height={120}
+              width={ 120 }
+              height={ 120 }
             />
             <h3>线下享受服务</h3>
             <p>服务人员将上门为您服务，您可为服务的感受和满意程度打分</p>
@@ -95,6 +113,14 @@ class SearchPage extends Component {
       </div>
     )
   }
+
+  componentDidMount () {
+
+  }
 }
 
-export { SearchPage as page }
+SearchPage.propTypes = {
+  setCity: PropTypes.func.required,
+}
+
+export { SearchPage as page, stateKey, actions, reducer, initialState }

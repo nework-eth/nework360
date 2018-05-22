@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
-import { Form, Input, Button, Select } from 'antd'
+import { Form, Input, Button, Select, message } from 'antd'
 import './static/style/index.less'
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
+import { sendCode, register } from '../../service/auth'
 
 const FormItem = Form.Item
 const InputGroup = Input.Group
@@ -11,9 +12,43 @@ const Option = Select.Option
 class Page extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async (err, { messageCode, password, phoneNumber, userName }) => {
       if (!err) {
-        console.log('Received values of form: ', values)
+        try {
+          const { data: { code, desc } } = await register({
+            phoneNumber,
+            nickNamne: userName,
+            pwd: password,
+            code: messageCode,
+          })
+          if (code === 200 && desc === 'success') {
+            message.success('注册成功', () => {
+              browserHistory.push('/auth/login')
+            })
+            return
+          }
+          message.error(desc)
+        } catch (e) {
+          console.log(e)
+          message.error('请求服务器失败')
+        }
+      }
+    })
+  }
+
+  sendCode = () => {
+    this.props.form.validateFields([ 'phoneNumber' ], async (err, { phoneNumber }) => {
+      if (!err) {
+        try {
+          const { data: { code, desc } } = await sendCode({ phoneNumber: +phoneNumber })
+          if (code === 200) {
+            message.success('已发送短信验证码')
+            return
+          }
+          message.error(desc)
+        } catch (e) {
+          message.error('请求服务器失败')
+        }
       }
     })
   }
@@ -30,7 +65,7 @@ class Page extends Component {
           required={ false }
         >
           { getFieldDecorator('userName', {
-            rules: [ { required: true, message: 'Please input your username!' } ],
+            rules: [ { required: true, message: '请输入姓名!' } ],
           })(
             <Input
               placeholder="姓名"
@@ -45,7 +80,7 @@ class Page extends Component {
           required={ false }
         >
           { getFieldDecorator('password', {
-            rules: [ { required: true, message: 'Please input your Password!' } ],
+            rules: [ { required: true, message: '请输入密码!' } ],
           })(
             <Input
               type="password"
@@ -62,15 +97,14 @@ class Page extends Component {
         >
           <InputGroup compact>
             <Select
-              defaultValue="Zhejiang"
+              defaultValue="+86"
               className="region-select"
               dropdownClassName="drop-down"
             >
-              <Option value="Zhejiang">Zhejiang</Option>
-              <Option value="Jiangsu">Jiangsu</Option>
+              <Option value="+86">中国（+86）</Option>
             </Select>
-            { getFieldDecorator('mobile', {
-              rules: [ { required: true, message: 'Please input your Password!' } ],
+            { getFieldDecorator('phoneNumber', {
+              rules: [ { required: true, message: '请输入手机号码!' } ],
             })(
               <Input
                 placeholder="输入手机号"
@@ -87,8 +121,8 @@ class Page extends Component {
           required={ false }
         >
           <InputGroup compact>
-            { getFieldDecorator('message', {
-              rules: [ { required: true, message: 'Please input your Password!' } ],
+            { getFieldDecorator('messageCode', {
+              rules: [ { required: true, message: '请输入短信验证码!' } ],
             })(
               <Input
                 placeholder="4位数字短信验证码"
@@ -100,7 +134,9 @@ class Page extends Component {
               />,
             ) }
             <Button
-              className="get-message-button">
+              className="get-message-button"
+              onClick={ this.sendCode }
+            >
               获取验证码
             </Button>
           </InputGroup>
@@ -117,7 +153,7 @@ class Page extends Component {
             注册
           </Button>
         </FormItem>
-        <span className="captions">已经有账号了？<Link to="/login">去登录</Link></span>
+        <span className="captions">已经有账号了？<Link to="/auth/login">去登录</Link></span>
       </Form>
     )
   }

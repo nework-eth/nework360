@@ -50,6 +50,9 @@
   }
   .drop-down {
     background-color: #fff;
+    color: #092235;
+    font-weight: normal;
+    border-radius: 2px!important;
     &:hover, &:focus {
       color: #008bf7;
       background-color: #fff;
@@ -60,6 +63,37 @@
     width: 30%;
     height: 50px;
     line-height: 24px;
+  }
+  .ant-input-group:hover {
+    .ant-input {
+      border: 1px solid #008bf7;
+    }
+    .ant-btn {
+      border-style: solid;
+      border-color: #008bf7 #008bf7 #008bf7 #9CA6AE;
+    }
+    .ant-btn:hover, .ant-btn:focus {
+      border-color: #008bf7 #008bf7 #008bf7 #008bf7;
+      background-color: white;
+    }
+  }
+  .ant-input-group {
+    .ant-btn:hover, .ant-btn:focus {
+      background-color: white;
+    }
+  }
+  .has-error {
+    .ant-input-group:hover {
+      .ant-input {
+        border: 1px solid #f70000;
+      }
+    }
+    .ant-input:focus {
+      border-color: #f70000;
+    }
+  }
+  .ant-input:focus {
+    box-shadow: none;
   }
 }
 

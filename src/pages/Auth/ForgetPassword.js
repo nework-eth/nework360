@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button } from 'antd'
+import { Form, Icon, Input, Button, message } from 'antd'
 import './static/style/index.less'
+import { forgetPasswordSendCode, changePassword } from '../../service/auth'
 
-import { Link } from 'react-router'
+import { Link, browserHistory } from 'react-router'
 
 const FormItem = Form.Item
 const InputGroup = Input.Group
@@ -11,9 +12,37 @@ const InputGroup = Input.Group
 class Page extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
-    this.props.form.validateFields((err, values) => {
+    this.props.form.validateFields(async (err, { messageCode, password, phoneNumber }) => {
       if (!err) {
-        console.log('Received values of form: ', values)
+        try {
+          const { code } = changePassword({ phoneNumber, pwd: password, code: messageCode })
+          if (code === 200) {
+            message.success('修改密码成功', () => {
+              browserHistory.push('/auth/login')
+            })
+            return
+          }
+          message.error('修改密码失败')
+        } catch (e) {
+          message.error('请求服务器失败')
+        }
+      }
+    })
+  }
+
+  sendCode = () => {
+    this.props.form.validateFields([ 'phoneNumber' ], async (err, { phoneNumber }) => {
+      if (!err) {
+        try {
+          const { code, desc } = await forgetPasswordSendCode({ phoneNumber })
+          if (code === 200) {
+            message.success('已发送短信验证码')
+            return
+          }
+          message.error(desc)
+        } catch (e) {
+          message.error('请求服务器失败')
+        }
       }
     })
   }
@@ -29,8 +58,8 @@ class Page extends Component {
           colon={ false }
           required={ false }
         >
-          { getFieldDecorator('userName', {
-            rules: [ { required: true, message: 'Please input your username!' } ],
+          { getFieldDecorator('phoneNumber', {
+            rules: [ { required: true, message: '请输入手机号!' } ],
           })(
             <Input
               placeholder="输入手机号"
@@ -45,8 +74,8 @@ class Page extends Component {
           required={ false }
         >
           <InputGroup compact>
-            { getFieldDecorator('message', {
-              rules: [ { required: true, message: 'Please input your Password!' } ],
+            { getFieldDecorator('messageCode', {
+              rules: [ { required: true, message: '请输入短信验证码!' } ],
             })(
               <Input
                 placeholder="4位数字短信验证码"
@@ -58,7 +87,9 @@ class Page extends Component {
               />,
             ) }
             <Button
-              className="get-message-button">
+              className="get-message-button"
+              onClick={ this.sendCode }
+            >
               获取验证码
             </Button>
           </InputGroup>
@@ -70,7 +101,7 @@ class Page extends Component {
           required={ false }
         >
           { getFieldDecorator('password', {
-            rules: [ { required: true, message: 'Please input your Password!' } ],
+            rules: [ { required: true, message: '请输入新密码!' } ],
           })(
             <Input
               type="password"
@@ -92,7 +123,7 @@ class Page extends Component {
         </FormItem>
         <Link
           className="footer-link"
-          to="/login"
+          to="/auth/login"
         >
           <Icon
             type="left-circle-o"

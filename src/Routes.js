@@ -68,10 +68,16 @@ const getForgetPassword = async (nextState, callback) => {
 }
 
 const getSearchPage = async (nextState, callback) => {
-  callback(
-    null,
-    (await import(/* webpackChunkName: "Search" */'./pages/Homepage/SearchPage.js')).page,
-  )
+  const { page, reducer, stateKey, initialState } = (await import(/* webpackChunkName: "Search" */'./pages/Homepage/SearchPage.js'))
+  const state = store.getState()
+  store.reset(combineReducers({
+    ...store._reducers,
+    city: reducer,
+  }), {
+    ...state,
+    [ stateKey ]: initialState,
+  })
+  callback(null, page)
 }
 
 const getFirstClassPage = async (nextState, callback) => {
@@ -110,11 +116,9 @@ const Routes = () => (
       <Route path="*" getComponent={ getNotFoundPage }/>
     </Route>
     <Route path="/" component={ Homepage }>
+      <IndexRoute getComponent={ getSearchPage }/>
       <Route path="select-city" getComponent={ getSelectCityPage }/>
-      <Route path="search" getComponent={ getSearchPage }>
-        { /*<Route path="first-class" getComponent={ getFirstClassPage }/>*/ }
-        <Route path="home" getComponent={ getHome }/>
-      </Route>
+      <Route path="search" getComponent={ getSearchPage }/>
     </Route>
   </Router>
 )
