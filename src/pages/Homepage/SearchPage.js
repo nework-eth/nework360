@@ -119,8 +119,4 @@ class SearchPage extends Component {
   }
 }
 
-SearchPage.propTypes = {
-  setCity: PropTypes.func.required,
-}
-
 export { SearchPage as page, stateKey, actions, reducer, initialState }

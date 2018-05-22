@@ -15,14 +15,14 @@ class Page extends Component {
     this.props.form.validateFields(async (err, { messageCode, password, phoneNumber }) => {
       if (!err) {
         try {
-          const { code } = changePassword({ phoneNumber, pwd: password, code: messageCode })
+          const { data: { code, desc } } = changePassword({ phoneNumber, pwd: password, code: messageCode })
           if (code === 200) {
             message.success('修改密码成功', () => {
               browserHistory.push('/auth/login')
             })
             return
           }
-          message.error('修改密码失败')
+          message.error(desc)
         } catch (e) {
           message.error('请求服务器失败')
         }

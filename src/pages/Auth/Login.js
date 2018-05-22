@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Input, Button } from 'antd'
+import { Form, Input, Button, message } from 'antd'
 import './static/style/index.less'
 import { Link, browserHistory } from 'react-router'
 import { login } from '../../service/auth'
@@ -14,11 +14,16 @@ class Page extends Component {
     e.preventDefault()
     this.props.form.validateFields(async (err, { phoneNumber, password }) => {
       if (!err) {
-        await login({ phoneNumber, pwd: password }).then(res => {
-          if (res.code === 200) {
-            browserHistory.push('/select-city')
-          }
-        })
+        await login({ phoneNumber, pwd: password })
+          .then(({ data: { code, desc } }) => {
+            if (code === 200 && desc === 'success') {
+              browserHistory.push('/select-city')
+            }
+            message.error(desc)
+          })
+          .catch(e => {
+            message.error('请求服务器失败')
+          })
       }
     })
   }
