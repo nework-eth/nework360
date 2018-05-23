@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import './static/style/index.less'
 import { combineReducers } from 'redux'
 import { bindActionCreators } from 'redux'
-import { setCity } from './actions'
+import { setCityId, setCityName, setCountryId } from './actions'
 import reducer from './reducer'
 import store from '../../Store'
 import { getCityByIp } from '../../service/homepage'
@@ -15,9 +15,13 @@ const specialLinkStyle = {
   textDecoration: 'none',
 }
 
-const stateKey = 'city'
+const stateKey = 'position'
 
-const initialState = '北京'
+const initialState = {
+  cityName: '北京',
+  cityId: 110,
+  countryId: 1,
+}
 
 const state = store.getState()
 store.reset(combineReducers({
@@ -29,11 +33,13 @@ store.reset(combineReducers({
 })
 
 const mapState = (state) => ({
-  city: state[ stateKey ] || '北京',
+  cityName: state[ stateKey ].cityName,
 })
 
 const mapDispatch = (dispatch) => bindActionCreators({
-  setCity: setCity,
+  setCityName,
+  setCityId,
+  setCountryId,
 }, dispatch)
 
 @connect(mapState, mapDispatch)
@@ -43,7 +49,7 @@ class NavMenu extends Component {
   }
 
   render () {
-    const { city } = this.props
+    const { cityName } = this.props
     return (
       <div className="top-nav-container">
         <ul>
@@ -55,7 +61,7 @@ class NavMenu extends Component {
             </li>
             <li className="vertical-line"/>
             <Link className="li-item" style={ { paddingRight: '10px', textDecoration: 'none', color: '#092235' } }
-              to="/select-city">{ city }</Link>
+              to="/select-city">{ cityName }</Link>
           </div>
           <div className="li-wrapper">
             <li style={ { paddingRight: '20px' } } className="li-item">如何运作？</li>
@@ -75,10 +81,8 @@ class NavMenu extends Component {
     try {
       const { data: { code, desc } } = await getCityByIp()
       if (code === 200) {
-        this.props.setCity(desc)
-        return
+        this.props.setCityName(desc)
       }
-      this.props.setCity('北京')
     } catch (e) {
       message.error('请求服务器失败')
     }

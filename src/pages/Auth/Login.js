@@ -17,9 +17,11 @@ class Page extends Component {
         await login({ phoneNumber, pwd: password })
           .then(({ data: { code, desc } }) => {
             if (code === 200 && desc === 'success') {
-              browserHistory.push('/select-city')
+              message.success('登录成功')
+              browserHistory.push('/')
+              return
             }
-            message.error(desc)
+            message.error('登录失败')
           })
           .catch(e => {
             message.error('请求服务器失败')

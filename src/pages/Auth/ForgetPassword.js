@@ -34,7 +34,7 @@ class Page extends Component {
     this.props.form.validateFields([ 'phoneNumber' ], async (err, { phoneNumber }) => {
       if (!err) {
         try {
-          const { code, desc } = await forgetPasswordSendCode({ phoneNumber })
+          const { data: { code, desc } } = await forgetPasswordSendCode({ phoneNumber })
           if (code === 200) {
             message.success('已发送短信验证码')
             return

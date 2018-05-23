@@ -6,3 +6,5 @@ export const getCityByLetter = params => axios(`${baseUrl}/district/listCityByCo
 export const getCityBySearch = params => axios(`${baseUrl}/district/listDistrictByParam`, { params })
 
 export const getCityByIp = () => axios(`${baseUrl}/district/getDistByIp`)
+
+export const getCityTree = () => axios(`${baseUrl}/district/listDistsByTree`)
