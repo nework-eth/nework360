@@ -265,6 +265,9 @@ class SelectCity extends Component {
         // cityOptions: letterCityList,
         // selectedCity: letterCityList[0]
       })
+      this.props.setCityName('北京')
+      this.props.setCityId(110)
+      this.props.setCountryId(1)
     } catch (e) {
       message.error('请求服务器失败')
     }

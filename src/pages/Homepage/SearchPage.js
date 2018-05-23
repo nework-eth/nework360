@@ -1,34 +1,63 @@
 import React, { Component } from 'react'
 import './static/style/search.less'
-import { Input, Icon } from 'antd'
+import { Input, Icon, message } from 'antd'
 import { view as IconItem } from '../../components/LogoItem'
+import { stateKey } from '../../components/NavMenu'
 import { view as Home } from './Home'
 // import { view as FirstClass } from './FirstClass'
+import { getServiceTree, getListServiceByParam } from '../../service/homepage'
+import { connect } from 'react-redux'
 
 const Search = Input.Search
 
+const mapState = (state) => ({
+  cityId: state[ stateKey ].cityId,
+  cityName: state[ stateKey ].cityName,
+})
+
+@connect(mapState)
 class SearchPage extends Component {
   constructor (props) {
     super(props)
     this.state = {
       iconListUrl: [
-        './images/category-home.png',
-        './images/category-beauty.png',
-        './images/category-health.png',
-        './images/category-photo.png',
-        './images/category-repair.png',
-        './images/category-education.png',
-        './images/category-tech-fix.png',
-        './images/category-pets.png',
-        './images/category-event.png',
-        './images/category-fitness.png',
-        './images/category-wedding.png',
-        './images/category-other.png',
+        './images/家政-icon.png',
+        './images/美容美甲-icon.png',
+        './images/健康-icon.png',
+        './images/摄影摄像-icon.png',
+        './images/上门维修-icon.png',
+        './images/教育培训-icon.png',
+        './images/数码维修-icon.png',
+        './images/宠物-icon.png',
+        './images/活动-icon.png',
+        './images/运动健身-icon.png',
+        './images/婚礼策划-icon.png',
+        './images/其他-icon.png',
       ],
+      serviceImageList: [
+        './images/美容美甲.png',
+        './images/宠物寄养.png',
+        './images/保洁.png',
+        './images/手机维修.png',
+        './images/钟点工.png',
+        './images/月嫂.png',
+        './images/保姆.png',
+        './images/宠物寄养.png',
+        './images/宠物训练.png',
+        './images/遛狗.png',
+        './images/宠物洗澡.png',
+      ],
+      serviceTree: [],
+      firstLevelServiceList: [],
     }
   }
 
   render () {
+    const {
+      firstLevelServiceList,
+      serviceTree,
+      serviceImageList,
+    } = this.state
     return (
       <div className="search-service-container">
         <div>
@@ -46,19 +75,23 @@ class SearchPage extends Component {
           size="large"
         />
         <div
-          style={ {
-            display: 'flex',
-            flexWrap: 'wrap',
-            justifyContent: 'space-between',
-          } }
           className="icon-list-container"
         >
-          { this.state.iconListUrl.map((item, index) => {
-            console.log(item)
-            return <IconItem imgSrc={ item } title="test" key={ index }/>
-          }) }
+          {
+            this.state.firstLevelServiceList.map((service, index) =>
+              <IconItem
+                imgSrc={ this.state.iconListUrl.find(iconUrl => iconUrl.includes(service)) }
+                key={ index }
+                title={ service }
+              />,
+            )
+          }
         </div>
-        <Home/>
+        <Home
+          firstServiceList={ firstLevelServiceList }
+          serviceTree={ serviceTree }
+          serviceImageList={ serviceImageList }
+        />
         <h2 style={ { marginTop: '50px', marginBottom: '20px' } }>如何发布需求</h2>
         <div className="introduce-container">
           <div className="introduce-card">
@@ -94,6 +127,47 @@ class SearchPage extends Component {
         </div>
       </div>
     )
+  }
+
+  getServiceTree = async () => {
+    try {
+      const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.cityId })
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
+      console.log(data)
+      const firstLevelServiceList = data.map(item => item.serviceTypeName)
+      firstLevelServiceList.map(service => {
+        console.log(this.state.iconListUrl.find(iconUrl => iconUrl.includes(service)))
+        return 1
+      })
+      console.log('firstLevelServiceList', firstLevelServiceList)
+      console.log('serviceTree', data)
+      this.setState({
+        serviceTree: data,
+        firstLevelServiceList,
+      })
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+
+  getFirstServiceList = async () => {
+    try {
+      const { data: { code, data, desc } } = await getListServiceByParam({
+        dist: this.props.cityName,
+        parentId: 0,
+      })
+      console.log(code, data, desc)
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+
+  componentDidMount () {
+    this.getServiceTree()
+    // this.getFirstServiceList()
   }
 }
 

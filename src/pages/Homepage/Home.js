@@ -4,8 +4,8 @@ import { view as CardItem } from '../../components/CardItem'
 import './static/style/home.less'
 
 class Home extends Component {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
     this.state = {
       serviceList: [
         {
@@ -49,6 +49,7 @@ class Home extends Component {
           count: 128,
         },
       ],
+
     }
   }
 
@@ -64,37 +65,34 @@ class Home extends Component {
 
     const h2Style = {
       marginTop: '50px',
-      marginBottom: '20px'
+      marginBottom: '20px',
     }
     return (
       <div className="home-container">
-        <h2 style={h2Style}>附近的服务</h2>
-        <Carousel { ...settings }>
-          { this.state.serviceList.map(({ imgSrc, title, count }, index) => <CardItem
-            imgSrc={ imgSrc }
-            title={ title }
-            count={ count }
-            key={ index }
-          />) }
-        </Carousel>
-        <h2 style={h2Style}>家政</h2>
-        <Carousel { ...settings }>
-          { this.state.serviceList.map(({ imgSrc, title, count }, index) => <CardItem
-            imgSrc={ imgSrc }
-            title={ title }
-            count={ count }
-            key={ index }
-          />) }
-        </Carousel>
-        <h2 style={h2Style}>宠物</h2>
-        <Carousel { ...settings }>
-          { this.state.serviceList.map(({ imgSrc, title, count }, index) => <CardItem
-            imgSrc={ imgSrc }
-            title={ title }
-            count={ count }
-            key={ index }
-          />) }
-        </Carousel>
+        {/*<h2 style={ h2Style }>附近的服务</h2>*/}
+        {/*<Carousel { ...settings }>*/}
+          {/*{ this.state.serviceList.map(({ imgSrc, title, count }, index) => <CardItem*/}
+            {/*imgSrc={ imgSrc }*/}
+            {/*title={ title }*/}
+            {/*count={ count }*/}
+            {/*key={ index }*/}
+          {/*/>) }*/}
+        {/*</Carousel>*/}
+        {
+          this.props.firstServiceList.map((service, index) => (
+            <div key={ service }>
+              <h2 style={ h2Style }>{ service }</h2>
+              <Carousel { ...settings }>
+                { this.props.serviceTree[ index ].child.map(({ serviceTypeName }, index) => <CardItem
+                  imgSrc={ this.props.serviceImageList.find(serviceImage => serviceImage.includes(serviceTypeName)) }
+                  title={ serviceTypeName }
+                  count={ 10 }
+                  key={ index }
+                />) }
+              </Carousel>
+            </div>
+          ))
+        }
       </div>
     )
   }
