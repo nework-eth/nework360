@@ -8,7 +8,25 @@ class Footer extends Component {
         <div className="content-wrapper">
           <div className="logo">
             <i className="iconfont icon-logo" style={ { fontSize: '24px' } }/>
-            <div>span</div>
+            <div className="footer-icon-container">
+              <div className="icon-wrapper"
+                style={ { backgroundColor: '#0FB047' } }
+              >
+                <i className="iconfont icon-wechat"/>
+              </div>
+              <div
+                className="icon-wrapper"
+                style={ { backgroundColor: '#219FEF' } }
+              >
+                <i className="iconfont icon-twitter"/>
+              </div>
+              <div
+                className="icon-wrapper"
+                style={ { backgroundColor: '#292929' } }
+              >
+                <i className="iconfont icon-medium"/>
+              </div>
+            </div>
           </div>
           <div className="communicate">
             <p>联系我们</p>
