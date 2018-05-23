@@ -3,9 +3,12 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import './static/style/index.less'
 import { combineReducers } from 'redux'
-import * as actions from './actions'
+import { bindActionCreators } from 'redux'
+import { setCity } from './actions'
 import reducer from './reducer'
 import store from '../../Store'
+import { getCityByIp } from '../../service/homepage'
+import { message } from 'antd'
 
 const specialLinkStyle = {
   color: '#082135',
@@ -29,7 +32,11 @@ const mapState = (state) => ({
   city: state[ stateKey ] || '北京',
 })
 
-@connect(mapState)
+const mapDispatch = (dispatch) => bindActionCreators({
+  setCity: setCity,
+}, dispatch)
+
+@connect(mapState, mapDispatch)
 class NavMenu extends Component {
   constructor (props) {
     super(props)
@@ -42,7 +49,7 @@ class NavMenu extends Component {
         <ul>
           <div className="li-wrapper">
             <li className="li-item">
-              <Link to="/" style={{color:'#092235'}}>
+              <Link to="/" style={ { color: '#092235' } }>
                 <i className="iconfont icon-logo logo-item"/>
               </Link>
             </li>
@@ -63,6 +70,23 @@ class NavMenu extends Component {
       </div>
     )
   }
+
+  getCityByIp = async () => {
+    try {
+      const { data: { code, desc } } = await getCityByIp()
+      if (code === 200) {
+        this.props.setCity(desc)
+        return
+      }
+      this.props.setCity('北京')
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+
+  componentDidMount () {
+    this.getCityByIp()
+  }
 }
 
-export { NavMenu as view, stateKey, actions, reducer, initialState }
+export { NavMenu as view, stateKey, reducer, initialState }

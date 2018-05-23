@@ -1,5 +1,5 @@
 # 请参考 https://help.aliyun.com/document_detail/59293.html 了解更多关于release文件的编写方式
 
 code.language=node8.x
-build.command=npm i  && yarn build --production
+build.command=npm i --registry=https://registry.npm.taobao.org  && yarn build --production
 build.output=build/*
