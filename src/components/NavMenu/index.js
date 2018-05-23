@@ -2,12 +2,32 @@ import React from 'react'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import './static/style/index.less'
-import { stateKey } from '../../pages/Homepage/SearchPage'
+import { combineReducers } from 'redux'
+import * as actions from './actions'
+import reducer from './reducer'
+import store from '../../Store'
 
 const specialLinkStyle = {
   color: '#082135',
   textDecoration: 'none',
 }
+
+const stateKey = 'city'
+
+const initialState = '北京'
+
+const state = store.getState()
+store.reset(combineReducers({
+  ...store._reducers,
+  [ stateKey ]: reducer,
+}), {
+  ...state,
+  [ stateKey ]: initialState,
+})
+
+const mapState = (state) => ({
+  city: state[ stateKey ] || '北京',
+})
 
 const NavMenu = ({ city }) => {
   return (
@@ -33,10 +53,6 @@ const NavMenu = ({ city }) => {
   )
 }
 
-const mapState = (state) => ({
-  city: state[ stateKey ] || '北京',
-})
-
 const WrapperNavMenu = connect(mapState)(NavMenu)
 
-export { WrapperNavMenu as view }
+export { WrapperNavMenu as view, stateKey, actions, reducer, initialState }

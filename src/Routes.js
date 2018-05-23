@@ -67,18 +67,8 @@ const getForgetPassword = async (nextState, callback) => {
   )
 }
 
-const getSearchPage = async (nextState, callback) => {
-  const { page, reducer, stateKey, initialState } = (await import(/* webpackChunkName: "Search" */'./pages/Homepage/SearchPage.js'))
-  const state = store.getState()
-  store.reset(combineReducers({
-    ...store._reducers,
-    city: reducer,
-  }), {
-    ...state,
-    [ stateKey ]: initialState,
-  })
-  callback(null, page)
-}
+const getSearchPage = async (nextState, callback) =>
+  callback(null, (await import(/* webpackChunkName: "Search" */'./pages/Homepage/SearchPage.js')).page)
 
 const getFirstClassPage = async (nextState, callback) => {
   callback(

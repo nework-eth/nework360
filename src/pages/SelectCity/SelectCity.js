@@ -5,8 +5,8 @@ import './static/style/index.less'
 import { bindActionCreators } from 'redux'
 import { getCityByLetter, getCityBySearch } from '../../service/homepage'
 import { connect } from 'react-redux'
-import { setCity } from '../Homepage/actions'
-import { stateKey } from '../Homepage/SearchPage'
+import { setCity } from '../../components/NavMenu/actions'
+import { stateKey } from '../../components/NavMenu'
 
 const Option = Select.Option
 

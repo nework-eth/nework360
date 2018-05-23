@@ -1,30 +1,12 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import './static/style/search.less'
-import { bindActionCreators } from 'redux'
 import { Input, Icon } from 'antd'
 import { view as IconItem } from '../../components/LogoItem'
-import { setCity } from './actions'
 import { view as Home } from './Home'
 // import { view as FirstClass } from './FirstClass'
-import * as actions from './actions.js'
-import reducer from './reducer.js'
-import { connect } from 'react-redux'
 
 const Search = Input.Search
 
-const stateKey = 'city'
-const initialState = '北京'
-
-const mapState = (state) => ({
-  city: state[ stateKey ] || '北京',
-})
-
-const mapDispatch = (dispatch) => bindActionCreators({
-  setCity: setCity,
-}, dispatch)
-
-@connect(mapState, mapDispatch)
 class SearchPage extends Component {
   constructor (props) {
     super(props)
@@ -113,10 +95,6 @@ class SearchPage extends Component {
       </div>
     )
   }
-
-  componentDidMount () {
-
-  }
 }
 
-export { SearchPage as page, stateKey, actions, reducer, initialState }
+export { SearchPage as page }
