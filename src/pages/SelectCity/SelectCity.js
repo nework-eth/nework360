@@ -16,15 +16,21 @@ const containerStyle = {
   minHeight: '100%',
 }
 
-const LetterCity = ({ letter, letterCityList }) => {
+const LetterCity = ({ letter, letterCityList, handleClick }) => {
   return (
     <div className="letter-city-container">
       <div className="letter-container">
         { letter }
       </div>
       <div className="city-container">
-        { letterCityList.map(({ chinese }, index) =>
-          <div className="virtual-button" key={ index }>{ chinese }</div>,
+        { letterCityList.map(({ chinese, districtId }, index) =>
+          <div className=
+            "virtual-button"
+            key={ index }
+            onClick={ () => {handleClick(chinese, districtId)} }
+          >
+            { chinese }
+          </div>,
         ) }
       </div>
     </div>
@@ -194,16 +200,24 @@ class SelectCity extends Component {
           </div>
           <h3>热门城市</h3>
           <div className="hot-city">
-            <div className="virtual-button">北京</div>
-            <div className="virtual-button">北京</div>
-            <div className="virtual-button">北京</div>
-            <div className="virtual-button">北京</div>
-            <div className="virtual-button">北京</div>
-            <div className="virtual-button">北京</div>
-            <div className="virtual-button">北京</div>
-            <div className="virtual-button">北京</div>
-            <div className="virtual-button">乌鲁木齐</div>
-            <div className="virtual-button">北京</div>
+            {
+              [
+                '北京',
+                '北京',
+                '北京',
+                '北京',
+                '北京',
+                '北京',
+                '北京',
+                '乌鲁木齐',
+              ].map(item => <div
+                  className="virtual-button"
+                  onClick={ () => {this.handleButtonClick(item)} }
+                >
+                  { item }
+                </div>,
+              )
+            }
           </div>
           <div className="first-letter">
             <h3>按城市首字母选择:&nbsp;&nbsp;&nbsp;</h3>
@@ -223,6 +237,7 @@ class SelectCity extends Component {
                 key={ index }
                 letter={ letter.toUpperCase() }
                 letterCityList={ letterCityList }
+                handleClick={ this.handleButtonClick }
               />,
             )
           }
@@ -233,10 +248,11 @@ class SelectCity extends Component {
 
   getCityByLetter = async () => {
     try {
-      const { data: { data } } = await getCityByLetter({ countryId: 1 })
+      const { data: { data } } = await getCityByLetter({ countryId: this.props.countryId || 1 })
       const letterCityList = Object.entries(data).filter(([ letter, letterCityList ]) => {
         return letterCityList.length > 0
       })
+      console.log(letterCityList)
       this.setState({
         letterCityList,
         filterCityList: letterCityList,
@@ -293,6 +309,7 @@ class SelectCity extends Component {
       cityOptions,
       selectedCity,
     })
+    this.props.setCountryId(value)
     this.props.setCityName(selectedCity)
     this.props.setCityId((cityData.find(item => item.chinese === selectedCity).districtId))
   }
@@ -318,6 +335,11 @@ class SelectCity extends Component {
     })
     this.props.setCityName(value)
     this.props.setCityId((this.state.cityData.find(item => item.chinese === value)).districtId)
+  }
+
+  handleButtonClick = (cityName, cityId = '001') => {
+    this.props.setCityName(cityName)
+    this.props.setCityId(cityId)
   }
 }
 
