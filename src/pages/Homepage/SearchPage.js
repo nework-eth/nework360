@@ -51,15 +51,11 @@ class SearchPage extends Component {
       firstLevelServiceList: [],
       pageState: 'default',
       selectedFirstService: '',
+      nearServiceList: [],
     }
   }
 
   render () {
-    const {
-      firstLevelServiceList,
-      serviceTree,
-      serviceImageList,
-    } = this.state
     return (
       <div className="search-service-container">
         <div>
@@ -172,7 +168,14 @@ class SearchPage extends Component {
         dist: this.props.cityName,
         level: 's',
       })
-      console.log(code, data, desc)
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
+      console.log('nearServiceList', data)
+      this.setState({
+        nearServiceList: data,
+      })
     } catch (e) {
       message.error('请求服务器失败')
     }
@@ -180,8 +183,7 @@ class SearchPage extends Component {
 
   componentDidMount () {
     this.getServiceTree()
-    // this.getFirstServiceList()
-    // this.getNearServiceList()
+    this.getNearServiceList()
   }
 
   handleFirstServiceChange = (firstService) => {
@@ -199,11 +201,13 @@ class SearchPage extends Component {
       serviceTree,
       serviceImageList,
       selectedFirstService,
+      nearServiceList,
     } = this.state
     if (pageState === 'default') {
       return <Home
         firstServiceList={ firstLevelServiceList }
         serviceTree={ serviceTree }
+        nearServiceList={ nearServiceList }
         serviceImageList={ serviceImageList }
         handleFirstServiceChange={ this.handleFirstServiceChange }
       />

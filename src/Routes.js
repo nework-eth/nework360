@@ -91,6 +91,13 @@ const getHome = async (nextState, callback) => {
   )
 }
 
+const getTest = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "Test" */'./components/Test/test.js'))
+  )
+}
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (

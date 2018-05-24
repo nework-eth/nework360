@@ -69,11 +69,11 @@ class Home extends Component {
       cursor: 'pointer',
     }
 
-    const { handleFirstServiceChange } = this.props
+    const { handleFirstServiceChange, nearServiceList, serviceImageList } = this.props
     return (
       <div className="home-container">
-        { /*<h2 style={ h2Style }>附近的服务</h2>*/ }
-        { /*<Carousel { ...settings }>*/ }
+        { /*{ <h2 style={ h2Style }>附近的服务</h2> }*/ }
+        { /*{ <Carousel { ...settings }> }*/ }
         { /*{ this.state.serviceList.map(({ imgSrc, title, count }, index) => <CardItem*/ }
         { /*imgSrc={ imgSrc }*/ }
         { /*title={ title }*/ }
@@ -81,6 +81,17 @@ class Home extends Component {
         { /*key={ index }*/ }
         { /*/>) }*/ }
         { /*</Carousel>*/ }
+        <h2 style={ h2Style }>附近的服务</h2>
+        <Carousel { ...settings }>
+          {
+            nearServiceList.map(({ serviceTypeName }) => <CardItem
+              imgSrc={ serviceImageList.find(serviceImage => serviceImage.includes(serviceTypeName)) }
+              title={ serviceTypeName }
+              count={ 10 }
+              key={ serviceTypeName }
+            />)
+          }
+        </Carousel>
         {
           this.props.firstServiceList.map((service, index) => (
             <div key={ service }>
