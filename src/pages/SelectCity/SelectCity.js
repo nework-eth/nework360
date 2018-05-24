@@ -5,7 +5,7 @@ import './static/style/index.less'
 import { bindActionCreators } from 'redux'
 import { getCityByLetter, getCityBySearch, getCityTree } from '../../service/homepage'
 import { connect } from 'react-redux'
-import { setCityName, setCityId } from '../../components/NavMenu/actions'
+import { setCityName, setCityId, setCountryId } from '../../components/NavMenu/actions'
 import { stateKey } from '../../components/NavMenu'
 
 const Option = Select.Option
@@ -44,6 +44,7 @@ const mapState = (state) => ({
 })
 
 const mapDispatch = (dispatch) => bindActionCreators({
+  setCountryId: setCountryId,
   setCityName: setCityName,
   setCityId: setCityId,
 }, dispatch)
@@ -210,7 +211,8 @@ class SelectCity extends Component {
                 '北京',
                 '北京',
                 '乌鲁木齐',
-              ].map(item => <div
+              ].map((item, index) => <div
+                  key={ index }
                   className="virtual-button"
                   onClick={ () => {this.handleButtonClick(item)} }
                 >
