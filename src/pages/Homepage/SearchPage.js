@@ -4,7 +4,7 @@ import { Input, Icon, message } from 'antd'
 import { view as IconItem } from '../../components/LogoItem'
 import { stateKey } from '../../components/NavMenu'
 import { view as Home } from './Home'
-// import { view as FirstClass } from './FirstClass'
+import { view as FirstClass } from './FirstClass'
 import { getServiceTree, getListServiceByParam } from '../../service/homepage'
 import { connect } from 'react-redux'
 
@@ -49,6 +49,8 @@ class SearchPage extends Component {
       ],
       serviceTree: [],
       firstLevelServiceList: [],
+      pageState: 'default',
+      selectedFirstService: '',
     }
   }
 
@@ -83,15 +85,14 @@ class SearchPage extends Component {
                 imgSrc={ this.state.iconListUrl.find(iconUrl => iconUrl.includes(service)) }
                 key={ index }
                 title={ service }
+                handleClick={ () => {this.handleFirstServiceChange(service)} }
               />,
             )
           }
         </div>
-        <Home
-          firstServiceList={ firstLevelServiceList }
-          serviceTree={ serviceTree }
-          serviceImageList={ serviceImageList }
-        />
+        {
+          this.virtualRouter()
+        }
         <h2 style={ { marginTop: '50px', marginBottom: '20px' } }>如何发布需求</h2>
         <div className="introduce-container">
           <div className="introduce-card">
@@ -157,7 +158,19 @@ class SearchPage extends Component {
     try {
       const { data: { code, data, desc } } = await getListServiceByParam({
         dist: this.props.cityName,
-        parentId: 0,
+        level: 's',
+      })
+      console.log(code, data, desc)
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+
+  getNearServiceList = async () => {
+    try {
+      const { data: { code, data, desc } } = await getListServiceByParam({
+        dist: this.props.cityName,
+        level: 's',
       })
       console.log(code, data, desc)
     } catch (e) {
@@ -168,6 +181,38 @@ class SearchPage extends Component {
   componentDidMount () {
     this.getServiceTree()
     // this.getFirstServiceList()
+    // this.getNearServiceList()
+  }
+
+  handleFirstServiceChange = (firstService) => {
+    console.log('handleFirstServiceChange')
+    this.setState({
+      selectedFirstService: firstService,
+      pageState: 'selected',
+    })
+  }
+
+  virtualRouter = () => {
+    const {
+      pageState,
+      firstLevelServiceList,
+      serviceTree,
+      serviceImageList,
+      selectedFirstService,
+    } = this.state
+    if (pageState === 'default') {
+      return <Home
+        firstServiceList={ firstLevelServiceList }
+        serviceTree={ serviceTree }
+        serviceImageList={ serviceImageList }
+        handleFirstServiceChange={ this.handleFirstServiceChange }
+      />
+    }
+    return <FirstClass
+      selectedFirstService={ selectedFirstService }
+      serviceImageList={ serviceImageList }
+      secondServiceList={ (serviceTree.find(item => item.serviceTypeName === selectedFirstService)).child }
+    />
   }
 }
 

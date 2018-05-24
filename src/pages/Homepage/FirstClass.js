@@ -3,84 +3,26 @@ import { view as CardItem } from '../../components/CardItem'
 import './static/style/first-class.less'
 
 class FirstClass extends Component {
-  constructor () {
-    super()
-    this.state = {
-      cardList: [
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-        {
-          imgSrc: './images/category-home.png',
-          title: 'test',
-          count: 1,
-        },
-      ],
-    }
+  constructor (props) {
+    super(props)
   }
 
   render () {
+    const {
+      selectedFirstService,
+      secondServiceList,
+      serviceImageList,
+    } = this.props
     return (
       <div>
-        <h2>全部家政服务</h2>
+        <h2 style={ { marginTop: '50px', marginBottom: '20px' } }>全部{ selectedFirstService }服务</h2>
         <div className="card-item-container">
-          { this.state.cardList.map(({ imgSrc, title, count }) =>
+          { secondServiceList.map(({ serviceTypeName }) =>
             <CardItem
-              imgSrc={ imgSrc }
-              title={ title }
-              count={ count }
+              key = {serviceTypeName}
+              imgSrc={ serviceImageList.find(item => item.includes(serviceTypeName)) }
+              title={ serviceTypeName }
+              count={ 10 }
             />,
           ) }
         </div>
