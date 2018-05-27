@@ -7,6 +7,9 @@ import { syncHistoryWithStore } from 'react-router-redux'
 
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Homepage } from './pages/Homepage/Homepage'
+import { page as SearchPage } from './pages/Homepage/SearchPage'
+import { view as TestPage } from './components/Test/test'
+import { page as SkillPage } from './pages/Skill/Skill.js'
 
 import store from './Store.js'
 
@@ -94,7 +97,23 @@ const getHome = async (nextState, callback) => {
 const getTest = async (nextState, callback) => {
   callback(
     null,
-    (await import(/* webpackChunkName: "Test" */'./components/Test/test.js'))
+    (await import(/* webpackChunkName: "Test" */'./components/Test/test.js')).view,
+  )
+}
+
+const getContainerPage = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "Container" */'./pages/Container/Container.js')).page,
+  )
+}
+
+// const getSkillPage = async (nextState, callback) => callback(null, (await import(/* webpackChunkName: "Skill" */'./pages/Skill/Skill.js')).page)
+
+const getSkillPage = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "Container" */'./pages/Skill/Skill.js')).page,
   )
 }
 
@@ -115,9 +134,18 @@ const Routes = () => (
     <Route path="/" component={ Homepage }>
       <IndexRoute getComponent={ getSearchPage }/>
       <Route path="select-city" getComponent={ getSelectCityPage }/>
-      <Route path="search" getComponent={ getSearchPage }/>
+      <Route path="search" getComponent={ getSearchPage }>
+        <Route path="test" getComponent={ getTest }/>
+      </Route>
+    </Route>
+    <Route getComponent={ getContainerPage }>
+      <Route path="/skill" getComponent={ getSkillPage }/>
     </Route>
   </Router>
 )
 
 export default Routes
+
+// <Route path="search" component={ getSearchPage }>
+//   <Route path="test" getComponent={ getTest }/>
+// </Route>

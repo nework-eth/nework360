@@ -1,0 +1,30 @@
+.select-type-card-container {
+  width: 700px;
+  height: 360px;
+  display: flex;
+  flex-wrap: wrap;
+  .select-type-card-item {
+    width: 175px;
+    height: 120px;
+    border: 1px solid #9ca6ae;
+    padding-top: 23px;
+    text-align: center;
+    font-size: 0;
+    &:nth-of-type(n+5):nth-of-type(-n+8) {
+      border-top: 0;
+      border-bottom: 0;
+    }
+    &:nth-of-type(n+1):nth-of-type(-n+3), &:nth-of-type(n+9):nth-of-type(-n+11), &:nth-of-type(n+5):nth-of-type(-n+7) {
+      border-right: 0;
+    }
+
+    img {
+      margin-bottom: 5px;
+    }
+    p {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: bold;
+    }
+  }
+}

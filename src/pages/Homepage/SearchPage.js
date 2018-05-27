@@ -121,6 +121,9 @@ class SearchPage extends Component {
             <h3>线下享受服务</h3>
             <p>服务人员将上门为您服务，您可为服务的感受和满意程度打分</p>
           </div>
+          {
+            this.props.children
+          }
         </div>
       </div>
     )

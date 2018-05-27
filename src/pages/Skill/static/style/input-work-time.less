@@ -1,0 +1,19 @@
+.input-work-time-container {
+  display: flex;
+  div {
+    flex: 1;
+    padding-top: 23px;
+    padding-bottom: 20px;
+    text-align: center;
+    &:nth-of-type(n+1):nth-of-type(-n+2) {
+      border-right: 2px solid #f2f6f6;
+    }
+    p {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: bold;
+      margin-top: 5px;
+    }
+  }
+  border: 2px solid #f2f6f6;
+}
