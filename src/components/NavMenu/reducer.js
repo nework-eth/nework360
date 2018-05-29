@@ -1,6 +1,6 @@
-import { SETCITYNAME, SETCITYID, SETCOUNTRYID } from './actionTypes'
+import { SETCITYNAME, SETCITYID, SETCOUNTRYID, SETUSERID } from './actionTypes'
 
-export default (state = {}, action) => {
+const positionReducer = (state = {}, action) => {
   switch (action.type) {
     case SETCITYNAME:
       return { ...state, ...{ cityName: action.cityName } }
@@ -12,4 +12,16 @@ export default (state = {}, action) => {
       return state
   }
 }
+
+const userReducer = (state = {}, action) => {
+  switch (action.type) {
+    case SETUSERID:
+      return { ...state, ...{ userId: action.userId } }
+    default:
+      return state
+  }
+}
+
+export { positionReducer, userReducer }
+
 

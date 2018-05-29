@@ -4,12 +4,17 @@
   display: flex;
   flex-wrap: wrap;
   .select-type-card-item {
+    position: relative;
     width: 175px;
     height: 120px;
-    border: 1px solid #9ca6ae;
+    border: 2px solid #F2F6F6;
     padding-top: 23px;
     text-align: center;
     font-size: 0;
+    cursor: pointer;
+    &:hover {
+      background-color: #f6f8f9;
+    }
     &:nth-of-type(n+5):nth-of-type(-n+8) {
       border-top: 0;
       border-bottom: 0;
@@ -17,7 +22,6 @@
     &:nth-of-type(n+1):nth-of-type(-n+3), &:nth-of-type(n+9):nth-of-type(-n+11), &:nth-of-type(n+5):nth-of-type(-n+7) {
       border-right: 0;
     }
-
     img {
       margin-bottom: 5px;
     }
@@ -25,6 +29,20 @@
       font-size: 16px;
       line-height: 22px;
       font-weight: bold;
+    }
+    i {
+      color: #fff;
+      font-size: 18px;
+      position: absolute;
+      top: 0;
+      right: 1px;
+    }
+  }
+  .selected-card-item {
+    border: 2px solid #008bf7 !important;
+    background: linear-gradient(-135deg, #008bf7 25px, #fff 0);
+    &:hover {
+      background: linear-gradient(-135deg, #008bf7 25px, #f6f8f9 0);
     }
   }
 }

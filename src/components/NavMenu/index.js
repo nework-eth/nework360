@@ -5,7 +5,7 @@ import './static/style/index.less'
 import { combineReducers } from 'redux'
 import { bindActionCreators } from 'redux'
 import { setCityId, setCityName, setCountryId } from './actions'
-import reducer from './reducer'
+import { userReducer, positionReducer } from './reducer'
 import store from '../../Store'
 import { getCityByIp } from '../../service/homepage'
 import { message } from 'antd'
@@ -26,14 +26,19 @@ const initialState = {
 const state = store.getState()
 store.reset(combineReducers({
   ...store._reducers,
-  [ stateKey ]: reducer,
+  [ stateKey ]: positionReducer,
+  user: userReducer,
 }), {
   ...state,
   [ stateKey ]: initialState,
+  user: {
+    userId: '',
+  },
 })
 
 const mapState = (state) => ({
   cityName: state[ stateKey ].cityName,
+  userId: state.user.userId,
 })
 
 const mapDispatch = (dispatch) => bindActionCreators({
@@ -63,15 +68,23 @@ class NavMenu extends Component {
             <Link className="li-item" style={ { paddingRight: '10px', textDecoration: 'none', color: '#092235' } }
               to="/select-city">{ cityName }</Link>
           </div>
-          <div className="li-wrapper">
-            <li style={ { paddingRight: '20px' } } className="li-item">如何运作？</li>
-            <li className="vertical-line"/>
-            <li className="li-item"><Link to="/auth/login" style={ specialLinkStyle }>登录</Link></li>
-            <li
-              className="li-item" style={ { paddingLeft: '0' } }><Link to="/auth/register"
-              style={ specialLinkStyle }>注册</Link>
-            </li>
-          </div>
+          {
+            this.props.userId
+              ? <div className="li-wrapper">
+                <li className="li-item">
+                  <Link to="/skill" style={ specialLinkStyle }>我要工作</Link>
+                </li>
+              </div>
+              : <div className="li-wrapper">
+                <li style={ { paddingRight: '20px' } } className="li-item">如何运作？</li>
+                <li className="vertical-line"/>
+                <li className="li-item"><Link to="/auth/login" style={ specialLinkStyle }>登录</Link></li>
+                <li
+                  className="li-item" style={ { paddingLeft: '0' } }>
+                  <Link to="/auth/register" style={ specialLinkStyle }>注册</Link>
+                </li>
+              </div>
+          }
         </ul>
       </div>
     )
@@ -93,4 +106,4 @@ class NavMenu extends Component {
   }
 }
 
-export { NavMenu as view, stateKey, reducer, initialState }
+export { NavMenu as view, stateKey, initialState }

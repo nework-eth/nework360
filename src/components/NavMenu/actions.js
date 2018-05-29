@@ -5,3 +5,5 @@ export const setCityName = (cityName) => ({ type: ActionTypes.SETCITYNAME, cityN
 export const setCityId = (cityId) => ({ type: ActionTypes.SETCITYID, cityId })
 
 export const setCountryId = (countryId) => ({ type: ActionTypes.SETCOUNTRYID, countryId })
+
+export const setUserId = (userId) => ({ type: ActionTypes.SETUSERID, userId })

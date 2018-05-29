@@ -2,12 +2,20 @@ import React, { Component } from 'react'
 import { Form, Input, Button, message } from 'antd'
 import './static/style/index.less'
 import { Link, browserHistory } from 'react-router'
+import { bindActionCreators } from 'redux'
+import { setUserId } from '../../components/NavMenu/actions'
 import { login } from '../../service/auth'
+import { connect } from 'react-redux'
 
 const FormItem = Form.Item
 
 const FooterStyle = { display: 'flex', justifyContent: 'space-between' }
 
+const mapDispatch = (dispatch) => bindActionCreators({
+  setUserId,
+}, dispatch)
+
+@connect(null, mapDispatch)
 @Form.create()
 class Page extends Component {
   handleSubmit = (e) => {
@@ -15,9 +23,10 @@ class Page extends Component {
     this.props.form.validateFields(async (err, { phoneNumber, password }) => {
       if (!err) {
         await login({ phoneNumber, pwd: password })
-          .then(({ data: { code, desc } }) => {
+          .then(({ data: { code, desc, data } }) => {
             if (code === 200 && desc === 'success') {
               message.success('登录成功')
+              this.props.setUserId(data.userId)
               browserHistory.push('/')
               return
             }

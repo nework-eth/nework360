@@ -1,6 +1,6 @@
 import React from 'react'
 
-// import { Input, Select } from 'antd'
+import { Icon } from 'antd'
 import './static/style/partly-complete.less'
 
 function PartlyComplete ({ username }) {
@@ -11,17 +11,13 @@ function PartlyComplete ({ username }) {
       <p style={{marginBottom:'50px'}}>你也可以自行推广，我们将不收取任何费用</p>
       <div className="partly-complete-content-container">
         <div className="partly-complete-icon-wrapper">
-          <i
-            className="iconfont icon-selected"
-          />
+          <i className="iconfont icon-selected" />
         </div>
         <div className="content">个人资料和服务范围</div>
       </div>
       <div className="partly-complete-content-container">
-        <div className="partly-complete-icon-wrapper">
-          <i
-            className="iconfont icon-selected"
-          />
+        <div className="partly-complete-number-wrapper">
+          2
         </div>
         <div className="content">上传认证信息</div>
       </div>
