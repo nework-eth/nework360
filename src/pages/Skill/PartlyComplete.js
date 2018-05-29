@@ -1,6 +1,5 @@
 import React from 'react'
 
-import { Icon } from 'antd'
 import './static/style/partly-complete.less'
 
 function PartlyComplete ({ username }) {

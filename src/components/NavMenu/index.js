@@ -1,14 +1,13 @@
-import React, { Component } from 'react'
-import { Link } from 'react-router'
-import { connect } from 'react-redux'
-import './static/style/index.less'
-import { combineReducers } from 'redux'
-import { bindActionCreators } from 'redux'
-import { setCityId, setCityName, setCountryId } from './actions'
-import { userReducer, positionReducer } from './reducer'
-import store from '../../Store'
-import { getCityByIp } from '../../service/homepage'
 import { message } from 'antd'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Link } from 'react-router'
+import { bindActionCreators, combineReducers } from 'redux'
+import { getCityByIp } from '../../service/homepage'
+import store from '../../Store'
+import { setCityId, setCityName, setCountryId } from './actions'
+import { positionReducer, userReducer } from './reducer'
+import './static/style/index.less'
 
 const specialLinkStyle = {
   color: '#082135',
@@ -49,10 +48,6 @@ const mapDispatch = (dispatch) => bindActionCreators({
 
 @connect(mapState, mapDispatch)
 class NavMenu extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   render () {
     const { cityName } = this.props
     return (

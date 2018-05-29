@@ -11,4 +11,4 @@ export const getCityTree = () => axios(`${baseUrl}/district/listDistsByTree`)
 
 export const getServiceTree = params => axios(`${baseUrl}/service/listServiceByCity`, { params })
 
-export const getListServiceByParam = params => axios(`${baseUrl}/service/listServiceByParam`, {params})
+export const getListServiceByParam = params => axios(`${baseUrl}/service/listServiceByParam`, { params })

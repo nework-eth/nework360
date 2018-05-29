@@ -1,22 +1,22 @@
+import { Button, Progress } from 'antd'
 import { message } from 'antd/lib/index'
 import React, { Component } from 'react'
-import { Progress, Button } from 'antd'
+import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
+import { baseUrl } from '../../service/config'
 import { getCityTree } from '../../service/homepage'
+import { releaseSkill } from '../../service/skill'
 import { view as InputPosition } from './InputPosition'
-import { view as UploadComplete } from './UploadComplete'
-import { view as SelectType } from './SelectType'
 import { view as InputWorkTime } from './InputWorkTime'
 import { view as Introduce } from './Introduce'
 import { view as PartlyComplete } from './PartlyComplete'
-import { view as UploadAvatar } from './UploadAvatar'
-import { view as SelectSecondaryType } from './SelectSecondaryType'
 import { view as SelectCertificate } from './SelectCertificate'
-import { view as UploadCertificate } from './UploadCertificate'
-import { connect } from 'react-redux'
-import { browserHistory } from 'react-router'
-import { releaseSkill } from '../../service/skill'
+import { view as SelectSecondaryType } from './SelectSecondaryType'
+import { view as SelectType } from './SelectType'
 import './static/style/index.less'
-import { baseUrl } from '../../service/config'
+import { view as UploadAvatar } from './UploadAvatar'
+import { view as UploadCertificate } from './UploadCertificate'
+import { view as UploadComplete } from './UploadComplete'
 
 const uploadUrl = `${baseUrl}/qiniu/uploadUserFile`
 
@@ -234,7 +234,7 @@ class SkillPage extends Component {
           latitude: 39.928216,
           longitude: 116.447962,
           serviceTime: this.state.serviceTimeList.join(','),
-          serviceIds: [ 1, 2, 3 ],
+          serviceIds: [ 1, 2, 3 ].join(','),
           isUsed: 1,
           isDeleted: 0,
         })

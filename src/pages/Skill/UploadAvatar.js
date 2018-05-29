@@ -1,24 +1,23 @@
+import { Button, message, Upload } from 'antd'
 import React from 'react'
-
-import { Upload, Button, message } from 'antd'
 import { baseUrl } from '../../service/config'
 
-const props = {
-  name: '头像',
-  action: `${baseUrl}/qiniu/uploadUserFile`,
-  data: { userId: 2, column: 'avatar' },
-  onChange (info) {
-    if (info.file.status !== 'uploading') {
-      console.log(info.file, info.fileList)
-    }
-    if (info.file.status === 'done') {
-      message.success(`上传成功`)
-    } else if (info.file.status === 'error') {
-      message.error(`上传失败`)
-    }
-  },
-  showUploadList: false,
-}
+// const props = {
+//   name: '头像',
+//   action: `${baseUrl}/qiniu/uploadUserFile`,
+//   data: { userId: 2, column: 'avatar' },
+//   onChange (info) {
+//     if (info.file.status !== 'uploading') {
+//       console.log(info.file, info.fileList)
+//     }
+//     if (info.file.status === 'done') {
+//       message.success(`上传成功`)
+//     } else if (info.file.status === 'error') {
+//       message.error(`上传失败`)
+//     }
+//   },
+//   showUploadList: false,
+// }
 
 function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar }) {
   return (
@@ -64,7 +63,9 @@ function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar }) {
                 width: '160px',
                 height: '50px',
               } }
-            >选择图片</Button>
+            >
+              选择图片
+            </Button>
           </Upload>
         </div>
       </div>

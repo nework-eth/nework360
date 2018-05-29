@@ -1,5 +1,4 @@
 import React from 'react'
-
 // import { Input, Select } from 'antd'
 import './static/style/input-work-time.less'
 
@@ -12,7 +11,7 @@ function InputWorkTime ({ serviceTimeList, handleWorkTimeItemClick }) {
           className={ serviceTimeList.includes('w') ? 'checked-time-item' : '' }
           onClick={ handleWorkTimeItemClick('w') }
         >
-          <img src="./images/calendar-workday.png" height={ 50 } width={ 50 }/>
+          <img src="./images/calendar-workday.png" height={ 50 } width={ 50 } alt="工作日"/>
           <i className="iconfont icon-selected"/>
           <p>周一至周五</p>
         </div>
@@ -20,7 +19,7 @@ function InputWorkTime ({ serviceTimeList, handleWorkTimeItemClick }) {
           className={ serviceTimeList.includes('sat') ? 'checked-time-item' : '' }
           onClick={ handleWorkTimeItemClick('sat') }
         >
-          <img src="./images/calendar-workday.png" height={ 50 } width={ 50 }/>
+          <img src="./images/calendar-workday.png" height={ 50 } width={ 50 } alt="周六"/>
           <i className="iconfont icon-selected"/>
           <p>周六</p>
         </div>
@@ -28,7 +27,7 @@ function InputWorkTime ({ serviceTimeList, handleWorkTimeItemClick }) {
           className={ serviceTimeList.includes('sun') ? 'checked-time-item' : '' }
           onClick={ handleWorkTimeItemClick('sun') }
         >
-          <img src="./images/calendar-workday.png" height={ 50 } width={ 50 }/>
+          <img src="./images/calendar-workday.png" height={ 50 } width={ 50 } alt="周日"/>
           <i className="iconfont icon-selected"/>
           <p>周日</p>
         </div>

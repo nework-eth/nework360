@@ -3,10 +3,6 @@ import { view as CardItem } from '../../components/CardItem'
 import './static/style/first-class.less'
 
 class FirstClass extends Component {
-  constructor (props) {
-    super(props)
-  }
-
   render () {
     const {
       selectedFirstService,
