@@ -14,6 +14,10 @@ function InputPosition ({
                           handleCountryChange,
                           handleProvinceChange,
                           handleCityChange,
+                          location,
+                          handleLocationChange,
+                          specAddr,
+                          handleSpecAddrChange,
                         }) {
   return (
     <div className="input-position-container">
@@ -78,9 +82,15 @@ function InputPosition ({
         </div>
       </div>
       <p>小区或街道名</p>
-      <Input/>
+      <Input
+        value={ location }
+        onChange={ handleLocationChange }
+      />
       <p>具体地址</p>
-      <Input/>
+      <Input
+        value={ specAddr }
+        onChange={ handleSpecAddrChange }
+      />
     </div>
   )
 }

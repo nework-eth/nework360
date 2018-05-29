@@ -46,13 +46,17 @@ function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar }) {
                 console.log(info.file, info.fileList)
               }
               if (info.file.status === 'done') {
-                message.success(`上传成功`)
+                if (info.file.response.code === 200) {
+                  message.success(info.file.response.desc)
+                  return
+                }
+                message.error(info.file.response.desc)
               } else if (info.file.status === 'error') {
                 message.error(`上传失败`)
               }
             } }
             showUploadList={ false }
-            data={ { userId, column:'avatar' } }
+            data={ { userId, column: 'avatar' } }
           >
             <Button
               type="primary"

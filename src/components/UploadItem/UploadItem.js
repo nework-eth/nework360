@@ -44,19 +44,25 @@ class UploadItem extends Component {
       </div>
     )
     const imageUrl = this.state.imageUrl
-    const { title } = this.props
+    const { action, column, userId } = this.props
     return (
-        <Upload
-          name="avatar"
-          listType="picture-card"
-          className="upload-item"
-          showUploadList={ false }
-          action="//jsonplaceholder.typicode.com/posts/"
-          beforeUpload={ beforeUpload }
-          onChange={ this.handleChange }
-        >
-          { imageUrl ? <img src={ imageUrl } alt="avatar"/> : uploadButton }
-        </Upload>
+      <Upload
+        name="avatar"
+        listType="picture-card"
+        className="upload-item"
+        showUploadList={ false }
+        action={ action }
+        data={
+          {
+            userId,
+            column,
+          }
+        }
+        beforeUpload={ beforeUpload }
+        onChange={ this.handleChange }
+      >
+        { imageUrl ? <img src={ imageUrl } alt="avatar"/> : uploadButton }
+      </Upload>
     )
   }
 }
