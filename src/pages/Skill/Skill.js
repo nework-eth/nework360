@@ -48,44 +48,121 @@ class SkillPage extends Component {
     cityId: 110,
   }
 
-  render () {
-    const { progressPercent, step } = this.state
-    return (
-      <div className="skill-container">
-        <main style={ { width: '700px', margin: '0 auto' } }>
-          <h2 style={ { margin: '50px 0' } }>
-            <i
-              className="iconfont icon-logo"
-              style={ { fontSize: '30px', lineHeight: '40px' } }
-            />
-          </h2>
-          <Progress
-            percent={ progressPercent }
-            showInfo={ false }
-            style={ { height: '5px' } }
-          />
-          {
-            this.StepView()
+  handleButtonClick = async () => {
+    // if (this.state.step !== 9) {
+    //   if (this.state.step === 5) {
+    //     const { data: { code, desc } } = await releaseSkill({
+    //       districtId: this.state.cityId,
+    //       userId: this.state.userId,
+    //       location: this.state.location,
+    //       specAddr: this.state.specAddr,
+    //       latitude: 39.928216,
+    //       longitude: 116.447962,
+    //       serviceTime: this.state.serviceTimeList.join(','),
+    //       serviceIds: [ 1, 2, 3 ].join(','),
+    //       isUsed: 1,
+    //       isDeleted: 0,
+    //     })
+    //     if (code === 200) {
+    //       message.success(desc)
+    //       this.setState({
+    //         step: this.state.step + 1,
+    //         progressPercent: (this.state.step + 1) * 10 + 10,
+    //       })
+    //       return
+    //     }
+    //     message.error('请求服务器失败')
+    //     return
+    //   }
+    //   this.setState({
+    //     step: this.state.step + 1,
+    //     progressPercent: (this.state.step + 1) * 10 + 10,
+    //   })
+    //   return
+    switch (this.state.step) {
+      case 0:
+        if (this.state.location && this.state.specAddr) {
+          this.goNextStep()
+          return
+        } else {
+          message.info('请填写地址')
+          return
+        }
+      case 1:
+        if (this.state.selectedType) {
+          this.goNextStep()
+          return
+        } else {
+          message.info('请选择工作类型')
+          return
+        }
+      case 2:
+        if (this.state.secondaryTypeList.length !== 0) {
+          this.goNextStep()
+          return
+        } else {
+          message.info('请选择工作类型')
+          return
+        }
+      case 3:
+        if (this.state.serviceTimeList.length !== 0) {
+          this.goNextStep()
+          return
+        } else {
+          message.info('请选择工作时间')
+          return
+        }
+      case 4:
+        if (this.state.introduce) {
+          this.goNextStep()
+          return
+        } else {
+          message.info('请输入自我介绍')
+          return
+        }
+      case 5:
+        if (this.state.avatarSrc) {
+          const { data: { code, desc } } = await releaseSkill({
+            districtId: this.state.cityId,
+            userId: this.state.userId,
+            location: this.state.location,
+            specAddr: this.state.specAddr,
+            latitude: 39.928216,
+            longitude: 116.447962,
+            serviceTime: this.state.serviceTimeList.join(','),
+            serviceIds: [ 1, 2, 3 ].join(','),
+            isUsed: 1,
+            isDeleted: 0,
+          })
+          if (code === 200) {
+            message.success(desc)
+            this.setState({
+              step: this.state.step + 1,
+              progressPercent: (this.state.step + 1) * 10 + 10,
+            })
+            return
           }
-        </main>
-        <footer>
-          <p
-            onClick={ this.handleGoBack }
-            style={ step === 0 || step === 9 ? { visibility: 'hidden' } : {} }
-          >
-            <i className="iconfont icon-return"/>
-            返回
-          </p>
-          <Button type="primary" onClick={ this.handleGoNextStep }>
-            {
-              step !== 9
-                ? '下一步'
-                : '完成'
-            }
-          </Button>
-        </footer>
-      </div>
-    )
+          message.error('请求服务器失败')
+          return
+        } else {
+          message.info('请上传头像')
+          return
+        }
+      case 6:
+        this.goNextStep()
+        return
+      case 7:
+        this.goNextStep()
+        return
+      case 8:
+        this.goNextStep()
+        return
+      case 9:
+        browserHistory.push('/search')
+        return
+      default:
+        return
+    }
   }
 
   StepView = () => {
@@ -218,45 +295,67 @@ class SkillPage extends Component {
       cityId: this.getCityIdByName(value) || '',
     })
   }
+  goNextStep = () => this.setState({
+    step: this.state.step + 1,
+    progressPercent: (this.state.step + 1) * 10 + 10,
+  })
+
+  render () {
+    const { progressPercent, step } = this.state
+    return (
+      <div className="skill-container">
+        <main style={ { width: '700px', margin: '0 auto' } }>
+          <h2 style={ { margin: '50px 0' } }>
+            <i
+              className="iconfont icon-logo"
+              style={ { fontSize: '30px', lineHeight: '40px' } }
+            />
+          </h2>
+          <Progress
+            percent={ progressPercent }
+            showInfo={ false }
+            style={ { height: '5px' } }
+          />
+          {
+            this.StepView()
+          }
+        </main>
+        <footer>
+          <p
+            onClick={ this.handleGoBack }
+            style={ step === 0 || step === 9 ? { visibility: 'hidden' } : {} }
+          >
+            <i className="iconfont icon-return"/>
+            返回
+          </p>
+          <Button type="primary" onClick={ this.handleButtonClick }>
+            {
+              step !== 9
+                ? '下一步'
+                : '完成'
+            }
+          </Button>
+        </footer>
+      </div>
+    )
+  }
 
   componentDidMount () {
     this.getCityTree()
+    /* eslint-disable no-undef */
   }
 
-  handleGoNextStep = async () => {
-    if (this.state.step !== 9) {
-      if (this.state.step === 5) {
-        const { data: { code, desc } } = await releaseSkill({
-          districtId: this.state.cityId,
-          userId: this.state.userId,
-          location: this.state.location,
-          specAddr: this.state.specAddr,
-          latitude: 39.928216,
-          longitude: 116.447962,
-          serviceTime: this.state.serviceTimeList.join(','),
-          serviceIds: [ 1, 2, 3 ].join(','),
-          isUsed: 1,
-          isDeleted: 0,
-        })
-        if (code === 200) {
-          message.success(desc)
-          this.setState({
-            step: this.state.step + 1,
-            progressPercent: (this.state.step + 1) * 10 + 10,
-          })
-          return
-        }
-        message.error('请求服务器失败')
-        return
-      }
-      this.setState({
-        step: this.state.step + 1,
-        progressPercent: (this.state.step + 1) * 10 + 10,
-      })
-      return
-    }
-    browserHistory.push('/search')
+  mapInit () {
+    // const placeSearch = new AMap.PlaceSearch({ //构造地点查询类
+    //   pageSize: 5,
+    //   pageIndex: 1,
+    //   city: '010', //城市
+    //   panel: 'result',
+    // })
   }
+
+  // browserHistory.push('/search')
+  // }
 
   handleGoBack = () => {
     this.setState({

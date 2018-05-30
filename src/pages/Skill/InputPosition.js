@@ -1,5 +1,5 @@
-import React from 'react'
 import { Input, Select } from 'antd'
+import React from 'react'
 import './static/style/input-position.less'
 
 const Option = Select.Option
@@ -85,11 +85,13 @@ function InputPosition ({
       <Input
         value={ location }
         onChange={ handleLocationChange }
+        placeholder="如不清楚，可输入名称来搜索…"
       />
       <p>具体地址</p>
       <Input
         value={ specAddr }
         onChange={ handleSpecAddrChange }
+        placeholder="请输入具体地址"
       />
     </div>
   )

@@ -1,15 +1,12 @@
 import React from 'react'
-import { Router, Route, IndexRoute, browserHistory } from 'react-router'
 import { Provider } from 'react-redux'
-import { combineReducers } from 'redux'
+import { browserHistory, IndexRoute, Route, Router } from 'react-router'
 
 import { syncHistoryWithStore } from 'react-router-redux'
+import { combineReducers } from 'redux'
 
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Homepage } from './pages/Homepage/Homepage'
-import { page as SearchPage } from './pages/Homepage/SearchPage'
-import { view as TestPage } from './components/Test/test'
-import { page as SkillPage } from './pages/Skill/Skill.js'
 
 import store from './Store.js'
 
@@ -117,6 +114,13 @@ const getSkillPage = async (nextState, callback) => {
   )
 }
 
+const getProfilePage = async (nextState, callback) => {
+  callback(
+    null,
+    (await import(/* webpackChunkName: "Profile" */'./pages/Profile/Profile.js')).page,
+  )
+}
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (
@@ -140,6 +144,7 @@ const Routes = () => (
     </Route>
     <Route getComponent={ getContainerPage }>
       <Route path="/skill" getComponent={ getSkillPage }/>
+      <Route path="/profile" getComponent={ getProfilePage }/>
     </Route>
   </Router>
 )
