@@ -1,7 +1,6 @@
 import React from 'react'
-import { view as TopMenu } from '../../components/NavMenu'
 import { view as Footer } from '../../components/Footer'
-// import
+import { view as TopMenu } from '../../components/NavMenu'
 
 const containerStyle = {
   position: 'relative',

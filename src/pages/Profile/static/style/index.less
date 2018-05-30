@@ -5,11 +5,133 @@
   main {
     flex: 1;
     padding: 0 calc(50vw - 350px);
+    .avatar {
+      margin: 30px 0;
+      border-radius: 50%;
+    }
+    h2 {
+      line-height: 50px;
+    }
+    .info {
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+    }
+    .position {
+      font-weight: bold;
+      margin-right: 20px;
+    }
+    .rate {
+      font-weight: bold;
+      margin-left: 10px;
+      margin-right: 8px;
+    }
+    .evaluation {
+      color: #9ca6ae;
+    }
+    .introduce {
+      height: 60px;
+      position: relative;
+      overflow: hidden;
+      &::after {
+        content: '...';
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        padding: 0 0 0 5px;
+        background-color: white;
+      }
+    }
+    .information-container {
+      margin: 30px 0;
+      display: flex;
+      div {
+        margin-right: 30px;
+        display: flex;
+        align-items: center;
+        i {
+          margin-right: 10px;
+          font-size: 20px;
+        }
+      }
+    }
+    .company-card {
+      padding: 30px;
+      width: 340px;
+      border: 1px solid #dde6ec;
+      .company-name {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      .block-chain-number {
+        color: #9ca6ae;
+        margin-bottom: 20px;
+      }
+      .company-introduce {
+        height: 60px;
+        position: relative;
+        overflow: hidden;
+        &::after {
+          content: '...';
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          padding: 0 0 0 2px;
+          background-color: white;
+        }
+      }
+    }
+    .skill-card {
+      width: 160px;
+      padding: 30px;
+      border: 1px solid #dde6ec;
+      .title {
+        margin-top: 20px;
+        font-weight: bold;
+      }
+      .skill-index {
+        color: #9ca6ae;
+      }
+    }
+    .company-title {
+      margin-bottom: 10px;
+    }
+    .skill-title {
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+    .location {
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+    .time-location-container {
+      margin-bottom: 50px;
+      display: flex;
+      justify-content: space-between;
+      #mapContainer {
+        width: 340px;
+        height: 340px;
+      }
+    }
   }
   footer {
     display: flex;
+    flex-flow: row-reverse;
     padding: 25px calc(50vw - 350px);
     align-items: center;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+    .ant-btn {
+      width: 160px;
+      height: 50px;
+      border-color: #008bf7;
+    }
   }
+}
+
+.ant-rate-star-first, .ant-rate-star-second {
+  color: #dde6ec;
+}
+
+.ant-rate-star-half .ant-rate-star-first, .ant-rate-star-full .ant-rate-star-second {
+  color: #F79F00;;
 }
