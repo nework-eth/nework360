@@ -29,6 +29,9 @@ function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar }) {
           alt="头像"
           width={ 200 }
           height={ 200 }
+          style={ {
+            borderRadius: '50%',
+          } }
         />
         <img
           src="./images/headshot-mask.png"
@@ -46,7 +49,9 @@ function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar }) {
               }
               if (info.file.status === 'done') {
                 if (info.file.response.code === 200) {
-                  message.success(info.file.response.desc)
+                  console.log(info)
+                  handleUploadAvatar(info.file.response.data.path)
+                  message.success('上传头像成功')
                   return
                 }
                 message.error(info.file.response.desc)

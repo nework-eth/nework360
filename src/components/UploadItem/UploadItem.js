@@ -1,11 +1,5 @@
+import { Icon, message, Upload } from 'antd'
 import React, { Component } from 'react'
-import { Upload, Icon, message } from 'antd'
-
-function getBase64 (img, callback) {
-  const reader = new FileReader()
-  reader.addEventListener('load', () => callback(reader.result))
-  reader.readAsDataURL(img)
-}
 
 function beforeUpload (file) {
   const isJPG = file.type === 'image/jpeg'
@@ -30,10 +24,12 @@ class UploadItem extends Component {
     }
     if (info.file.status === 'done') {
       // Get this url from response in real world.
-      getBase64(info.file.originFileObj, imageUrl => this.setState({
-        imageUrl,
-        loading: false,
-      }))
+      // getBase64(info.file.originFileObj, imageUrl => this.setState({
+      //   imageUrl,
+      //   loading: false,
+      // }))
+      this.setState({ loading: false })
+      this.props.handleUpload(info.file.response.data.path)
     }
   }
 
@@ -43,11 +39,11 @@ class UploadItem extends Component {
         <Icon type={ this.state.loading ? 'loading' : 'plus' }/>
       </div>
     )
-    const imageUrl = this.state.imageUrl
-    const { action, column, userId } = this.props
+    const imageUrl = this.props.src
+    const { action, column, userId, handleChange } = this.props
     return (
       <Upload
-        name="avatar"
+        name="file"
         listType="picture-card"
         className="upload-item"
         showUploadList={ false }

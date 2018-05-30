@@ -22,7 +22,7 @@ import { view as UploadComplete } from './UploadComplete'
 const uploadUrl = `${baseUrl}/qiniu/uploadUserFile`
 
 const mapState = (state) => ({
-  userId: state.user.userId,
+  userId: state.user.userId || 11,
 })
 
 @connect(mapState)
@@ -49,6 +49,10 @@ class SkillPage extends Component {
     specAddr: '',
     cityId: 110,
     lastCity: '',
+    passportSrc: '',
+    photoSrc: '',
+    idCardPositiveSrc: '',
+    idCardNegativeSrc: '',
   }
   StepView = () => {
     switch (this.state.step) {
@@ -97,6 +101,7 @@ class SkillPage extends Component {
           avatarSrc={ this.state.avatarSrc }
           userId={ this.props.userId }
           uploadUrl={ uploadUrl }
+          handleUploadAvatar={ this.handleUploadAvatar }
         />
       case 6:
         return <PartlyComplete/>
@@ -110,6 +115,11 @@ class SkillPage extends Component {
           selectedCertification={ this.state.selectedCertification }
           userId={ this.props.userId }
           uploadUrl={ uploadUrl }
+          passportSrc={ this.state.passportSrc }
+          photoSrc={ this.state.photoSrc }
+          idCardNegativeSrc={ this.state.idCardNegativeSrc }
+          idCardPositiveSrc={ this.state.idCardPositiveSrc }
+          handleUpload={ this.handleUpload }
         />
       case 9:
         return <UploadComplete
@@ -120,36 +130,6 @@ class SkillPage extends Component {
   }
 
   handleButtonClick = async () => {
-    // if (this.state.step !== 9) {
-    //   if (this.state.step === 5) {
-    //     const { data: { code, desc } } = await releaseSkill({
-    //       districtId: this.state.cityId,
-    //       userId: this.state.userId,
-    //       location: this.state.location,
-    //       specAddr: this.state.specAddr,
-    //       latitude: 39.928216,
-    //       longitude: 116.447962,
-    //       serviceTime: this.state.serviceTimeList.join(','),
-    //       serviceIds: [ 1, 2, 3 ].join(','),
-    //       isUsed: 1,
-    //       isDeleted: 0,
-    //     })
-    //     if (code === 200) {
-    //       message.success(desc)
-    //       this.setState({
-    //         step: this.state.step + 1,
-    //         progressPercent: (this.state.step + 1) * 10 + 10,
-    //       })
-    //       return
-    //     }
-    //     message.error('请求服务器失败')
-    //     return
-    //   }
-    //   this.setState({
-    //     step: this.state.step + 1,
-    //     progressPercent: (this.state.step + 1) * 10 + 10,
-    //   })
-    //   return
     switch (this.state.step) {
       case 0:
         if (this.state.location && this.state.specAddr) {
@@ -193,9 +173,9 @@ class SkillPage extends Component {
         }
       case 5:
         if (this.state.avatarSrc) {
-          const { data: { code, desc } } = await releaseSkill({
+          const { data: { code, data } } = await releaseSkill({
             districtId: this.state.cityId,
-            userId: this.state.userId,
+            userId: this.state.userId || 11,
             location: this.state.location,
             specAddr: this.state.specAddr,
             latitude: 39.928216,
@@ -206,8 +186,9 @@ class SkillPage extends Component {
             isDeleted: 0,
           })
           if (code === 200) {
-            message.success(desc)
+            message.success('发布技能成功')
             this.setState({
+              avatarSrc: data.path,
               step: this.state.step + 1,
               progressPercent: (this.state.step + 1) * 10 + 10,
             })
@@ -475,6 +456,12 @@ class SkillPage extends Component {
     && Array.isArray(this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ])
     && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName)
     && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName).districtId
+
+  handleUpload = (type) => (url) => {
+    this.setState({
+      [ type ]: url,
+    })
+  }
 
   componentDidMount () {
     this.getCityTree()

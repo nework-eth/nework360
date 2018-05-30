@@ -2,20 +2,33 @@ import React from 'react'
 
 import { view as UploadItem } from '../../components/UploadItem/UploadItem'
 
-const UploadWrapper = ({ title, uploadUrl, userId, column }) => {
+import './static/style/index.less'
+
+const UploadWrapper = ({ title, uploadUrl, userId, column, src, handleUpload }) => {
   return (
     <div className="upload-item-wrapper">
       <UploadItem
         action={ uploadUrl }
         userId={ userId }
         column={ column }
+        src={ src }
+        handleUpload={ handleUpload }
       />
       <p>{ title }</p>
     </div>
   )
 }
 
-function UploadAvatar ({ selectedCertification, uploadUrl, userId }) {
+function UploadCerificate ({
+                             selectedCertification,
+                             uploadUrl,
+                             userId,
+                             idCardPositiveSrc,
+                             idCardNegativeSrc,
+                             photoSrc,
+                             passportSrc,
+                             handleUpload,
+                           }) {
   return (
     <div className="upload-certificate-container">
       <h2 style={ { marginTop: '50px', marginBottom: '50px' } }>上传证件及本人照片</h2>
@@ -27,21 +40,29 @@ function UploadAvatar ({ selectedCertification, uploadUrl, userId }) {
                 {
                   title: '正面照片（个人信息）',
                   column: 'id_card_positive',
+                  src: idCardPositiveSrc,
+                  type: 'idCardPositiveSrc',
                 },
                 {
                   title: '背面照片（国徽）',
                   column: 'id_card_negative',
+                  src: idCardNegativeSrc,
+                  type: 'idCardNegativeSrc',
                 },
                 {
                   title: '本人照片',
                   column: 'photo',
+                  src: photoSrc,
+                  type: 'photoSrc',
                 },
-              ].map(({ title, column }) => <UploadWrapper
+              ].map(({ title, column, src, type }) => <UploadWrapper
                 title={ title }
                 key={ title }
                 uploadUrl={ uploadUrl }
                 userId={ userId }
                 column={ column }
+                src={ src }
+                handleUpload={ handleUpload(type) }
               />)
             }
           </div>
@@ -51,16 +72,22 @@ function UploadAvatar ({ selectedCertification, uploadUrl, userId }) {
                 {
                   title: '护照个人信息页',
                   column: 'passport_pic',
+                  src: passportSrc,
+                  type: 'passportSrc',
                 },
                 {
                   title: '本人照片',
                   column: 'photo',
+                  src: photoSrc,
+                  type: 'photoSrc',
                 },
-              ].map(({ title, column }) => <UploadWrapper
+              ].map(({ title, column, src, type }) => <UploadWrapper
                 title={ title }
                 uploadUrl={ uploadUrl }
                 userId={ userId }
                 column={ column }
+                src={ src }
+                handleUpload={ handleUpload(type) }
               />)
             }
           </div>
@@ -71,4 +98,4 @@ function UploadAvatar ({ selectedCertification, uploadUrl, userId }) {
   )
 }
 
-export { UploadAvatar as view }
+export { UploadCerificate as view }
