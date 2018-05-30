@@ -1,5 +1,6 @@
 import { Button, Progress } from 'antd'
 import { message } from 'antd/lib/index'
+import debounce from 'lodash/debounce'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
@@ -44,8 +45,78 @@ class SkillPage extends Component {
     selectedCertification: '',
     introduce: '',
     location: '',
+    locationOptions: [],
     specAddr: '',
     cityId: 110,
+    lastCity: '',
+  }
+  StepView = () => {
+    switch (this.state.step) {
+      case 0:
+        return <InputPosition
+          selectedCountry={ this.state.selectedCountry }
+          countryOptions={ this.state.countryOptions }
+          selectedProvince={ this.state.selectedProvince }
+          provinceOptions={ this.state.provinceOptions }
+          selectedCity={ this.state.selectedCity }
+          cityOptions={ this.state.cityOptions }
+          handleCountryChange={ this.handleCountryChange }
+          handleProvinceChange={ this.handleProvinceChange }
+          handleCityChange={ this.handleCityChange }
+          location={ this.state.location }
+          handleLocationChange={ this.handleLocationChange }
+          specAddr={ this.state.specAddr }
+          handleSpecAddrChange={ this.handleSpecAddrChange }
+          locationOptions={ this.state.locationOptions }
+        />
+      case 1:
+        return <SelectType
+          handleSelectType={ this.handleSelectType }
+          handleInputType={ this.handleInputType }
+          selectedType={ this.state.selectedType }
+          inputType={ this.state.inputType }
+        />
+      case 2:
+        return <SelectSecondaryType
+          selectedType={ this.state.selectedType }
+          secondaryTypeList={ this.state.secondaryTypeList }
+          handleSecondaryTypeClick={ this.handleSecondaryTypeClick }
+        />
+      case 3:
+        return <InputWorkTime
+          serviceTimeList={ this.state.serviceTimeList }
+          handleWorkTimeItemClick={ this.handleWorkTimeItemClick }
+        />
+      case 4:
+        return <Introduce
+          introduce={ this.state.introduce }
+          handleIntroduceChange={ this.handleIntroduceChange }
+        />
+      case 5:
+        return <UploadAvatar
+          avatarSrc={ this.state.avatarSrc }
+          userId={ this.props.userId }
+          uploadUrl={ uploadUrl }
+        />
+      case 6:
+        return <PartlyComplete/>
+      case 7:
+        return <SelectCertificate
+          selectedCertification={ this.state.selectedCertification }
+          handleSelectedCertification={ this.handleSelectedCertification }
+        />
+      case 8:
+        return <UploadCertificate
+          selectedCertification={ this.state.selectedCertification }
+          userId={ this.props.userId }
+          uploadUrl={ uploadUrl }
+        />
+      case 9:
+        return <UploadComplete
+        />
+      default:
+        return
+    }
   }
 
   handleButtonClick = async () => {
@@ -164,73 +235,17 @@ class SkillPage extends Component {
         return
     }
   }
-
-  StepView = () => {
-    switch (this.state.step) {
-      case 0:
-        return <InputPosition
-          selectedCountry={ this.state.selectedCountry }
-          countryOptions={ this.state.countryOptions }
-          selectedProvince={ this.state.selectedProvince }
-          provinceOptions={ this.state.provinceOptions }
-          selectedCity={ this.state.selectedCity }
-          cityOptions={ this.state.cityOptions }
-          handleCountryChange={ this.handleCountryChange }
-          handleProvinceChange={ this.handleProvinceChange }
-          handleCityChange={ this.handleCityChange }
-          location={ this.state.location }
-          handleLocationChange={ this.handleLocationChange }
-          specAddr={ this.state.specAddr }
-          handleSpecAddrChange={ this.handleSpecAddrChange }
-        />
-      case 1:
-        return <SelectType
-          handleSelectType={ this.handleSelectType }
-          handleInputType={ this.handleInputType }
-          selectedType={ this.state.selectedType }
-          inputType={ this.state.inputType }
-        />
-      case 2:
-        return <SelectSecondaryType
-          selectedType={ this.state.selectedType }
-          secondaryTypeList={ this.state.secondaryTypeList }
-          handleSecondaryTypeClick={ this.handleSecondaryTypeClick }
-        />
-      case 3:
-        return <InputWorkTime
-          serviceTimeList={ this.state.serviceTimeList }
-          handleWorkTimeItemClick={ this.handleWorkTimeItemClick }
-        />
-      case 4:
-        return <Introduce
-          introduce={ this.state.introduce }
-          handleIntroduceChange={ this.handleIntroduceChange }
-        />
-      case 5:
-        return <UploadAvatar
-          avatarSrc={ this.state.avatarSrc }
-          userId={ this.props.userId }
-          uploadUrl={ uploadUrl }
-        />
-      case 6:
-        return <PartlyComplete/>
-      case 7:
-        return <SelectCertificate
-          selectedCertification={ this.state.selectedCertification }
-          handleSelectedCertification={ this.handleSelectedCertification }
-        />
-      case 8:
-        return <UploadCertificate
-          selectedCertification={ this.state.selectedCertification }
-          userId={ this.props.userId }
-          uploadUrl={ uploadUrl }
-        />
-      case 9:
-        return <UploadComplete
-        />
-      default:
-        return
-    }
+  mapInit = () => {
+    this.mapApi = new Promise((resolve, reject) => {
+      try {
+        /* eslint-disable no-undef */
+        AMap.plugin('AMap.Autocomplete', () => {
+          resolve()
+        })
+      } catch (e) {
+        reject(e)
+      }
+    })
   }
 
   getCityTree = async () => {
@@ -295,6 +310,7 @@ class SkillPage extends Component {
       cityId: this.getCityIdByName(value) || '',
     })
   }
+
   goNextStep = () => this.setState({
     step: this.state.step + 1,
     progressPercent: (this.state.step + 1) * 10 + 10,
@@ -340,18 +356,44 @@ class SkillPage extends Component {
     )
   }
 
-  componentDidMount () {
-    this.getCityTree()
-    /* eslint-disable no-undef */
+  handleLocationChange = (value) => {
+    this.getLocationOptions(value)
+    this.setState({
+      location: value,
+    })
   }
-
-  mapInit () {
-    // const placeSearch = new AMap.PlaceSearch({ //构造地点查询类
-    //   pageSize: 5,
-    //   pageIndex: 1,
-    //   city: '010', //城市
-    //   panel: 'result',
-    // })
+  getLocationOptions = (keyword) => {
+    this.mapApi.then(() => {
+      console.log('here')
+      if (this.state.lastCity && this.state.lastCity === this.state.selectedCity) {
+        keyword && this.placeSearch.search(keyword, (status, result) => {
+          if (status === 'complete' && result.info === 'OK') {
+            console.log(result.tips)
+            this.setState({
+              locationOptions: result.tips,
+            })
+          }
+        })
+        return
+      }
+      this.setState({
+        lastCity: this.state.selectedCity,
+      })
+      /* eslint-disable no-undef */
+      this.placeSearch = new AMap.Autocomplete({ city: this.state.selectedCity })
+      keyword && this.placeSearch.search(keyword, (status, result) => {
+        if (status === 'complete' && result.info === 'OK') {
+          console.log(result.tips)
+          this.setState({
+            locationOptions: result.tips,
+          })
+          // result.tips.map(item=>{
+          //   console.log(typeof item.name)
+          //   return 1
+          // })
+        }
+      })
+    })
   }
 
   // browserHistory.push('/search')
@@ -418,10 +460,9 @@ class SkillPage extends Component {
     })
   }
 
-  handleLocationChange = (e) => {
-    this.setState({
-      location: e.target.value,
-    })
+  constructor (props) {
+    super(props)
+    this.getLocationOptions = debounce(this.getLocationOptions, 800)
   }
 
   handleSpecAddrChange = (e) => {
@@ -434,6 +475,11 @@ class SkillPage extends Component {
     && Array.isArray(this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ])
     && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName)
     && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName).districtId
+
+  componentDidMount () {
+    this.getCityTree()
+    this.mapInit()
+  }
 }
 
 export { SkillPage as page }

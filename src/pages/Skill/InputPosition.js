@@ -18,6 +18,7 @@ function InputPosition ({
                           handleLocationChange,
                           specAddr,
                           handleSpecAddrChange,
+                          locationOptions,
                         }) {
   return (
     <div className="input-position-container">
@@ -82,11 +83,23 @@ function InputPosition ({
         </div>
       </div>
       <p>小区或街道名</p>
-      <Input
+      <Select
+        mode="combobox"
         value={ location }
+        placeholder="如不清楚可输入名称来搜索"
+        defaultActiveFirstOption={ false }
+        showArrow={ false }
         onChange={ handleLocationChange }
-        placeholder="如不清楚，可输入名称来搜索…"
-      />
+        className="place-select"
+      >
+        { locationOptions.map(({ name, address, district, adcode }) =>
+          <Option
+            value={ `${district} ${address} ${name}` }
+            key={ `${adcode}${address}` }
+          >
+            { `${district} ${address} ${name}` }</Option>,
+        ) }
+      </Select>
       <p>具体地址</p>
       <Input
         value={ specAddr }
