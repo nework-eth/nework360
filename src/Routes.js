@@ -89,13 +89,20 @@ const getSelectCityPage = async (nextState, callback) => {
 const getSkillPage = async (nextState, callback) =>
   callback(null, (await import(/* webpackChunkName: "Skill" */'./pages/Skill/Skill.js')).page)
 
-const getProfilePage = async (nextState, callback) => {
-  callback(
-    null,
-    (await import(/* webpackChunkName: "Profile" */'./pages/Profile/Profile.js')).page,
-  )
-}
+const getProfilePage = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "Profile" */'./pages/Profile/Profile.js')).page,
+)
 
+const getUserDetailPage = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "UserDetail" */'./pages/UserDetail/UserDetail.js')).page,
+)
+
+const getWalletPage = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "Wallet" */'./pages/Wallet/Wallet.js')).page,
+)
 const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (
@@ -114,6 +121,8 @@ const Routes = () => (
     <Route component={ Container }>
       <Route path="/skill" getComponent={ getSkillPage }/>
       <Route path="/profile" getComponent={ getProfilePage }/>
+      <Route path="/userDetail" getComponent={ getUserDetailPage }/>
+      <Route path="/wallet" getComponent={ getWalletPage }/>
     </Route>
   </Router>
 )

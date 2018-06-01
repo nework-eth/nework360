@@ -29,9 +29,6 @@ function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar }) {
           alt="头像"
           width={ 200 }
           height={ 200 }
-          style={ {
-            borderRadius: '50%',
-          } }
         />
         <img
           src="./images/headshot-mask.png"
