@@ -1,8 +1,8 @@
+import { Button, Form, Input, message, Select } from 'antd'
 import React, { Component } from 'react'
-import { Form, Input, Button, Select, message } from 'antd'
+import { browserHistory, Link } from 'react-router'
+import { register, sendCode } from '../../service/auth'
 import './static/style/index.less'
-import { Link, browserHistory } from 'react-router'
-import { sendCode, register } from '../../service/auth'
 
 const FormItem = Form.Item
 const InputGroup = Input.Group
@@ -17,7 +17,7 @@ class Page extends Component {
         try {
           const { data: { code, desc } } = await register({
             phoneNumber,
-            nickNamne: userName,
+            nickName: userName,
             pwd: password,
             code: messageCode,
           })

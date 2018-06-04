@@ -84,6 +84,25 @@
   .ant-menu-item-selected {
     background: #fff !important;
     color: #008bf7 !important;
-    border-right: none !important;
+    border-right: 1px solid #dde6ec;
+    transition: none !important;
+    &::after {
+      height: 0;
+    }
+  }
+  .ant-menu-item {
+    transition: none;
+    &:hover, &:active {
+      transition: none;
+      background-color: #fff;
+      border-right: 1px solid #dde6ec;
+    }
+  }
+  .ant-menu.ant-menu-light.ant-menu-root.ant-menu-inline {
+    border-right: 1px solid #dde6ec;
+  }
+
+  .ant-menu-vertical .ant-menu-item:after, .ant-menu-vertical-left .ant-menu-item:after, .ant-menu-vertical-right .ant-menu-item:after, .ant-menu-inline .ant-menu-item:after {
+    border-right: none;
   }
 }

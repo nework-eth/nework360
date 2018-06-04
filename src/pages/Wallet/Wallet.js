@@ -68,31 +68,37 @@ function Content ({ selectedItem, data }) {
         title: '流水号',
         dataIndex: 'id',
         key: 'id',
+        width: 120,
       },
       {
         title: '金额',
         dataIndex: 'amount',
         key: 'amount',
+        width: 130,
       },
       {
         title: '交易类型',
         dataIndex: 'type',
         key: 'type',
+        width: 100,
       },
       {
         title: '账户',
         dataIndex: 'account',
         key: 'account',
+        width: 100,
       },
       {
         title: '交易状态',
         dataIndex: 'status',
         key: 'status',
+        width: 100,
       },
       {
         title: '交易时间',
         dataIndex: 'date',
         key: 'date',
+        width: 130,
       },
     ]
 
@@ -106,7 +112,7 @@ function Content ({ selectedItem, data }) {
         date: '2018-06-20',
       },
       {
-        id: 'RE413413134',
+        id: 'RE413413135',
         amount: '2000',
         type: 'pay',
         account: 'ren',
@@ -114,7 +120,7 @@ function Content ({ selectedItem, data }) {
         date: '2018-06-20',
       },
       {
-        id: 'RE413413134',
+        id: 'RE413413136',
         amount: '2000',
         type: 'pay',
         account: 'ren',
@@ -122,7 +128,7 @@ function Content ({ selectedItem, data }) {
         date: '2018-06-20',
       },
       {
-        id: 'RE413413134',
+        id: 'RE413413137',
         amount: '2000',
         type: 'pay',
         account: 'ren',
@@ -130,7 +136,7 @@ function Content ({ selectedItem, data }) {
         date: '2018-06-20',
       },
       {
-        id: 'RE413413134',
+        id: 'RE413413138',
         amount: '2000',
         type: 'pay',
         account: 'ren',
@@ -138,7 +144,7 @@ function Content ({ selectedItem, data }) {
         date: '2018-06-20',
       },
       {
-        id: 'RE413413134',
+        id: 'RE413413139',
         amount: '2000',
         type: 'pay',
         account: 'ren',
@@ -146,7 +152,7 @@ function Content ({ selectedItem, data }) {
         date: '2018-06-20',
       },
       {
-        id: 'RE413413134',
+        id: 'RE413413140',
         amount: '2000',
         type: 'pay',
         account: 'ren',
@@ -158,6 +164,7 @@ function Content ({ selectedItem, data }) {
       <div>
         <h2>交易记录</h2>
         <Table
+          rowKey="id"
           columns={ columns }
           dataSource={ data }
           bordered={ false }

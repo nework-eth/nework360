@@ -1,0 +1,47 @@
+.wallet-container {
+  padding: 30px calc(50vw - 530px) 0;
+  display: flex;
+  h2 {
+    margin-bottom: 30px;
+  }
+
+  .edit-data-form-container {
+    padding-left: 110px;
+    .form-item {
+      display: flex;
+      .label {
+        margin-right: 20px;
+        width: 160px;
+        font-weight: bold;
+      }
+      .content {
+        width: 520px;
+      }
+    }
+  }
+
+  .ant-menu-item-selected {
+    background: #fff !important;
+    color: #008bf7 !important;
+    border-right: 1px solid #dde6ec;
+    transition: none !important;
+    &::after {
+      height: 0;
+    }
+  }
+  .ant-menu-item {
+    transition: none;
+    &:hover, &:active {
+      transition: none;
+      background-color: #fff;
+      border-right: 1px solid #dde6ec;
+    }
+  }
+  .ant-menu.ant-menu-light.ant-menu-root.ant-menu-inline {
+    border-right: 1px solid #dde6ec;
+  }
+
+  .ant-menu-vertical .ant-menu-item:after, .ant-menu-vertical-left .ant-menu-item:after, .ant-menu-vertical-right .ant-menu-item:after, .ant-menu-inline .ant-menu-item:after {
+    border-right: none;
+  }
+}

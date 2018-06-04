@@ -94,9 +94,9 @@ const getProfilePage = async (nextState, callback) => callback(
   (await import(/* webpackChunkName: "Profile" */'./pages/Profile/Profile.js')).page,
 )
 
-const getUserDetailPage = async (nextState, callback) => callback(
+const getEditDataPage = async (nextState, callback) => callback(
   null,
-  (await import(/* webpackChunkName: "UserDetail" */'./pages/UserDetail/UserDetail.js')).page,
+  (await import(/* webpackChunkName: "UserDetail" */'./pages/EditData/EditData.js')).page,
 )
 
 const getWalletPage = async (nextState, callback) => callback(
@@ -121,7 +121,7 @@ const Routes = () => (
     <Route component={ Container }>
       <Route path="/skill" getComponent={ getSkillPage }/>
       <Route path="/profile" getComponent={ getProfilePage }/>
-      <Route path="/userDetail" getComponent={ getUserDetailPage }/>
+      <Route path="/editData" getComponent={ getEditDataPage }/>
       <Route path="/wallet" getComponent={ getWalletPage }/>
     </Route>
   </Router>
