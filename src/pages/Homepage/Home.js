@@ -1,57 +1,9 @@
-import React, { Component } from 'react'
 import { Carousel } from 'antd'
+import React, { Component } from 'react'
 import { view as CardItem } from '../../components/CardItem'
 import './static/style/home.less'
 
 class Home extends Component {
-  constructor (props) {
-    super(props)
-    this.state = {
-      serviceList: [
-        {
-          imgSrc: './images/beautify.png',
-          title: '美容美甲',
-          count: 128,
-        },
-        {
-          imgSrc: './images/pet-feed.png',
-          title: '宠物寄养',
-          count: 128,
-        },
-        {
-          imgSrc: './images/cleaner.png',
-          title: '保洁',
-          count: 128,
-        },
-        {
-          imgSrc: './images/mobile-fixer.png',
-          title: '手机维修',
-          count: 128,
-        },
-        {
-          imgSrc: './images/beautify.png',
-          title: '美容美甲',
-          count: 128,
-        },
-        {
-          imgSrc: './images/beautify.png',
-          title: '美容美甲',
-          count: 128,
-        },
-        {
-          imgSrc: './images/beautify.png',
-          title: '美容美甲',
-          count: 128,
-        },
-        {
-          imgSrc: './images/beautify.png',
-          title: '美容美甲',
-          count: 128,
-        },
-      ],
-
-    }
-  }
 
   render () {
     const settings = {

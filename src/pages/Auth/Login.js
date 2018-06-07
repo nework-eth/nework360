@@ -1,11 +1,11 @@
+import { Button, Form, Input, message } from 'antd'
 import React, { Component } from 'react'
-import { Form, Input, Button, message } from 'antd'
-import './static/style/index.less'
-import { Link, browserHistory } from 'react-router'
-import { bindActionCreators } from 'redux'
-import { setUserId } from '../../components/NavMenu/actions'
-import { login } from '../../service/auth'
 import { connect } from 'react-redux'
+import { browserHistory, Link } from 'react-router'
+import { bindActionCreators } from 'redux'
+import { setUser, setUserId } from '../../components/NavMenu/actions'
+import { login } from '../../service/auth'
+import './static/style/index.less'
 
 const FormItem = Form.Item
 
@@ -13,6 +13,7 @@ const FooterStyle = { display: 'flex', justifyContent: 'space-between' }
 
 const mapDispatch = (dispatch) => bindActionCreators({
   setUserId,
+  setUser,
 }, dispatch)
 
 @connect(null, mapDispatch)
@@ -26,6 +27,8 @@ class Page extends Component {
           .then(({ data: { code, desc, data } }) => {
             if (code === 200 && desc === 'success') {
               message.success('登录成功')
+              console.log(data)
+              this.props.setUser(data)
               this.props.setUserId(data.userId)
               browserHistory.push('/')
               return

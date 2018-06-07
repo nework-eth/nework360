@@ -1,14 +1,14 @@
-import React from 'react';
+import React from 'react'
 
-import {view as TopMenu} from '../components/NavMenu';
+import { view as TopMenu } from '../components/NavMenu'
 
-const App = ({children}) => {
+const App = ({ children }) => {
   return (
     <div>
-      <TopMenu />
-      <div>{children}</div>
+      <TopMenu/>
+      <div>{ children }</div>
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import { Select, message, Spin } from 'antd'
+import { message, Select, Spin } from 'antd'
 import debounce from 'lodash/debounce'
-import './static/style/index.less'
-import { bindActionCreators } from 'redux'
-import { getCityByLetter, getCityBySearch, getCityTree } from '../../service/homepage'
+import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { setCityName, setCityId, setCountryId } from '../../components/NavMenu/actions'
+import { bindActionCreators } from 'redux'
 import { stateKey } from '../../components/NavMenu'
+import { setCityId, setCityName, setCountryId } from '../../components/NavMenu/actions'
+import { getCityByLetter, getCityBySearch, getCityTree, getHotCity } from '../../service/homepage'
+import './static/style/index.less'
 
 const Option = Select.Option
 
@@ -73,6 +73,7 @@ class SelectCity extends Component {
     selectedCity: '北京',
     cityData: [],
     tree: [],
+    hotCityList: [],
   }
 
   getCityBySearch = (value) => {
@@ -114,6 +115,64 @@ class SelectCity extends Component {
     console.log(value)
     this.props.setCityName(value)
   }
+  getHotCity = async () => {
+    try {
+      const { data: { data, code, desc } } = await getHotCity()
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
+      this.setState({
+        hotCityList: data,
+      })
+      console.log('hot city', data)
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+
+  getCityByLetter = async () => {
+    try {
+      const { data: { data } } = await getCityByLetter({ countryId: this.props.countryId || 1 })
+      const letterCityList = Object.entries(data).filter(([ letter, letterCityList ]) => {
+        return letterCityList.length > 0
+      })
+      console.log(letterCityList)
+      this.setState({
+        letterCityList,
+        filterCityList: letterCityList,
+      })
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+
+  getCityTree = async () => {
+    try {
+      const { data: { code, data } } = await getCityTree()
+      if (code !== 200) {
+        return message.error('请求服务器失败')
+      }
+      const tree = data
+      console.log(tree)
+      const countryList = Object.keys(tree)
+      const provinceList = Object.keys(tree[ '中国' ])
+      const letterCityList = tree[ '中国' ][ '北京' ].map(item => item.chinese)
+      this.setState({
+        tree,
+        countryOptions: countryList,
+        provinceOptions: provinceList,
+        cityOptions: letterCityList,
+        // cityOptions: letterCityList,
+        // selectedCity: letterCityList[0]
+      })
+      this.props.setCityName('北京')
+      this.props.setCityId(110)
+      this.props.setCountryId(1)
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
 
   render () {
     const {
@@ -126,6 +185,7 @@ class SelectCity extends Component {
       selectedCountry,
       selectedProvince,
       selectedCity,
+      hotCityList,
     } = this.state
     return (
       <div style={ containerStyle }>
@@ -202,21 +262,12 @@ class SelectCity extends Component {
           <h3>热门城市</h3>
           <div className="hot-city">
             {
-              [
-                '北京',
-                '北京',
-                '北京',
-                '北京',
-                '北京',
-                '北京',
-                '北京',
-                '乌鲁木齐',
-              ].map((item, index) => <div
-                  key={ index }
+              hotCityList.map(({ chinese }) => <div
+                key={ chinese }
                   className="virtual-button"
-                  onClick={ () => {this.handleButtonClick(item)} }
+                onClick={ () => {this.handleButtonClick(chinese)} }
                 >
-                  { item }
+                { chinese }
                 </div>,
               )
             }
@@ -248,52 +299,10 @@ class SelectCity extends Component {
     )
   }
 
-  getCityByLetter = async () => {
-    try {
-      const { data: { data } } = await getCityByLetter({ countryId: this.props.countryId || 1 })
-      const letterCityList = Object.entries(data).filter(([ letter, letterCityList ]) => {
-        return letterCityList.length > 0
-      })
-      console.log(letterCityList)
-      this.setState({
-        letterCityList,
-        filterCityList: letterCityList,
-      })
-    } catch (e) {
-      message.error('请求服务器失败')
-    }
-  }
-
-  getCityTree = async () => {
-    try {
-      const { data: { code, data } } = await getCityTree()
-      if (code !== 200) {
-        return message.error('请求服务器失败')
-      }
-      const tree = data
-      console.log(tree)
-      const countryList = Object.keys(tree)
-      const provinceList = Object.keys(tree[ '中国' ])
-      const letterCityList = tree[ '中国' ][ '北京' ].map(item => item.chinese)
-      this.setState({
-        tree,
-        countryOptions: countryList,
-        provinceOptions: provinceList,
-        cityOptions: letterCityList,
-        // cityOptions: letterCityList,
-        // selectedCity: letterCityList[0]
-      })
-      this.props.setCityName('北京')
-      this.props.setCityId(110)
-      this.props.setCountryId(1)
-    } catch (e) {
-      message.error('请求服务器失败')
-    }
-  }
-
   componentDidMount () {
     this.getCityByLetter()
     this.getCityTree()
+    this.getHotCity()
   }
 
   handleCountryChange = (value) => {

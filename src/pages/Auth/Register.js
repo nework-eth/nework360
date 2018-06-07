@@ -17,7 +17,7 @@ class Page extends Component {
         try {
           const { data: { code, desc } } = await register({
             phoneNumber,
-            nickName: userName,
+            nickname: userName,
             pwd: password,
             code: messageCode,
           })

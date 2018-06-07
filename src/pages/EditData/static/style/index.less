@@ -1,4 +1,4 @@
-.wallet-container {
+.edit-data-container {
   padding: 30px calc(50vw - 530px) 0;
   display: flex;
   h2 {
@@ -7,8 +7,12 @@
 
   .edit-data-form-container {
     padding-left: 110px;
+    .form-item-group {
+      margin-bottom: 20px;
+    }
     .form-item {
       display: flex;
+      align-items: center;
       .label {
         margin-right: 20px;
         width: 160px;
@@ -17,6 +21,52 @@
       .content {
         width: 520px;
       }
+      .introduce {
+        margin-left: 180px;
+        color: #9ca6ae;
+        line-height: 20px;
+      }
+    }
+    .image-wrapper {
+      margin-top: 30px;
+      margin-bottom: 20px;
+      position: relative;
+      .mask {
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+    }
+    .ant-btn {
+      margin-right: 10px;
+      width: 160px;
+      height: 50px;
+    }
+    .skill-info {
+      margin-top: 30px;
+    }
+    .auth-icon {
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+    .auth-title {
+      margin-bottom: 10px;
+      font-weight: bold;
+      font-size: 20px;
+      line-height: 20px;
+    }
+    .auth-button {
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+    .horizontal-line {
+      width: 700px;
+      height: 1px;
+      background-color: #dde6ec;
+    }
+    h3 {
+      margin-bottom: 30px;
+      line-height: 20px;
     }
   }
 
@@ -43,5 +93,60 @@
 
   .ant-menu-vertical .ant-menu-item:after, .ant-menu-vertical-left .ant-menu-item:after, .ant-menu-vertical-right .ant-menu-item:after, .ant-menu-inline .ant-menu-item:after {
     border-right: none;
+  }
+}
+
+.edit-data-modal-form-container {
+  p.title {
+    font-weight: bold;
+  }
+  .form-item:not(:last-of-type) {
+    margin-bottom: 20px;
+    .message-wrapper {
+      display: flex;
+      align-items: center;
+      &:hover {
+        .ant-input {
+          border-color: #008bf7;
+        }
+        .message-button {
+          border-color: #008bf7 #008bf7 #008bf7 #9ca6ae;
+        }
+      }
+      .ant-input {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        border-right-width: 0;
+      }
+      .message-button {
+        width: 30%;
+        height: 50px;
+        color: #008bf7;
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+        cursor: pointer;
+        &:hover, &:active, &:focus {
+          background: #fff;
+          border-left-color: #008bf7;
+        }
+      }
+    }
+  }
+  .form-item:last-of-type {
+    .ant-btn {
+      width: 160px;
+      height: 50px;
+      margin-right: 20px;
+      border-color: #008bf7;
+    }
+    .ant-btn:last-of-type {
+      border: 2px solid #008bf7;
+      color: #008bf7;
+      cursor: pointer;
+      &:hover, &:active, &:focus {
+        border-color: #007dde;
+        background-color: #fff;
+      }
+    }
   }
 }
