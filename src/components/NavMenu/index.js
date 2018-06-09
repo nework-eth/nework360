@@ -14,6 +14,11 @@ const specialLinkStyle = {
   textDecoration: 'none',
 }
 
+const userLinkStyle = {
+  color: '#082135',
+  textDecoration: 'none',
+}
+
 const stateKey = 'position'
 
 const initialState = {
@@ -38,6 +43,8 @@ store.reset(combineReducers({
 const mapState = (state) => ({
   cityName: state[ stateKey ].cityName,
   userId: state.user.userId,
+  isPartyB: state.user.isPartyB,
+  avatar: state.user.avatar,
 })
 
 const mapDispatch = (dispatch) => bindActionCreators({
@@ -65,11 +72,26 @@ class NavMenu extends Component {
           </div>
           {
             this.props.userId
-              ? <div className="li-wrapper">
-                <li className="li-item">
-                  <Link to="/skill" style={ specialLinkStyle }>我要工作</Link>
-                </li>
-              </div>
+              ? (
+                <div className="li-wrapper">
+                  { !this.props.isPartyB
+                  && <li className="li-item user-li-item">
+                    <Link to="/skill" style={ specialLinkStyle }>我要工作</Link>
+                  </li>
+                  }
+                  <li className="li-item user-li-item">
+                    <Link to="/" style={ userLinkStyle }>我的订单</Link>
+                  </li>
+                  <li className="li-item user-li-item">
+                    <Link to="/" style={ userLinkStyle }>消息中心</Link>
+                  </li>
+                  <li className="li-item user-li-item">
+                    <Link to="/profile" style={ userLinkStyle }>
+                      <img src={ this.props.avatar } alt="头像" width={ 30 } height={ 30 } className="avatar"/>
+                    </Link>
+                  </li>
+                </div>
+              )
               : <div className="li-wrapper">
                 <li style={ { paddingRight: '20px' } } className="li-item">如何运作？</li>
                 <li className="vertical-line"/>

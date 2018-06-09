@@ -345,11 +345,10 @@ class SkillPage extends Component {
   }
   getLocationOptions = (keyword) => {
     this.mapApi.then(() => {
-      console.log('here')
       if (this.state.lastCity && this.state.lastCity === this.state.selectedCity) {
         keyword && this.placeSearch.search(keyword, (status, result) => {
           if (status === 'complete' && result.info === 'OK') {
-            console.log(result.tips)
+            console.log(result)
             this.setState({
               locationOptions: result.tips,
             })

@@ -5,13 +5,17 @@ const ModalForm = (
   {
     modalType,
     data: { phoneNumber, email },
-    messageCode,
+    phoneCode,
     handleModalCancel,
-    getMessageCode,
+    getPhoneCode,
+    getMailCode,
     handleInput,
-    handleMessageCodeChange,
+    handlePhoneCodeChange,
+    handleMailCodeChange,
     verifyPhoneNumber,
+    verifyEmail,
     handleSave,
+    mailCode,
   },
 ) => {
   switch (modalType) {
@@ -25,15 +29,15 @@ const ModalForm = (
           <p className="title">短信验证码</p>
           <div className="message-wrapper">
             <Input
-              value={ messageCode }
+              value={ phoneCode }
               style={ {
                 width: '70%',
               } }
-              onChange={ handleMessageCodeChange }
+              onChange={ handlePhoneCodeChange }
             />
             <Button
               className="message-button"
-              onClick={ getMessageCode }
+              onClick={ getPhoneCode }
             >
               获取验证码
             </Button>
@@ -48,26 +52,28 @@ const ModalForm = (
       return (<div className="edit-data-modal-form-container">
         <div className="form-item">
           <p>邮箱地址</p>
-          <Input value={ email }/>
+          <Input value={ email } onChange={ handleInput('email') }/>
         </div>
         <div className="form-item">
           <p>邮箱验证码</p>
           <div className="message-wrapper">
             <Input
-              value={ messageCode }
+              value={ mailCode }
               style={ {
                 width: '70%',
               } }
+              onChange={ handleMailCodeChange }
             />
             <Button
               className="message-button"
+              onClick={ getMailCode }
             >
               获取验证码
             </Button>
           </div>
         </div>
         <div className="form-item">
-          <Button type="primary">确认</Button>
+          <Button type="primary" onClick={ verifyEmail }>确认</Button>
           <Button onClick={ handleModalCancel }>取消</Button>
         </div>
       </div>)

@@ -18,7 +18,7 @@ const userReducer = (state = {}, action) => {
     case SETUSERID:
       return { ...state, ...{ userId: action.userId } }
     case SETUSER:
-      return { ...state, ...action }
+      return action.user
     default:
       return state
   }
