@@ -3,7 +3,11 @@ import React from 'react'
 
 import './static/style/index.less'
 
-function SecondaryCardItem ({ content, isChecked, handleClick }) {
+function SecondaryCardItem ({
+                              content,
+                              isChecked,
+                              handleClick,
+                            }) {
   return (
     <div
       className={
@@ -39,6 +43,8 @@ function SelectType ({
                        secondaryTypeList,
                        handleSecondaryTypeClick,
                        secondServiceList,
+                       secondaryInputType,
+                       handleSecondaryInputType,
                      }) {
   return (
     <div>
@@ -57,11 +63,15 @@ function SelectType ({
             )
           }
         </div>
-        <div style={ secondaryTypeList.includes('其他') ? {} : { display: 'none' } }>
+        <div style={ selectedType === '其他' || secondaryTypeList.includes(-1) ? {} : { display: 'none' } }>
           <p>
             请填写具体的工作技能
           </p>
-          <Input placeholder="工作技能"/>
+          <Input
+            value={ secondaryInputType }
+            placeholder="工作技能"
+            onChange={ handleSecondaryInputType }
+          />
         </div>
       </div>
     </div>

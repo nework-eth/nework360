@@ -1,13 +1,31 @@
-import { message } from 'antd'
+import { Dropdown, Menu, message } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 import { bindActionCreators, combineReducers } from 'redux'
+import { signOut } from '../../service/auth'
 import { getCityByIp } from '../../service/homepage'
 import store from '../../Store'
-import { setCityId, setCityName, setCountryId } from './actions'
+import { setCityId, setCityName, setCountryId, setUser } from './actions'
 import { positionReducer, userReducer } from './reducer'
 import './static/style/index.less'
+
+const menu = (
+  <Menu>
+    <Menu.Item className="nav-ant-menu-item">
+      <Link to="/profile">我的主页</Link>
+    </Menu.Item>
+    <Menu.Item className="nav-ant-menu-item">
+      <Link to="/wallet">钱包</Link>
+    </Menu.Item>
+    <Menu.Item className="nav-ant-menu-item">
+      <Link to="/editData">设置</Link>
+    </Menu.Item>
+    <Menu.Item className="nav-ant-menu-item">
+      <Link to="/editData">设置</Link>
+    </Menu.Item>
+  </Menu>
+)
 
 const specialLinkStyle = {
   color: '#082135',
@@ -45,16 +63,28 @@ const mapState = (state) => ({
   userId: state.user.userId,
   isPartyB: state.user.isPartyB,
   avatar: state.user.avatar,
+  user: state.user,
 })
 
 const mapDispatch = (dispatch) => bindActionCreators({
   setCityName,
   setCityId,
   setCountryId,
+  setUser,
 }, dispatch)
 
 @connect(mapState, mapDispatch)
 class NavMenu extends Component {
+  handleSignOut = async () => {
+    const { data: { code, desc } } = await signOut()
+    if (code !== 200) {
+      message.error('退出登录失败')
+      return
+    }
+    this.props.setUser({})
+    browserHistory.push('/auth/login')
+  }
+
   render () {
     const { cityName } = this.props
     return (
@@ -74,7 +104,7 @@ class NavMenu extends Component {
             this.props.userId
               ? (
                 <div className="li-wrapper">
-                  { !this.props.isPartyB
+                  { !this.props.user.checkStatus
                   && <li className="li-item user-li-item">
                     <Link to="/skill" style={ specialLinkStyle }>我要工作</Link>
                   </li>
@@ -86,14 +116,29 @@ class NavMenu extends Component {
                     <Link to="/" style={ userLinkStyle }>消息中心</Link>
                   </li>
                   <li className="li-item user-li-item">
-                    <Link to="/profile" style={ userLinkStyle }>
+                    <Dropdown overlay={
+                      <Menu>
+                        <Menu.Item className="nav-ant-menu-item">
+                          <Link to="/profile">我的主页</Link>
+                        </Menu.Item>
+                        <Menu.Item className="nav-ant-menu-item">
+                          <Link to="/wallet">钱包</Link>
+                        </Menu.Item>
+                        <Menu.Item className="nav-ant-menu-item">
+                          <Link to="/editData">设置</Link>
+                        </Menu.Item>
+                        <Menu.Item className="nav-ant-menu-item">
+                          <Link to="/" onClick={ this.handleSignOut }>退出登录</Link>
+                        </Menu.Item>
+                      </Menu>
+                    }>
                       <img src={ this.props.avatar } alt="头像" width={ 30 } height={ 30 } className="avatar"/>
-                    </Link>
+                    </Dropdown>
                   </li>
                 </div>
               )
               : <div className="li-wrapper">
-                <li style={ { paddingRight: '20px' } } className="li-item">如何运作？</li>
+                <li style={ { paddingRight: '20px' } } className="li-item">帮助</li>
                 <li className="vertical-line"/>
                 <li className="li-item"><Link to="/auth/login" style={ specialLinkStyle }>登录</Link></li>
                 <li

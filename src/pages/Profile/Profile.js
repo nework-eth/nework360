@@ -207,7 +207,7 @@ class Profile extends Component {
         </main>
         <footer>
           <Button type="primary">
-            <Link to="/editData">编辑</Link>
+            <Link to="/editData" style={ { textDecoration: 'none' } }>编辑</Link>
           </Button>
         </footer>
       </div>

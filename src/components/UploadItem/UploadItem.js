@@ -23,11 +23,6 @@ class UploadItem extends Component {
       return
     }
     if (info.file.status === 'done') {
-      // Get this url from response in real world.
-      // getBase64(info.file.originFileObj, imageUrl => this.setState({
-      //   imageUrl,
-      //   loading: false,
-      // }))
       this.setState({ loading: false })
       const colMap = {
         avatar: 'avatar',
@@ -41,7 +36,7 @@ class UploadItem extends Component {
           message.error(res.data.desc)
           return
         }
-        message.success('上传成功过')
+        message.success('上传成功')
         this.props.handleUpload(info.file.response.data.path)
       })
     }

@@ -7,7 +7,7 @@ import { browserHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { setUser } from '../../components/NavMenu/actions'
 import { baseUrl } from '../../service/config'
-import { getUserById, updateUser } from '../../service/editData'
+import { getUserById, postSkillTemp, updateUser } from '../../service/editData'
 import { getCityTree } from '../../service/homepage'
 import { getServiceList, releaseSkill } from '../../service/skill'
 import { view as InputPosition } from './InputPosition'
@@ -45,6 +45,7 @@ class SkillPage extends Component {
     cityOptions: [],
     selectedType: '',
     inputType: '',
+    secondaryInputType: '',
     certificateType: '',
     progressPercent: 10,
     avatarSrc: '',
@@ -103,6 +104,8 @@ class SkillPage extends Component {
           selectedType={ this.state.selectedType }
           secondaryTypeList={ this.state.secondaryTypeList }
           handleSecondaryTypeClick={ this.handleSecondaryTypeClick }
+          secondaryInputType={ this.state.secondaryInputType }
+          handleSecondaryInputType={ this.handleSecondaryInputType }
         />
       case 3:
         return <InputWorkTime
@@ -165,16 +168,26 @@ class SkillPage extends Component {
           this.goNextStep()
           const parentId = (this.state.firstServiceList
             .find(item => item.serviceTypeName === this.state.selectedType)).serviceTypeId
-          this.setState({
-            secondServiceList: this.state.secondServiceList.filter(item => item.parentId === parentId),
-          })
+          if (parentId >= 0) {
+            this.setState({
+              secondServiceList: [ ...this.state.secondServiceList.filter(item => item.parentId === parentId), {
+                serviceTypeName: '其他',
+                level: 's',
+                serviceTypeId: -1,
+              } ],
+            })
+          } else {
+            this.setState({
+              secondServiceList: [],
+            })
+          }
           return
         } else {
           message.info('请选择工作类型')
           return
         }
       case 2:
-        if (this.state.secondaryTypeList.length !== 0) {
+        if (this.state.secondaryTypeList.length !== 0 || this.state.secondaryInputType) {
           this.goNextStep()
           return
         } else {
@@ -199,7 +212,45 @@ class SkillPage extends Component {
         }
       case 5:
         if (this.state.avatarSrc) {
-          const { data: { code, data } } = await releaseSkill({
+          if (this.state.secondaryTypeList.some(item => item !== -1)) {
+            const { data: { code, data } } = await releaseSkill({
+              userId: this.props.user.userId,
+              latitude: this.state.latitude,
+              longitude: this.state.longitude,
+              serviceIds: this.state.secondaryTypeList.filter(item => item !== -1).join(','),
+            })
+            if (code !== 200) {
+              message.error('请求服务器失败')
+              return
+            }
+          }
+          if (this.state.secondaryTypeList.includes(-1) || this.state.selectedType === '其他') {
+            const { data: { desc, code } } = await postSkillTemp(JSON.stringify([
+              {
+                userId: this.props.user.userId,
+                latitude: this.state.latitude,
+                longitude: this.state.longitude,
+                serviceName: this.state.inputType || this.state.selectedType,
+                level: 'f',
+              },
+              {
+                districtId: this.state.cityId,
+                userId: this.props.user.userId,
+                location: this.state.location,
+                specAddr: this.state.specAddr,
+                latitude: this.state.latitude,
+                longitude: this.state.longitude,
+                serviceTime: this.state.serviceTimeList.join(','),
+                serviceName: this.state.secondaryInputType,
+                level: 's',
+              },
+            ]))
+            if (code !== 200) {
+              message.error('请求服务器失败')
+              return
+            }
+          }
+          const { data: { code, desc } } = await updateUser({
             districtId: this.state.cityId,
             userId: this.props.user.userId,
             location: this.state.location,
@@ -207,31 +258,29 @@ class SkillPage extends Component {
             latitude: this.state.latitude,
             longitude: this.state.longitude,
             serviceTime: this.state.serviceTimeList.join(','),
-            serviceIds: this.state.secondaryTypeList.join(','),
-            isUsed: 1,
-            isDeleted: 0,
+            description: this.state.description,
           })
-          console.log('data++++++++', data)
-          if (code === 200) {
-            message.success('发布技能成功')
-            this.setState({
-              step: this.state.step + 1,
-              progressPercent: (this.state.step + 1) * 10 + 10,
-            })
-            const { data: { data, code } } = await getUserById({ userId: this.props.user.userId })
-            if (code !== 200) {
-              message.error('请求服务器失败')
-              return
-            }
-            this.props.setUser(data)
+          if (code !== 200) {
+            message.error('请求服务器失败')
             return
           }
-          message.error('请求服务器失败')
+          this.setState({
+            step: this.state.step + 1,
+            progressPercent: (this.state.step + 1) * 10 + 10,
+          })
+          message.success('发布技能成功')
+          const res = await getUserById({ userId: this.props.user.userId })
+          if (res.data.code !== 200) {
+            message.error('请求服务器失败')
+            return
+          }
+          this.props.setUser(res.data.data)
           return
         } else {
           message.info('请上传头像')
           return
         }
+        return
       case 6:
         this.goNextStep()
         return
@@ -429,6 +478,12 @@ class SkillPage extends Component {
     })
   }
 
+  handleSecondaryInputType = (e) => {
+    this.setState({
+      secondaryInputType: e.target.value,
+    })
+  }
+
   handleSecondaryTypeClick = (id) => () => {
     if (this.state.secondaryTypeList.includes(id)) {
       this.setState({
@@ -506,7 +561,11 @@ class SkillPage extends Component {
       console.log('servicelist', data)
       this.setState({
         serviceList: data,
-        firstServiceList: data.filter(item => item.level === 'f'),
+        firstServiceList: [ ...data.filter(item => item.level === 'f'), {
+          serviceTypeName: '其他',
+          level: 'f',
+          serviceTypeId: -1,
+        } ],
         secondServiceList: data.filter(item => item.level === 's'),
       })
     } catch (e) {
@@ -516,7 +575,6 @@ class SkillPage extends Component {
 
   handleLocationSelect = (value) => {
     const name = value.split(' ')[ 2 ]
-    console.log(name)
     const { location } = this.state.locationOptions.find(item => item.name === name)
     this.setState({
       latitude: location.lat,
@@ -536,13 +594,12 @@ class SkillPage extends Component {
   }
 
   updateStatus = async () => {
-    const { data: { data, code } } = updateUser({
+    const { data: { desc, code } } = await updateUser({
       userId: this.props.user.userId,
       checkStatus: 1,
     })
     if (code !== 200) {
-      message.error('请求服务器失败')
-
+      message.error(desc)
     }
   }
 }
