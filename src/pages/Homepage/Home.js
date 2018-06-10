@@ -9,9 +9,9 @@ class Home extends Component {
     const settings = {
       dots: false,
       speed: 500,
-      infinite: false,
+      infinite: true,
       slidesToShow: 4,
-      slidesToScroll: 1,
+      slidesToScroll: 4,
       arrows: true,
     }
 
