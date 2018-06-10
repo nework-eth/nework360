@@ -1,9 +1,9 @@
-import React from 'react'
 import { Input } from 'antd'
+import React from 'react'
 
 const { TextArea } = Input
 
-function Introduce ({ introduce, handleIntroduceChange }) {
+function Introduce ({ introduce, handleDescriptionChange }) {
   return (
     <div>
       <h2 style={ { marginTop: '50px', marginBottom: '50px' } }>简单介绍下自己</h2>
@@ -12,7 +12,7 @@ function Introduce ({ introduce, handleIntroduceChange }) {
         rows={ 8 }
         placeholder="简单介绍下你的工作经历，服务特色等，以获得更多的客户…"
         value={ introduce }
-        onChange={ handleIntroduceChange }
+        onChange={ handleDescriptionChange }
       />
     </div>
   )

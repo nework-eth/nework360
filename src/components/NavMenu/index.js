@@ -104,7 +104,7 @@ class NavMenu extends Component {
             this.props.userId
               ? (
                 <div className="li-wrapper">
-                  { !this.props.user.checkStatus
+                  { !this.props.user.isPartyB
                   && <li className="li-item user-li-item">
                     <Link to="/skill" style={ specialLinkStyle }>我要工作</Link>
                   </li>

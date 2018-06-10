@@ -82,6 +82,7 @@ function SelectType ({
                        handleInputType,
                        inputType,
                        firstServiceList,
+                       inputTypeTooLong,
                      }) {
   return (
     <div>
@@ -115,6 +116,7 @@ function SelectType ({
           placeholder="工作类型"
           onChange={ handleInputType }
         />
+        { inputTypeTooLong && <div className="error-tip">无法继续输入</div> }
       </div>
     </div>
   )

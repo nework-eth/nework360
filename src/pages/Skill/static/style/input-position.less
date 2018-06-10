@@ -1,9 +1,12 @@
 .input-position-container {
   .select-container {
     display: flex;
-    .select-item {
+    .skill-select-item {
       width: 220px;
       margin-right: 20px;
+      &:nth-of-type(3n+3) {
+        margin-right: 0;
+      }
     }
   }
   p:not(:first-child) {

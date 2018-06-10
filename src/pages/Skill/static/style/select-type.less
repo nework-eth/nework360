@@ -1,13 +1,14 @@
 .select-type-card-container {
   width: 700px;
-  height: 360px;
   display: flex;
   flex-wrap: wrap;
   .select-type-card-item {
     position: relative;
     width: 175px;
     height: 120px;
-    border: 2px solid #F2F6F6;
+    //border: 2px solid #F2F6F6;
+    border-bottom: 2px solid #f2f6f6;
+    border-right: 2px solid #f2f6f6;
     padding-top: 23px;
     text-align: center;
     font-size: 0;
@@ -15,12 +16,11 @@
     &:hover {
       background-color: #f6f8f9;
     }
-    &:nth-of-type(n+5):nth-of-type(-n+8) {
-      border-top-color: transparent;
-      border-bottom-color: transparent;
+    &:nth-of-type(-n+4) {
+      border-top: 2px solid #f2f6f6;
     }
-    &:nth-of-type(n+1):nth-of-type(-n+3), &:nth-of-type(n+9):nth-of-type(-n+11), &:nth-of-type(n+5):nth-of-type(-n+7) {
-      border-right-color: transparent;
+    &:nth-of-type(4n+1) {
+      border-left: 2px solid #f2f6f6;
     }
     img {
       margin-bottom: 5px;

@@ -53,11 +53,16 @@ class Home extends Component {
               >
                 { service }
               </h2>
-              <Carousel { ...settings }>
-                { this.props.serviceTree[ index ].child.map(({ serviceTypeName }, index) => <CardItem
+              <Carousel { ...{
+                ...settings,
+                slidesToShow: this.props.serviceTree[ index ].child.length > 4
+                  ? 4
+                  : this.props.serviceTree[ index ].child.length,
+              } }>
+                { this.props.serviceTree[ index ].child.map(({ serviceTypeName, count }, index) => <CardItem
                   imgSrc={ this.props.serviceImageList.find(serviceImage => serviceImage.includes(serviceTypeName)) }
                   title={ serviceTypeName }
-                  count={ 10 }
+                  count={ count }
                   key={ index }
                 />) }
               </Carousel>

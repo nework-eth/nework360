@@ -56,6 +56,9 @@ const getForgetPassword = async (nextState, callback) => {
 const getSearchPage = async (nextState, callback) =>
   callback(null, (await import(/* webpackChunkName: "Search" */'./pages/Homepage/SearchPage.js')).page)
 
+const getServiceList = async (nextState, callback) =>
+  callback(null, (await import(/* webpackChunkName: "Search" */'./pages/Homepage/ServiceList.js')).page)
+
 // const getFirstClassPage = async (nextState, callback) => {
 //   callback(
 //     null,
@@ -103,6 +106,7 @@ const getWalletPage = async (nextState, callback) => callback(
   null,
   (await import(/* webpackChunkName: "Wallet" */'./pages/Wallet/Wallet.js')).page,
 )
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (
@@ -117,6 +121,7 @@ const Routes = () => (
       <IndexRoute getComponent={ getSearchPage }/>
       <Route path="select-city" getComponent={ getSelectCityPage }/>
       <Route path="search" getComponent={ getSearchPage }/>
+      <Route path="service-list" getComponent={ getServiceList }/>
     </Route>
     <Route component={ Container }>
       <Route path="/skill" getComponent={ getSkillPage }/>

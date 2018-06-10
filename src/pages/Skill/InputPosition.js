@@ -20,17 +20,19 @@ function InputPosition ({
                           handleSpecAddrChange,
                           locationOptions,
                           handleLocationSelect,
+                          specAddrTooLong,
                         }) {
   return (
     <div className="input-position-container">
       <h2 style={ { marginTop: '50px', marginBottom: '50px' } }>您打算在什么地方开展工作？</h2>
       <div className="select-container">
-        <div>
+        <div className="select-wrapper">
           <p>国家或地区</p>
           <Select
-            className="select-item"
+            className="skill-select-item"
             value={ selectedCountry }
             onChange={ handleCountryChange }
+            placeholder="请选择国家"
           >
             {
               countryOptions.map(country =>
@@ -44,12 +46,14 @@ function InputPosition ({
             }
           </Select>
         </div>
-        <div className="select-item">
+        <div>
           <p>省份/洲</p>
           <Select
-            className="select-item"
+            className="skill-select-item"
             value={ selectedProvince }
             onChange={ handleProvinceChange }
+            disabled={ !selectedCountry }
+            placeholder="请选择省份/洲"
           >
             {
               provinceOptions.map(province =>
@@ -63,12 +67,14 @@ function InputPosition ({
             }
           </Select>
         </div>
-        <div className="select-item">
+        <div>
           <p>城市</p>
           <Select
-            className="select-item"
+            className="skill-select-item"
             value={ selectedCity }
             onChange={ handleCityChange }
+            disabled={ !selectedProvince }
+            placeholder="请选择城市"
           >
             {
               cityOptions.map(city =>
@@ -108,6 +114,7 @@ function InputPosition ({
         onChange={ handleSpecAddrChange }
         placeholder="请输入具体地址"
       />
+      { specAddrTooLong && <div className="error-tip">无法继续输入</div> }
     </div>
   )
 }

@@ -136,7 +136,7 @@ class Page extends Component {
   }
 
   componentDidMount () {
-    if (this.props.location.state.phoneNumber) {
+    if (this.props.location.state && this.props.location.state.phoneNumber) {
       this.props.form.setFieldsValue({ phoneNumber: this.props.location.state.phoneNumber })
     }
   }

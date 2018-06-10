@@ -37,11 +37,11 @@ const mapDispatch = (dispatch) => bindActionCreators({
 class SkillPage extends Component {
   state = {
     step: 0,
-    selectedCountry: '中国',
+    selectedCountry: undefined,
     countryOptions: [],
-    selectedProvince: '北京',
+    selectedProvince: undefined,
     provinceOptions: [],
-    selectedCity: '北京',
+    selectedCity: undefined,
     cityOptions: [],
     selectedType: '',
     inputType: '',
@@ -68,6 +68,9 @@ class SkillPage extends Component {
     secondServiceList: [],
     latitude: '',
     longitude: '',
+    specAddrTooLong: false,
+    inputTypeTooLong: false,
+    description: '',
   }
 
   StepView = () => {
@@ -89,6 +92,7 @@ class SkillPage extends Component {
           handleSpecAddrChange={ this.handleSpecAddrChange }
           locationOptions={ this.state.locationOptions }
           handleLocationSelect={ this.handleLocationSelect }
+          specAddrTooLong={ this.state.specAddrTooLong }
         />
       case 1:
         return <SelectType
@@ -97,6 +101,7 @@ class SkillPage extends Component {
           handleInputType={ this.handleInputType }
           selectedType={ this.state.selectedType }
           inputType={ this.state.inputType }
+          inputTypeTooLong={ this.state.inputTypeTooLong }
         />
       case 2:
         return <SelectSecondaryType
@@ -114,8 +119,8 @@ class SkillPage extends Component {
         />
       case 4:
         return <Introduce
-          introduce={ this.state.introduce }
-          handleIntroduceChange={ this.handleIntroduceChange }
+          introduce={ this.state.description }
+          handleDescriptionChange={ this.handleDescriptionChange }
         />
       case 5:
         return <UploadAvatar
@@ -155,14 +160,14 @@ class SkillPage extends Component {
   handleButtonClick = async () => {
     switch (this.state.step) {
       case 0:
-        if (this.state.location && this.state.specAddr) {
-          this.goNextStep()
-          this.getServiceList()
-          return
-        } else {
-          message.info('请填写地址')
-          return
-        }
+        // if (this.state.location && this.state.specAddr) {
+        this.goNextStep()
+        this.getServiceList()
+        return
+      // } else {
+      //   message.info('请填写地址')
+      //   return
+      // }
       case 1:
         if (this.state.selectedType) {
           this.goNextStep()
@@ -187,29 +192,14 @@ class SkillPage extends Component {
           return
         }
       case 2:
-        if (this.state.secondaryTypeList.length !== 0 || this.state.secondaryInputType) {
-          this.goNextStep()
-          return
-        } else {
-          message.info('请选择工作类型')
-          return
-        }
+        this.goNextStep()
+        return
       case 3:
-        if (this.state.serviceTimeList.length !== 0) {
-          this.goNextStep()
-          return
-        } else {
-          message.info('请选择工作时间')
-          return
-        }
+        this.goNextStep()
+        return
       case 4:
-        if (this.state.introduce) {
-          this.goNextStep()
-          return
-        } else {
-          message.info('请输入自我介绍')
-          return
-        }
+        this.goNextStep()
+        return
       case 5:
         if (this.state.avatarSrc) {
           if (this.state.secondaryTypeList.some(item => item !== -1)) {
@@ -259,6 +249,7 @@ class SkillPage extends Component {
             longitude: this.state.longitude,
             serviceTime: this.state.serviceTimeList.join(','),
             description: this.state.description,
+            isPartyB: true,
           })
           if (code !== 200) {
             message.error('请求服务器失败')
@@ -344,11 +335,15 @@ class SkillPage extends Component {
     this.setState({
       selectedCountry: value,
       provinceOptions,
-      selectedProvince: Object.keys(this.state.tree[ value ])[ 0 ],
+      // selectedProvince: Object.keys(this.state.tree[ value ])[ 0 ],
+      selectedProvince: undefined,
       cityData,
       cityOptions,
-      selectedCity,
-      cityId: (cityData.find(item => item.chinese === selectedCity)).districtId,
+      // selectedCity,
+      selectedCity: undefined,
+      // cityId: (cityData.find(item => item.chinese === selectedCity)).districtId,
+      location: '',
+      specAddr: '',
     })
   }
 
@@ -360,8 +355,10 @@ class SkillPage extends Component {
       selectedProvince: value,
       cityData,
       cityOptions,
-      selectedCity: cityOptions[ 0 ],
-      cityId: (cityData.find(item => item.chinese === cityOptions[ 0 ])).districtId,
+      selectedCity: undefined,
+      // cityId: (cityData.find(item => item.chinese === cityOptions[ 0 ])).districtId,
+      location: '',
+      specAddr: '',
     })
   }
 
@@ -369,6 +366,8 @@ class SkillPage extends Component {
     this.setState({
       selectedCity: value,
       cityId: (this.state.cityData.find(item => item.chinese === value)).districtId,
+      location: '',
+      specAddr: '',
     })
   }
 
@@ -376,69 +375,22 @@ class SkillPage extends Component {
     step: this.state.step + 1,
     progressPercent: (this.state.step + 1) * 10 + 10,
   })
-
-  render () {
-    const { progressPercent, step } = this.state
-    return (
-      <div className="skill-container">
-        <main style={ { width: '700px', margin: '0 auto' } }>
-          <h2 style={ { margin: '50px 0' } }>
-            <i
-              className="iconfont icon-logo"
-              style={ { fontSize: '30px', lineHeight: '40px' } }
-            />
-          </h2>
-          <Progress
-            percent={ progressPercent }
-            showInfo={ false }
-            style={ { height: '5px' } }
-          />
-          {
-            this.StepView()
-          }
-        </main>
-        <footer>
-          <p
-            onClick={ this.handleGoBack }
-            style={ step === 0 || step === 9 ? { visibility: 'hidden' } : {} }
-          >
-            <i className="iconfont icon-return"/>
-            返回
-          </p>
-          <Button type="primary" onClick={ this.handleButtonClick }>
-            {
-              step !== 9
-                ? '下一步'
-                : '完成'
-            }
-          </Button>
-        </footer>
-      </div>
-    )
-  }
-
-  handleLocationChange = (value) => {
-    this.getLocationOptions(value)
-    this.setState({
-      location: value,
-    })
-  }
   getLocationOptions = (keyword) => {
     this.mapApi.then(() => {
-      if (this.state.lastCity && this.state.lastCity === this.state.selectedCity) {
-        keyword && this.placeSearch.search(keyword, (status, result) => {
-          if (status === 'complete' && result.info === 'OK') {
-            console.log(result)
-            this.setState({
-              locationOptions: result.tips,
-            })
-          }
-        })
-        return
-      }
-      this.setState({
-        lastCity: this.state.selectedCity,
-      })
+      // if (this.state.lastCity && this.state.lastCity === this.state.selectedCity) {
+      //   keyword && this.placeSearch.search(keyword, (status, result) => {
+      //     if (status === 'complete' && result.info === 'OK') {
+      //       console.log(result)
+      //       this.setState({
+      //         locationOptions: result.tips,
+      //       })
+      //     }
+      //   })
+      //   return
+      // }
+      // this.setState({
+      //   lastCity: this.state.selectedCity,
+      // })
       /* eslint-disable no-undef */
       this.placeSearch = new AMap.Autocomplete({ city: this.state.selectedCity })
       keyword && this.placeSearch.search(keyword, (status, result) => {
@@ -453,6 +405,29 @@ class SkillPage extends Component {
           // })
         }
       })
+    })
+  }
+
+  handleLocationChange = (value) => {
+    this.getLocationOptions(value)
+    this.setState({
+      location: value,
+    })
+  }
+  handleInputType = (e) => {
+    let str = e.target.value
+    if (str.length > 10) {
+      str = str.slice(0, 10)
+      this.setState({
+        inputTypeTooLong: true,
+      })
+    } else if (this.state.inputTypeTooLong) {
+      this.setState({
+        inputTypeTooLong: false,
+      })
+    }
+    this.setState({
+      inputType: str,
     })
   }
 
@@ -471,10 +446,9 @@ class SkillPage extends Component {
       selectedType: type,
     })
   }
-
-  handleInputType = (e) => {
+  handleDescriptionChange = (e) => {
     this.setState({
-      inputType: e.target.value,
+      description: e.target.value,
     })
   }
 
@@ -520,10 +494,20 @@ class SkillPage extends Component {
     })
     this.props.setUser({ ...this.props.user, avatar: url })
   }
-
-  handleIntroduceChange = (e) => {
+  handleSpecAddrChange = (e) => {
+    let str = e.target.value
+    if (str.length > 100) {
+      str = str.slice(0, 100)
+      this.setState({
+        specAddrTooLong: true,
+      })
+    } else if (this.state.specAddrTooLong) {
+      this.setState({
+        specAddrTooLong: false,
+      })
+    }
     this.setState({
-      introduce: e.target.value,
+      specAddr: str,
     })
   }
 
@@ -532,10 +516,83 @@ class SkillPage extends Component {
     this.getLocationOptions = debounce(this.getLocationOptions, 800)
   }
 
-  handleSpecAddrChange = (e) => {
-    this.setState({
-      specAddr: e.target.value,
-    })
+  render () {
+    const {
+      progressPercent,
+      step,
+      selectedCity,
+      selectedProvince,
+      selectedCountry,
+      location,
+      specAddr,
+      selectedType,
+      inputType,
+      secondaryTypeList,
+      secondaryInputType,
+      serviceTimeList,
+      description,
+      avatarSrc,
+      photoSrc,
+      idCardPositiveSrc,
+      idCardNegativeSrc,
+      passportSrc,
+      selectedCertification,
+    } = this.state
+    return (
+      <div className="skill-container">
+        <main style={ { width: '700px', margin: '0 auto' } }>
+          <h2 style={ { margin: '50px 0' } }>
+            <i
+              className="iconfont icon-logo"
+              style={ { fontSize: '30px', lineHeight: '40px' } }
+            />
+          </h2>
+          <Progress
+            percent={ progressPercent }
+            showInfo={ false }
+            style={ { height: '5px' } }
+          />
+          {
+            this.StepView()
+          }
+        </main>
+        <footer>
+          <p
+            onClick={ this.handleGoBack }
+            style={ step === 0 || step === 9 ? { visibility: 'hidden' } : {} }
+          >
+            <i className="iconfont icon-return"/>
+            返回
+          </p>
+          <Button type="primary" onClick={ this.handleButtonClick }
+            disabled={ step === 0
+              ? !selectedCountry || !selectedProvince || !selectedCity || !location || !specAddr
+              : step === 1
+                ? (!selectedType || (selectedType === '其他' && !inputType))
+                : step === 2
+                  ? (selectedType !== '其他' && ((secondaryTypeList.length === 1 && secondaryTypeList[ 0 ] === -1 && !secondaryInputType) || !secondaryTypeList.length)) || (selectedType === '其他' && !secondaryInputType)
+                  : step === 3
+                    ? serviceTimeList.length === 0
+                    : step === 4
+                      ? !description
+                      : step === 5
+                        ? !avatarSrc
+                        : step === 7
+                          ? !selectedCertification
+                          : step === 8
+                            ? !photoSrc || (!passportSrc && (!idCardNegativeSrc || !idCardPositiveSrc))
+                            : false
+            }
+          >
+            {
+              step !== 9
+                ? '下一步'
+                : '完成'
+            }
+          </Button>
+        </footer>
+      </div>
+    )
   }
 
   // getCityIdByName = (cityName) => this.state.tree[ this.state.selectedCountry ]

@@ -1,12 +1,10 @@
 import { Icon, Input, message } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { browserHistory } from 'react-router'
 import { view as IconItem } from '../../components/LogoItem'
 import { stateKey } from '../../components/NavMenu'
 import { getListServiceByDist, getListServiceByParam, getServiceTree } from '../../service/homepage'
 import { view as FirstClass } from './FirstClass'
-import { view as Home } from './Home'
 import './static/style/search.less'
 
 const Search = Input.Search
@@ -17,7 +15,62 @@ const mapState = (state) => ({
 })
 
 @connect(mapState)
-class SearchPage extends Component {
+class ServiceList extends Component {
+  getServiceTree = async () => {
+    try {
+      const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.cityId })
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
+      console.log('serviceTree', data)
+      const firstLevelServiceList = data.map(item => item.serviceTypeName)
+      console.log('firstLevelServiceList', firstLevelServiceList)
+      console.log('serviceTree', data)
+      this.setState({
+        serviceTree: data,
+        firstLevelServiceList,
+      })
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+  getFirstServiceList = async () => {
+    try {
+      const { data: { code, data, desc } } = await getListServiceByParam({
+        dist: this.props.cityName,
+        level: 'f',
+      })
+      console.log(code, data, desc)
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+  getNearServiceList = async () => {
+    try {
+      const { data: { code, data, desc } } = await getListServiceByDist({
+        dist: this.props.cityName,
+        level: 's',
+      })
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
+      console.log('nearServiceList', data)
+      this.setState({
+        nearServiceList: data,
+      })
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+  handleFirstServiceChange = (firstService) => {
+    this.setState({
+      selectedFirstService: firstService,
+      pageState: 'selected',
+    })
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -50,96 +103,17 @@ class SearchPage extends Component {
       ],
       serviceTree: [],
       firstLevelServiceList: [],
-      pageState: 'default',
       selectedFirstService: '',
       nearServiceList: [],
     }
-  }
-
-  getServiceTree = async () => {
-    try {
-      const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.cityId })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
-      console.log('serviceTree', data)
-      const firstLevelServiceList = data.map(item => item.serviceTypeName)
-      console.log('firstLevelServiceList', firstLevelServiceList)
-      console.log('serviceTree', data)
-      this.setState({
-        serviceTree: data,
-        firstLevelServiceList,
-      })
-    } catch (e) {
-      message.error('请求服务器失败')
-    }
-  }
-  handleFirstServiceChange = (firstService) => {
-    browserHistory.push({ pathname: '/service-list', state: { selectedFirstService: firstService } })
-  }
-
-  getFirstServiceList = async () => {
-    try {
-      const { data: { code, data, desc } } = await getListServiceByParam({
-        dist: this.props.cityName,
-        level: 'f',
-      })
-      console.log(code, data, desc)
-    } catch (e) {
-      message.error('请求服务器失败')
-    }
-  }
-
-  getNearServiceList = async () => {
-    try {
-      const { data: { code, data, desc } } = await getListServiceByDist({
-        dist: this.props.cityName,
-        level: 's',
-      })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
-      console.log('nearServiceList', data)
-      this.setState({
-        nearServiceList: data,
-      })
-    } catch (e) {
-      message.error('请求服务器失败')
-    }
-  }
-
-  componentDidMount () {
-    this.getServiceTree()
-    this.getNearServiceList()
-  }
-
-  virtualRouter = () => {
-    const {
-      pageState,
-      firstLevelServiceList,
-      serviceTree,
-      serviceImageList,
-      selectedFirstService,
-      nearServiceList,
-    } = this.state
-    if (pageState === 'default') {
-
-    }
-    return <FirstClass
-      selectedFirstService={ selectedFirstService }
-      serviceImageList={ serviceImageList }
-      secondServiceList={ (serviceTree.find(item => item.serviceTypeName === selectedFirstService)).child }
-    />
   }
 
   render () {
     const {
       firstLevelServiceList,
       serviceTree,
-      nearServiceList,
       serviceImageList,
+      selectedFirstService,
     } = this.state
     return (
       <div className="search-service-container">
@@ -171,12 +145,12 @@ class SearchPage extends Component {
             )
           }
         </div>
-        <Home
-          firstServiceList={ firstLevelServiceList }
-          serviceTree={ serviceTree }
-          nearServiceList={ nearServiceList }
+        <FirstClass
+          selectedFirstService={ selectedFirstService }
           serviceImageList={ serviceImageList }
-          handleFirstServiceChange={ this.handleFirstServiceChange }
+          secondServiceList={
+            (serviceTree.find(item => item.serviceTypeName === selectedFirstService) && (serviceTree.find(item => item.serviceTypeName === selectedFirstService)).child) || []
+          }
         />
         <h2 style={ { marginTop: '50px', marginBottom: '20px' } }>如何发布需求</h2>
         <div className="introduce-container">
@@ -217,6 +191,16 @@ class SearchPage extends Component {
       </div>
     )
   }
+
+  componentDidMount () {
+    this.getServiceTree()
+    this.getNearServiceList()
+    if (this.props.location.state.selectedFirstService) {
+      this.setState({
+        selectedFirstService: this.props.location.state.selectedFirstService,
+      })
+    }
+  }
 }
 
-export { SearchPage as page }
+export { ServiceList as page }

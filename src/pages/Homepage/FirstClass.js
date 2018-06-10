@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { view as CardItem } from '../../components/CardItem'
-import './static/style/first-class.less'
 
 class FirstClass extends Component {
   render () {

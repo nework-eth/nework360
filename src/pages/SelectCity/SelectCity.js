@@ -2,6 +2,7 @@ import { message, Select, Spin } from 'antd'
 import debounce from 'lodash/debounce'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { stateKey } from '../../components/NavMenu'
 import { setCityId, setCityName, setCountryId } from '../../components/NavMenu/actions'
@@ -18,7 +19,7 @@ const containerStyle = {
 
 const LetterCity = ({ letter, letterCityList, handleClick }) => {
   return (
-    <div className="letter-city-container">
+    <div className="letter-city-container" id={ `letter${letter.toUpperCase()}` }>
       <div className="letter-container">
         { letter }
       </div>
@@ -68,9 +69,9 @@ class SelectCity extends Component {
     countryOptions: [],
     provinceOptions: [],
     cityOptions: [],
-    selectedCountry: '中国',
-    selectedProvince: '北京',
-    selectedCity: '北京',
+    selectedCountry: undefined,
+    selectedProvince: undefined,
+    selectedCity: undefined,
     cityData: [],
     tree: [],
     hotCityList: [],
@@ -125,7 +126,6 @@ class SelectCity extends Component {
       this.setState({
         hotCityList: data,
       })
-      console.log('hot city', data)
     } catch (e) {
       message.error('请求服务器失败')
     }
@@ -173,6 +173,63 @@ class SelectCity extends Component {
       message.error('请求服务器失败')
     }
   }
+  handleCountryChange = (value) => {
+    console.log(this.state.tree[ value ])
+    const provinceOptions = Object.keys(this.state.tree[ value ])
+    const selectedProvince = provinceOptions[ 0 ]
+    const cityData = this.state.tree[ value ][ selectedProvince ]
+    // const cityOptions = cityData.map(item => item.chinese)
+    // const selectedCity = cityOptions[ 0 ]
+    this.setState({
+      selectedCountry: value,
+      provinceOptions,
+      // selectedProvince: Object.keys(this.state.tree[ value ])[ 0 ],
+      selectedProvince: undefined,
+      // cityData,
+      // cityOptions,
+      selectedCity: undefined,
+    })
+    // this.props.setCountryId(value)
+    // this.props.setCityName(selectedCity)
+    // this.props.setCityId((cityData.find(item => item.chinese === selectedCity).districtId))
+  }
+
+  componentDidMount () {
+    this.getCityByLetter()
+    this.getCityTree()
+    this.getHotCity()
+  }
+
+  handleProvinceChange = (value) => {
+    console.log(value)
+    console.log(this.state.tree[ this.state.selectedCountry ][ value ])
+    const cityData = this.state.tree[ this.state.selectedCountry ][ value ]
+    const cityOptions = cityData.map(item => item.chinese)
+    this.setState({
+      selectedProvince: value,
+      cityData,
+      cityOptions,
+      selectedCity: undefined,
+    })
+    // this.props.setCityName(cityOptions[ 0 ])
+    // this.props.setCityId((cityData.find(item => item.chinese === cityOptions[ 0 ])).districtId)
+  }
+  handleCityChange = (value) => {
+    this.setState({
+      selectedCity: value,
+    })
+    this.props.setCityName(value)
+    this.props.setCityId((this.state.cityData.find(item => item.chinese === value)).districtId)
+    browserHistory.push('/')
+  }
+  handleButtonClick = (cityName, cityId) => {
+    this.props.setCityName(cityName)
+    this.props.setCityId(cityId)
+    browserHistory.push('/')
+  }
+  scrollToLetter = (letter) => () => {
+    browserHistory.push(`/select-city#letter${letter.toUpperCase()}`)
+  }
 
   render () {
     const {
@@ -196,14 +253,17 @@ class SelectCity extends Component {
               <h3>搜索城市</h3>
               <div className="select-container">
                 <Select
+                  placeholder="请选择国家"
                   value={ selectedCountry }
                   onChange={ this.handleCountryChange }
+                  dropdownClassName="select-city-select-drop"
                 >
                   {
                     countryOptions.map(country =>
                       <Option
                         value={ country }
                         key={ country }
+                        className="select-option"
                       >
                         { country }
                       </Option>,
@@ -211,8 +271,10 @@ class SelectCity extends Component {
                   }
                 </Select>
                 <Select
+                  placeholder="请选择省份/洲"
                   value={ selectedProvince }
                   onChange={ this.handleProvinceChange }
+                  disabled={ !selectedCountry }
                 >
                   {
                     provinceOptions.map(province =>
@@ -226,8 +288,10 @@ class SelectCity extends Component {
                   }
                 </Select>
                 <Select
+                  placeholder="请选择城市"
                   value={ selectedCity }
                   onChange={ this.handleCityChange }
+                  disabled={ !selectedProvince }
                 >
                   {
                     cityOptions.map(city =>
@@ -248,7 +312,7 @@ class SelectCity extends Component {
                 mode="combobox"
                 value={ value }
                 placeholder="输入关键词"
-                notFoundContent={ fetching ? <Spin size="small"/> : null }
+                notFoundContent={ fetching ? <Spin size="small"/> : '未找到匹配的城' }
                 filterOption={ false }
                 onSearch={ this.getCityBySearch }
                 onChange={ this.handleChange }
@@ -262,10 +326,10 @@ class SelectCity extends Component {
           <h3>热门城市</h3>
           <div className="hot-city">
             {
-              hotCityList.map(({ chinese }) => <div
+              hotCityList.map(({ chinese, districtId }) => <div
                 key={ chinese }
                   className="virtual-button"
-                onClick={ () => {this.handleButtonClick(chinese)} }
+                onClick={ () => this.handleButtonClick(chinese, districtId) }
                 >
                 { chinese }
                 </div>,
@@ -278,6 +342,7 @@ class SelectCity extends Component {
               this.state.filterCityList.map(([ letter ]) =>
                 <span
                   key={ letter.toUpperCase() }
+                  onClick={ this.scrollToLetter(letter) }
                 >
                   { letter.toUpperCase() }
                 </span>,
@@ -297,60 +362,6 @@ class SelectCity extends Component {
         </div>
       </div>
     )
-  }
-
-  componentDidMount () {
-    this.getCityByLetter()
-    this.getCityTree()
-    this.getHotCity()
-  }
-
-  handleCountryChange = (value) => {
-    console.log(this.state.tree[ value ])
-    const provinceOptions = Object.keys(this.state.tree[ value ])
-    const selectedProvince = provinceOptions[ 0 ]
-    const cityData = this.state.tree[ value ][ selectedProvince ]
-    const cityOptions = cityData.map(item => item.chinese)
-    const selectedCity = cityOptions[ 0 ]
-    this.setState({
-      selectedCountry: value,
-      provinceOptions,
-      selectedProvince: Object.keys(this.state.tree[ value ])[ 0 ],
-      cityData,
-      cityOptions,
-      selectedCity,
-    })
-    this.props.setCountryId(value)
-    this.props.setCityName(selectedCity)
-    this.props.setCityId((cityData.find(item => item.chinese === selectedCity).districtId))
-  }
-
-  handleProvinceChange = (value) => {
-    console.log(value)
-    console.log(this.state.tree[ this.state.selectedCountry ][ value ])
-    const cityData = this.state.tree[ this.state.selectedCountry ][ value ]
-    const cityOptions = cityData.map(item => item.chinese)
-    this.setState({
-      selectedProvince: value,
-      cityData,
-      cityOptions,
-      selectedCity: cityOptions[ 0 ],
-    })
-    this.props.setCityName(cityOptions[ 0 ])
-    this.props.setCityId((cityData.find(item => item.chinese === cityOptions[ 0 ])).districtId)
-  }
-
-  handleCityChange = (value) => {
-    this.setState({
-      selectedCity: value,
-    })
-    this.props.setCityName(value)
-    this.props.setCityId((this.state.cityData.find(item => item.chinese === value)).districtId)
-  }
-
-  handleButtonClick = (cityName, cityId = '001') => {
-    this.props.setCityName(cityName)
-    this.props.setCityId(cityId)
   }
 }
 
