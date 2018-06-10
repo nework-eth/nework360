@@ -32,7 +32,7 @@ class Footer extends Component {
             <p>联系我们</p>
             <p>电话 010-57026742</p>
             <p>邮箱 service@pmcaff.com</p>
-            <p>官方网站 nework.pro</p>
+            <p><a href="http://nework.pro">官方网站 nework.pro</a></p>
           </div>
           <div className="link">
             <p>友情链接</p>
