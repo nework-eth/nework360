@@ -1,17 +1,17 @@
 import { Icon, message, Upload } from 'antd'
 import React, { Component } from 'react'
 
-function beforeUpload (file) {
-  const isJPG = file.type === 'image/jpeg'
-  if (!isJPG) {
-    message.error('You can only upload JPG file!')
-  }
-  const isLt2M = file.size / 1024 / 1024 < 2
-  if (!isLt2M) {
-    message.error('Image must smaller than 2MB!')
-  }
-  return isJPG && isLt2M
-}
+// function beforeUpload (file) {
+//   const isJPG = file.type === 'image/jpeg'
+//   if (!isJPG) {
+//     message.error('You can only upload JPG file!')
+//   }
+//   const isLt2M = file.size / 1024 / 1024 < 2
+//   if (!isLt2M) {
+//     message.error('Image must smaller than 2MB!')
+//   }
+//   return isJPG && isLt2M
+// }
 
 class UploadItem extends Component {
   state = {
@@ -29,7 +29,21 @@ class UploadItem extends Component {
       //   loading: false,
       // }))
       this.setState({ loading: false })
-      this.props.handleUpload(info.file.response.data.path)
+      const colMap = {
+        avatar: 'avatar',
+        id_card_positive: 'idCardPositive',
+        id_card_negative: 'idCardNegative',
+        photo: 'photo',
+        passport_pic: 'passportPic',
+      }
+      this.props.updateImageSrc(info.file.response.data.path, colMap[ this.props.column ]).then(res => {
+        if (res.data.code !== 200) {
+          message.error(res.data.desc)
+          return
+        }
+        message.success('上传成功过')
+        this.props.handleUpload(info.file.response.data.path)
+      })
     }
   }
 
@@ -54,7 +68,6 @@ class UploadItem extends Component {
             column,
           }
         }
-        beforeUpload={ beforeUpload }
         onChange={ this.handleChange }
       >
         { imageUrl ? <img src={ imageUrl } alt="avatar"/> : uploadButton }

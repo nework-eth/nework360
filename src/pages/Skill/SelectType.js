@@ -1,6 +1,5 @@
-import React from 'react'
-
 import { Input } from 'antd'
+import React from 'react'
 import './static/style/select-type.less'
 
 function CardItem ({ imgSrc, title, isSelected, handleClick }) {
@@ -77,19 +76,28 @@ const cardItemList = [
   },
 ]
 
-function SelectType ({ handleSelectType, selectedType, handleInputType, inputType }) {
+function SelectType ({
+                       handleSelectType,
+                       selectedType,
+                       handleInputType,
+                       inputType,
+                       firstServiceList,
+                     }) {
   return (
     <div>
       <h2 style={ { marginTop: '50px', marginBottom: '50px' } }>您打算开始什么类型的工作？</h2>
       <div className="select-type-card-container">
         {
-          cardItemList.map(({ imgSrc, title }) =>
+          firstServiceList.map(({ serviceTypeName }) =>
             <CardItem
-              imgSrc={ imgSrc }
-              title={ title }
-              key={ title }
-              isSelected={ title === selectedType }
-              handleClick={ handleSelectType(title) }
+              imgSrc={
+                (cardItemList.find(item => item.title === serviceTypeName)
+                  && (cardItemList.find(item => item.title === serviceTypeName)).imgSrc)
+                || './images/其他-icon.png' }
+              title={ serviceTypeName }
+              key={ serviceTypeName }
+              isSelected={ serviceTypeName === selectedType }
+              handleClick={ handleSelectType(serviceTypeName) }
             />)
         }
       </div>

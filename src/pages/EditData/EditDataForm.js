@@ -84,6 +84,8 @@ function EditDataForm ({
                          user,
                          deleteSkill,
                          handleShowAddSkillModal,
+                         locationOptions,
+                         handleLocationChange,
                        }) {
   switch (selectedItem) {
     case 'basic':
@@ -196,11 +198,23 @@ function EditDataForm ({
             <div className="form-item">
               <div className="label">小区名或街道名</div>
               <div className="content">
-                <Input
+                <Select
+                  mode="combobox"
                   value={ location }
-                  onChange={ handleInput('location') }
-                  placeholder="如不清楚，可输入名称以搜索…"
-                />
+                  placeholder="如不清楚可输入名称来搜索"
+                  defaultActiveFirstOption={ false }
+                  showArrow={ false }
+                  onChange={ handleLocationChange }
+                  className="place-select"
+                >
+                  { locationOptions.map(({ name, address, district, adcode }) =>
+                    <Option
+                      value={ `${district} ${address} ${name}` }
+                      key={ `${adcode}${address}` }
+                    >
+                      { `${district} ${address} ${name}` }</Option>,
+                  ) }
+                </Select>
               </div>
             </div>
             <div className="form-item">

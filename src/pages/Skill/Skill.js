@@ -4,9 +4,12 @@ import debounce from 'lodash/debounce'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
+import { bindActionCreators } from 'redux'
+import { setUser } from '../../components/NavMenu/actions'
 import { baseUrl } from '../../service/config'
+import { getUserById, updateUser } from '../../service/editData'
 import { getCityTree } from '../../service/homepage'
-import { releaseSkill } from '../../service/skill'
+import { getServiceList, releaseSkill } from '../../service/skill'
 import { view as InputPosition } from './InputPosition'
 import { view as InputWorkTime } from './InputWorkTime'
 import { view as Introduce } from './Introduce'
@@ -22,10 +25,15 @@ import { view as UploadComplete } from './UploadComplete'
 const uploadUrl = `${baseUrl}/qiniu/uploadUserFile`
 
 const mapState = (state) => ({
-  userId: state.user.userId || 11,
+  userId: state.user.userId,
+  user: state.user,
 })
 
-@connect(mapState)
+const mapDispatch = (dispatch) => bindActionCreators({
+  setUser,
+}, dispatch)
+
+@connect(mapState, mapDispatch)
 class SkillPage extends Component {
   state = {
     step: 0,
@@ -53,7 +61,14 @@ class SkillPage extends Component {
     photoSrc: '',
     idCardPositiveSrc: '',
     idCardNegativeSrc: '',
+    cityData: [],
+    serviceList: [],
+    firstServiceList: [],
+    secondServiceList: [],
+    latitude: '',
+    longitude: '',
   }
+
   StepView = () => {
     switch (this.state.step) {
       case 0:
@@ -72,9 +87,11 @@ class SkillPage extends Component {
           specAddr={ this.state.specAddr }
           handleSpecAddrChange={ this.handleSpecAddrChange }
           locationOptions={ this.state.locationOptions }
+          handleLocationSelect={ this.handleLocationSelect }
         />
       case 1:
         return <SelectType
+          firstServiceList={ this.state.firstServiceList }
           handleSelectType={ this.handleSelectType }
           handleInputType={ this.handleInputType }
           selectedType={ this.state.selectedType }
@@ -82,6 +99,7 @@ class SkillPage extends Component {
         />
       case 2:
         return <SelectSecondaryType
+          secondServiceList={ this.state.secondServiceList }
           selectedType={ this.state.selectedType }
           secondaryTypeList={ this.state.secondaryTypeList }
           handleSecondaryTypeClick={ this.handleSecondaryTypeClick }
@@ -102,6 +120,7 @@ class SkillPage extends Component {
           userId={ this.props.userId }
           uploadUrl={ uploadUrl }
           handleUploadAvatar={ this.handleUploadAvatar }
+          updateImageSrc={ this.updateImageSrc }
         />
       case 6:
         return <PartlyComplete/>
@@ -120,6 +139,7 @@ class SkillPage extends Component {
           idCardNegativeSrc={ this.state.idCardNegativeSrc }
           idCardPositiveSrc={ this.state.idCardPositiveSrc }
           handleUpload={ this.handleUpload }
+          updateImageSrc={ this.updateImageSrc }
         />
       case 9:
         return <UploadComplete
@@ -134,6 +154,7 @@ class SkillPage extends Component {
       case 0:
         if (this.state.location && this.state.specAddr) {
           this.goNextStep()
+          this.getServiceList()
           return
         } else {
           message.info('请填写地址')
@@ -142,6 +163,11 @@ class SkillPage extends Component {
       case 1:
         if (this.state.selectedType) {
           this.goNextStep()
+          const parentId = (this.state.firstServiceList
+            .find(item => item.serviceTypeName === this.state.selectedType)).serviceTypeId
+          this.setState({
+            secondServiceList: this.state.secondServiceList.filter(item => item.parentId === parentId),
+          })
           return
         } else {
           message.info('请选择工作类型')
@@ -175,23 +201,29 @@ class SkillPage extends Component {
         if (this.state.avatarSrc) {
           const { data: { code, data } } = await releaseSkill({
             districtId: this.state.cityId,
-            userId: this.state.userId || 11,
+            userId: this.props.user.userId,
             location: this.state.location,
             specAddr: this.state.specAddr,
-            latitude: 39.928216,
-            longitude: 116.447962,
+            latitude: this.state.latitude,
+            longitude: this.state.longitude,
             serviceTime: this.state.serviceTimeList.join(','),
-            serviceIds: [ 1, 2, 3 ].join(','),
+            serviceIds: this.state.secondaryTypeList.join(','),
             isUsed: 1,
             isDeleted: 0,
           })
+          console.log('data++++++++', data)
           if (code === 200) {
             message.success('发布技能成功')
             this.setState({
-              avatarSrc: data.path,
               step: this.state.step + 1,
               progressPercent: (this.state.step + 1) * 10 + 10,
             })
+            const { data: { data, code } } = await getUserById({ userId: this.props.user.userId })
+            if (code !== 200) {
+              message.error('请求服务器失败')
+              return
+            }
+            this.props.setUser(data)
             return
           }
           message.error('请求服务器失败')
@@ -208,6 +240,7 @@ class SkillPage extends Component {
         return
       case 8:
         this.goNextStep()
+        this.updateStatus()
         return
       case 9:
         browserHistory.push('/search')
@@ -245,8 +278,7 @@ class SkillPage extends Component {
         countryOptions: countryList,
         provinceOptions: provinceList,
         cityOptions: letterCityList,
-        // cityOptions: letterCityList,
-        // selectedCity: letterCityList[0]
+        cityData: tree[ '中国' ][ '北京' ],
       })
     } catch (e) {
       message.error('请求服务器失败')
@@ -267,7 +299,7 @@ class SkillPage extends Component {
       cityData,
       cityOptions,
       selectedCity,
-      cityId: this.getCityIdByName(selectedCity),
+      cityId: (cityData.find(item => item.chinese === selectedCity)).districtId,
     })
   }
 
@@ -280,15 +312,14 @@ class SkillPage extends Component {
       cityData,
       cityOptions,
       selectedCity: cityOptions[ 0 ],
-      cityId: this.getCityIdByName(value) || '',
+      cityId: (cityData.find(item => item.chinese === cityOptions[ 0 ])).districtId,
     })
-
   }
 
   handleCityChange = (value) => {
     this.setState({
       selectedCity: value,
-      cityId: this.getCityIdByName(value) || '',
+      cityId: (this.state.cityData.find(item => item.chinese === value)).districtId,
     })
   }
 
@@ -398,14 +429,14 @@ class SkillPage extends Component {
     })
   }
 
-  handleSecondaryTypeClick = (type) => () => {
-    if (this.state.secondaryTypeList.includes(type)) {
+  handleSecondaryTypeClick = (id) => () => {
+    if (this.state.secondaryTypeList.includes(id)) {
       this.setState({
-        secondaryTypeList: this.state.secondaryTypeList.filter(item => item !== type),
+        secondaryTypeList: this.state.secondaryTypeList.filter(item => item !== id),
       })
     } else {
       this.setState({
-        secondaryTypeList: [ ...this.state.secondaryTypeList, type ],
+        secondaryTypeList: [ ...this.state.secondaryTypeList, id ],
       })
     }
   }
@@ -428,10 +459,11 @@ class SkillPage extends Component {
     })
   }
 
-  handleUploadAvatar = (url) => {
+  handleUploadAvatar = async (url) => {
     this.setState({
       avatarSrc: url,
     })
+    this.props.setUser({ ...this.props.user, avatar: url })
   }
 
   handleIntroduceChange = (e) => {
@@ -451,10 +483,10 @@ class SkillPage extends Component {
     })
   }
 
-  getCityIdByName = (cityName) => this.state.tree[ this.state.selectedCountry ]
-    && Array.isArray(this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ])
-    && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName)
-    && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName).districtId
+  // getCityIdByName = (cityName) => this.state.tree[ this.state.selectedCountry ]
+  //   && Array.isArray(this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ])
+  //   && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName)
+  //   && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName).districtId
 
   handleUpload = (type) => (url) => {
     this.setState({
@@ -462,9 +494,56 @@ class SkillPage extends Component {
     })
   }
 
+  getServiceList = async () => {
+    try {
+      const { data: { code, data, desc } } = await getServiceList({
+        dist: this.state.selectedCity,
+      })
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
+      console.log('servicelist', data)
+      this.setState({
+        serviceList: data,
+        firstServiceList: data.filter(item => item.level === 'f'),
+        secondServiceList: data.filter(item => item.level === 's'),
+      })
+    } catch (e) {
+      message.error(e)
+    }
+  }
+
+  handleLocationSelect = (value) => {
+    const name = value.split(' ')[ 2 ]
+    console.log(name)
+    const { location } = this.state.locationOptions.find(item => item.name === name)
+    this.setState({
+      latitude: location.lat,
+      longitude: location.lng,
+    })
+  }
+
+  updateImageSrc = (src, type) =>
+    updateUser({
+      userId: this.props.user.userId,
+      [ type ]: src,
+    })
+
   componentDidMount () {
     this.getCityTree()
     this.mapInit()
+  }
+
+  updateStatus = async () => {
+    const { data: { data, code } } = updateUser({
+      userId: this.props.user.userId,
+      checkStatus: 1,
+    })
+    if (code !== 200) {
+      message.error('请求服务器失败')
+
+    }
   }
 }
 

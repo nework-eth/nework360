@@ -4,7 +4,7 @@ import { view as UploadItem } from '../../components/UploadItem/UploadItem'
 
 import './static/style/index.less'
 
-const UploadWrapper = ({ title, uploadUrl, userId, column, src, handleUpload }) => {
+const UploadWrapper = ({ title, uploadUrl, userId, column, src, handleUpload, updateImageSrc }) => {
   return (
     <div className="upload-item-wrapper">
       <UploadItem
@@ -13,6 +13,7 @@ const UploadWrapper = ({ title, uploadUrl, userId, column, src, handleUpload }) 
         column={ column }
         src={ src }
         handleUpload={ handleUpload }
+        updateImageSrc={ updateImageSrc }
       />
       <p>{ title }</p>
     </div>
@@ -28,6 +29,7 @@ function UploadCerificate ({
                              photoSrc,
                              passportSrc,
                              handleUpload,
+                             updateImageSrc,
                            }) {
   return (
     <div className="upload-certificate-container">
@@ -62,6 +64,7 @@ function UploadCerificate ({
                 userId={ userId }
                 column={ column }
                 src={ src }
+                updateImageSrc={ updateImageSrc }
                 handleUpload={ handleUpload(type) }
               />)
             }
@@ -87,6 +90,7 @@ function UploadCerificate ({
                 userId={ userId }
                 column={ column }
                 src={ src }
+                updateImageSrc={ updateImageSrc }
                 handleUpload={ handleUpload(type) }
               />)
             }

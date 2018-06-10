@@ -19,7 +19,7 @@ import { baseUrl } from '../../service/config'
 //   showUploadList: false,
 // }
 
-function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar }) {
+function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar, updateImageSrc }) {
   return (
     <div>
       <h2 style={ { marginTop: '50px', marginBottom: '50px' } }>上传一张您的头像照片或者Logo图案？</h2>
@@ -47,8 +47,17 @@ function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar }) {
               if (info.file.status === 'done') {
                 if (info.file.response.code === 200) {
                   console.log(info)
-                  handleUploadAvatar(info.file.response.data.path)
-                  message.success('上传头像成功')
+                  updateImageSrc(info.file.response.data.path, 'avatar').then(res => {
+                    console.log('res', res)
+                    if (res.data.code !== 200) {
+                      message.error(res.data.desc)
+                      return
+                    }
+                    handleUploadAvatar(info.file.response.data.path)
+                    message.success('上传头像成功')
+                  }).catch(e => {
+                    message.error('请求服务器失败')
+                  })
                   return
                 }
                 message.error(info.file.response.desc)

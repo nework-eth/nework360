@@ -19,6 +19,7 @@ function InputPosition ({
                           specAddr,
                           handleSpecAddrChange,
                           locationOptions,
+                          handleLocationSelect,
                         }) {
   return (
     <div className="input-position-container">
@@ -91,6 +92,7 @@ function InputPosition ({
         showArrow={ false }
         onChange={ handleLocationChange }
         className="place-select"
+        onSelect={ handleLocationSelect }
       >
         { locationOptions.map(({ name, address, district, adcode }) =>
           <Option

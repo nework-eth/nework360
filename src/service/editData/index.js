@@ -21,3 +21,5 @@ export const getSkillByUserId = params => axios(`${baseUrl}/skill/getSkillByUser
 export const deleteSkill = params => axios(`${baseUrl}/skill/deleteSkill`, { params })
 
 export const postSkill = data => axios.post(`${baseUrl}/skill/postSkill`, qs.stringify(data))
+
+export const postSkillTemp = jsonArray => axios.post(`${baseUrl}/skill/postSkillTemp`, qs.stringify({ jsonArray }))

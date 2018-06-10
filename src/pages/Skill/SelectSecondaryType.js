@@ -1,5 +1,5 @@
-import React from 'react'
 import { Input } from 'antd'
+import React from 'react'
 
 import './static/style/index.less'
 
@@ -11,7 +11,7 @@ function SecondaryCardItem ({ content, isChecked, handleClick }) {
           ? 'select-type-card-item selected-card-item'
           : 'select-type-card-item'
       }
-      onClick={ handleClick(content) }
+      onClick={ handleClick }
     >
       <i className="iconfont icon-selected"/>
       { content }
@@ -34,7 +34,12 @@ const secondaryList = [
   '其他',
 ]
 
-function SelectType ({ selectedType, secondaryTypeList, handleSecondaryTypeClick }) {
+function SelectType ({
+                       selectedType,
+                       secondaryTypeList,
+                       handleSecondaryTypeClick,
+                       secondServiceList,
+                     }) {
   return (
     <div>
       <h2 style={ { marginTop: '50px', marginBottom: '50px' } }>让我们缩小一下范围？</h2>
@@ -42,12 +47,12 @@ function SelectType ({ selectedType, secondaryTypeList, handleSecondaryTypeClick
         <h3>{ selectedType }</h3>
         <div className="secondary-type-select-container">
           {
-            secondaryList.map(item =>
+            secondServiceList.map(({ serviceTypeName, serviceTypeId }) =>
               <SecondaryCardItem
-                content={ item }
-                key={ item }
-                isChecked={ secondaryTypeList.includes(item) }
-                handleClick={ handleSecondaryTypeClick }
+                content={ serviceTypeName }
+                key={ serviceTypeId }
+                isChecked={ secondaryTypeList.includes(serviceTypeId) }
+                handleClick={ handleSecondaryTypeClick(serviceTypeId) }
               />,
             )
           }

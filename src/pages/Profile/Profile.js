@@ -171,23 +171,24 @@ class Profile extends Component {
           { /*introduce={ introduce }*/ }
           { /*/>) }*/ }
           { /*</Carousel>*/ }
-          <h3 className="skill-title">技能<span>（{ this.state.skillList.length }）</span></h3>
-          <Carousel
-            dots={ false }
-            infinite={ false }
-            slidesToShow={ 4 }
-            slidesToScroll={ 1 }
-            arrows={ true }
-          >
-            {
-              this.state.skillList.map(({ secondServiceTypeName, firstServiceTypeName }, index) => <SkillItem
-                logoSrc={ logoSrcList.find(src => src.includes(firstServiceTypeName)) || './images/其他-icon.png' }
-                title={ secondServiceTypeName }
-                index={ index }
-                key={ index }
-              />)
-            }
-          </Carousel>
+          { isPartyB && <div><h3 className="skill-title">技能<span>（{ this.state.skillList.length }）</span></h3>
+            <Carousel
+              dots={ false }
+              infinite={ false }
+              slidesToShow={ 4 }
+              slidesToScroll={ 1 }
+              arrows={ true }
+            >
+              {
+                this.state.skillList.map(({ secondServiceTypeName, firstServiceTypeName }, index) => <SkillItem
+                  logoSrc={ logoSrcList.find(src => src.includes(firstServiceTypeName)) || './images/其他-icon.png' }
+                  title={ secondServiceTypeName }
+                  index={ index }
+                  key={ index }
+                />)
+              }
+            </Carousel>
+          </div> }
           {
             isPartyB &&
             <div>

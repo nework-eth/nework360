@@ -1,7 +1,9 @@
-import { Button, Menu, Modal } from 'antd'
+import { Button, Input, Menu, Modal } from 'antd'
 import { message } from 'antd/lib/index'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
+import { setUser } from '../../components/NavMenu/actions'
 import {
   changePwd,
   deleteSkill,
@@ -10,6 +12,7 @@ import {
   getSkillByUserId,
   getUserById,
   postSkill,
+  postSkillTemp,
   updateUser,
   verifyEmail,
   verifyPhoneNumber,
@@ -24,6 +27,10 @@ const MenuItem = Menu.Item
 const mapState = (state) => ({
   user: state.user,
 })
+
+const mapDispatch = (dispatch) => bindActionCreators({
+  setUser,
+}, dispatch)
 
 function CardItem ({ imgSrc, title, isSelected, handleClick }) {
   return (
@@ -63,10 +70,10 @@ function SecondaryCardItem ({ content, isChecked, handleClick }) {
   )
 }
 
-@connect(mapState)
+@connect(mapState, mapDispatch)
 class EditData extends Component {
   state = {
-    selectedItem: 'avatar',
+    selectedItem: 'basic',
     countryOptions: [],
     provinceOptions: [],
     cityOptions: [],
@@ -110,6 +117,11 @@ class EditData extends Component {
     selectedFirstService: '',
     selectedSecondService: [],
     serviceTree: {},
+    inputSecondService: '',
+    inputFirstService: '',
+    lastCity: '',
+    selectedCity: '',
+    locationOptions: [],
   }
   getCityTree = async () => {
     try {
@@ -135,9 +147,14 @@ class EditData extends Component {
   }
   getUserById = async () => {
     try {
-      const { data: { data, code } } = await getUserById({ userId: 11 })
+      const { data: { data, code } } = await getUserById({ userId: this.props.user.userId })
       console.log(data)
       this.setState({ data: { ...data, serviceTime: data.serviceTime.split(',') } })
+      if (!data.isPartyB) {
+        this.setState({
+          menuItemList: this.state.menuItemList.filter(item => item.key !== 'skill'),
+        })
+      }
       if (code !== 200) {
         return message.error('请求服务器错误')
       }
@@ -244,9 +261,10 @@ class EditData extends Component {
       })
       if (code !== 200) {
         message.error(desc)
-        return
+      } else {
+        message.success('更新资料成功')
+        this.afterUpdate()
       }
-      message.success('更新资料成功')
     } catch (e) {
       message.error('请求服务器失败')
     }
@@ -277,14 +295,15 @@ class EditData extends Component {
   handleSave = (type) => async () => {
     try {
       const { data: { code } } = await updateUser({
-        userId: 11,
+        userId: this.props.user.userId,
         [ type ]: this.state.data[ type ],
       })
       if (code !== 200) {
         message.error('请求服务器失败')
-        return
+      } else {
+        message.success('更新资料成功')
+        this.afterUpdate()
       }
-      message.success('更新资料成功')
     } catch (e) {
       message.error('请求服务器失败')
     }
@@ -425,7 +444,10 @@ class EditData extends Component {
   })
   handleFirstServiceSelect = (serviceName) => () => this.setState({
     selectedFirstService: serviceName,
-    secondServiceList: this.state.serviceTree.find(item => item.serviceTypeName === serviceName).child,
+    secondServiceList: [ ...this.state.serviceTree.find(item => item.serviceTypeName === serviceName).child, {
+      serviceTypeName: '其他',
+      serviceTypeId: -1,
+    } ],
   })
   handleSecondServiceSelect = (skillId) => () => {
     if (this.state.selectedSecondService.includes(skillId)) {
@@ -438,23 +460,140 @@ class EditData extends Component {
       })
     }
   }
+
   addSkill = async () => {
     try {
-      const { data: { code, desc } } = await postSkill({
-        userId: this.props.user.userId,
-        latitude: this.props.user.latitude,
-        longitude: this.props.user.longitude,
-        serviceIds: this.state.selectedSecondService.join(','),
-      })
-      if (code !== 200) {
-        message.error(desc)
+      console.log('add skill')
+      console.log(this.state.selectedSecondService)
+      let promiseArr = []
+      if (this.state.selectedSecondService.some(item => item >= 0)) {
+        console.log('first if')
+        promiseArr.push(this.postSkill())
+      }
+      if (this.state.selectedSecondService.includes(-1)) {
+        console.log('sec if')
+        promiseArr.push(this.postSkillTemp())
+      }
+      if (promiseArr.length === 1) {
+        console.log('third if')
+        const [ result ] = await Promise.all(promiseArr)
+        if (result.data.code !== 200) {
+          message.error(result.data.desc)
+          return
+        }
+        message.success('新增技能成功')
+        this.getSkillByUserId()
+        this.hideSkillModal()
         return
       }
-      message.success('添加技能成功')
+      if (promiseArr.length === 2) {
+        const [ result1, result2 ] = await Promise.all(promiseArr)
+        if (result1.data.code !== 200 || result2.data.code !== 200) {
+          message.error('请求服务器失败')
+          this.hideSkillModal()
+          return
+        }
+        message.success('新增技能成功')
+        this.hideSkillModal()
+        this.getSkillByUserId()
+      }
     } catch (e) {
       message.error(e)
     }
+  }
 
+  postSkill = () => postSkill({
+    userId: this.props.user.userId,
+    latitude: this.props.user.latitude,
+    longitude: this.props.user.longitude,
+    serviceIds: this.state.selectedSecondService.join(','),
+  })
+
+  postSkillTemp = () =>
+    postSkillTemp(JSON.stringify([
+      {
+        userId: this.props.user.userId,
+        latitude: this.props.user.latitude,
+        longitude: this.props.user.longitude,
+        serviceName: this.state.selectedFirstService,
+        level: 'f',
+      },
+      {
+        districtId: this.props.user.districtId,
+        userId: this.props.user.userId,
+        location: this.props.user.location,
+        specAddr: this.props.user.specAddr,
+        latitude: this.props.user.latitude,
+        longitude: this.props.user.longitude,
+        serviceTime: this.props.user.serviceTime,
+        serviceName: this.state.inputSecondService,
+        level: 's',
+      },
+    ]))
+  handleLocationChange = (value) => {
+    this.getLocationOptions(value)
+    this.setState({
+      data: { ...this.state.data, location: value },
+    })
+  }
+  getLocationOptions = (keyword) => {
+    this.mapApi.then(() => {
+      // if (this.state.lastCity && this.state.lastCity === this.state.selectedCity) {
+      //   keyword && this.placeSearch.search(keyword, (status, result) => {
+      //     if (status === 'complete' && result.info === 'OK') {
+      //       console.log(result)
+      //       this.setState({
+      //         locationOptions: result.tips,
+      //       })
+      //     }
+      //   })
+      //   return
+      // }
+      // this.setState({
+      //   lastCity: this.state.selectedCity,
+      // })
+      /* eslint-disable no-undef */
+      this.placeSearch = new AMap.Autocomplete({ city: this.state.data.city })
+      keyword && this.placeSearch.search(keyword, (status, result) => {
+        if (status === 'complete' && result.info === 'OK') {
+          console.log(result.tips)
+          this.setState({
+            locationOptions: result.tips,
+          })
+        }
+      })
+    })
+  }
+  mapInit = () => {
+    this.mapApi = new Promise((resolve, reject) => {
+      try {
+        /* eslint-disable no-undef */
+        AMap.plugin('AMap.Autocomplete', () => {
+          resolve()
+        })
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+  handleInputSecondServiceChange = (e) => this.setState({
+    inputSecondService: e.target.value,
+  })
+  handleInputFirstServiceChange = (e) => this.setState({
+    inputFirstService: e.target.value,
+  })
+  afterUpdate = async () => {
+    try {
+      const { data: { data, code } } = await getUserById({ userId: this.props.user.userId })
+      if (code !== 200) {
+        message.error('请求服务器失败')
+        return
+      }
+      this.props.setUser(data)
+      this.getUserById()
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
   }
 
   render () {
@@ -480,13 +619,16 @@ class EditData extends Component {
       selectedFirstService,
       secondServiceList,
       selectedSecondService,
+      inputSecondService,
+      inputFirstService,
+      locationOptions,
     } = this.state
     return (
       <div className="edit-data-container">
         <Menu
           onClick={ this.handleClick }
           style={ { width: 188, minHeight: 800, height: '100%' } }
-          defaultSelectedKeys={ [ 'balance' ] }
+          defaultSelectedKeys={ [ selectedItem ] }
           mode="inline"
         >
           { menuItemList.map(({ key, content }) => <MenuItem key={ key }>{ content }</MenuItem>) }
@@ -517,7 +659,9 @@ class EditData extends Component {
             handleSaveBasic={ this.handleSaveBasic }
             user={ this.props.user }
             deleteSkill={ this.deleteSkill }
+            handleLocationChange={ this.handleLocationChange }
             handleShowAddSkillModal={ this.handleShowAddSkillModal }
+            locationOptions={ locationOptions }
           />
         </div>
         <Modal
@@ -566,17 +710,31 @@ class EditData extends Component {
         >
           {
             skillModalStep
-              ? <div className="secondary-type-select-container">
-                {
-                  secondServiceList.map(({ serviceTypeName, serviceTypeId }) =>
-                    <SecondaryCardItem
-                      content={ serviceTypeName }
-                      key={ serviceTypeName }
-                      isChecked={ selectedSecondService.includes(serviceTypeId) }
-                      handleClick={ this.handleSecondServiceSelect(serviceTypeId) }
-                    />,
-                  )
-                }
+              ?
+              <div className="secondary-type-container">
+                <div className="secondary-type-select-container">
+                  {
+                    secondServiceList.map(({ serviceTypeName, serviceTypeId }) =>
+                      <SecondaryCardItem
+                        content={ serviceTypeName }
+                        key={ serviceTypeName }
+                        isChecked={ selectedSecondService.includes(serviceTypeId) }
+                        handleClick={ this.handleSecondServiceSelect(serviceTypeId) }
+                      />,
+                    )
+                  }
+                </div>
+                <div
+                  style={ selectedSecondService.includes(-1) ? {} : { display: 'none' } }>
+                  <p>
+                    请填写具体的工作技能
+                  </p>
+                  <Input
+                    placeholder="工作技能"
+                    value={ inputSecondService }
+                    onChange={ this.handleInputSecondServiceChange }
+                  />
+                </div>
               </div>
               : <div className="select-type-card-container">
                 {
@@ -589,6 +747,21 @@ class EditData extends Component {
                       handleClick={ this.handleFirstServiceSelect(serviceName) }
                     />)
                 }
+                <div style={ selectedFirstService === '其他' ? {
+                  marginTop: '20px',
+                } : { display: 'none' } }>
+                  <p style={ {
+                    fontWeight: 'bold',
+                    marginBottom: '10px',
+                  } }>
+                    请填写具体的工作类型
+                  </p>
+                  <Input
+                    value={ inputFirstService }
+                    placeholder="工作类型"
+                    onChange={ this.handleInputFirstServiceChange }
+                  />
+                </div>
               </div>
           }
         </Modal>
@@ -601,6 +774,8 @@ class EditData extends Component {
     this.getUserById()
     this.getSkillByUserId()
     this.getServiceTree()
+    this.afterUpdate()
+    this.mapInit()
   }
 
 }
