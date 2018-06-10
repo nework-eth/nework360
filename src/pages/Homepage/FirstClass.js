@@ -13,12 +13,12 @@ class FirstClass extends Component {
       <div>
         <h2 style={ { marginTop: '50px', marginBottom: '20px' } }>全部{ selectedFirstService }服务</h2>
         <div className="card-item-container">
-          { secondServiceList.map(({ serviceTypeName }) =>
+          { secondServiceList.map(({ serviceTypeName, count }) =>
             <CardItem
-              key = {serviceTypeName}
+              key={ serviceTypeName }
               imgSrc={ serviceImageList.find(item => item.includes(serviceTypeName)) }
               title={ serviceTypeName }
-              count={ 10 }
+              count={ count }
             />,
           ) }
         </div>

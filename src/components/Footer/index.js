@@ -32,13 +32,13 @@ class Footer extends Component {
             <p>联系我们</p>
             <p>电话 010-57026742</p>
             <p>邮箱 service@pmcaff.com</p>
-            <p><a href="http://nework.pro">官方网站 nework.pro</a></p>
+            <p><a target="_blank" rel="noopener noreferrer" href="http://nework.pro">官方网站 nework.pro</a></p>
           </div>
           <div className="link">
             <p>友情链接</p>
-            <p>PMCAFF.com</p>
-            <p>外包大师</p>
-            <p>@设计狮</p>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://www.pmcaff.com">PMCAFF.com</a></p>
+            <p><a target="_blank" rel="noopener noreferrer" href="https://http://www.waibaodashi.com/">外包大师</a></p>
+            <p><a target="_blank" rel="noopener noreferrer" href="http://atdesigner.pmcaff.com/#/">@设计狮</a></p>
           </div>
         </div>
         <div className="horizontal-line"/>

@@ -1,12 +1,12 @@
+import { Icon, Input, message } from 'antd'
 import React, { Component } from 'react'
-import './static/style/search.less'
-import { Input, Icon, message } from 'antd'
+import { connect } from 'react-redux'
 import { view as IconItem } from '../../components/LogoItem'
 import { stateKey } from '../../components/NavMenu'
-import { view as Home } from './Home'
+import { getListServiceByDist, getListServiceByParam, getServiceTree } from '../../service/homepage'
 import { view as FirstClass } from './FirstClass'
-import { getServiceTree, getListServiceByParam } from '../../service/homepage'
-import { connect } from 'react-redux'
+import { view as Home } from './Home'
+import './static/style/search.less'
 
 const Search = Input.Search
 
@@ -157,7 +157,7 @@ class SearchPage extends Component {
     try {
       const { data: { code, data, desc } } = await getListServiceByParam({
         dist: this.props.cityName,
-        level: 's',
+        level: 'f',
       })
       console.log(code, data, desc)
     } catch (e) {
@@ -167,7 +167,7 @@ class SearchPage extends Component {
 
   getNearServiceList = async () => {
     try {
-      const { data: { code, data, desc } } = await getListServiceByParam({
+      const { data: { code, data, desc } } = await getListServiceByDist({
         dist: this.props.cityName,
         level: 's',
       })

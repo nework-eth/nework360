@@ -36,10 +36,10 @@ class Home extends Component {
         <h2 style={ h2Style }>附近的服务</h2>
         <Carousel { ...settings }>
           {
-            nearServiceList.map(({ serviceTypeName }) => <CardItem
+            nearServiceList.map(({ serviceTypeName, count }) => <CardItem
               imgSrc={ serviceImageList.find(serviceImage => serviceImage.includes(serviceTypeName)) }
               title={ serviceTypeName }
-              count={ 10 }
+              count={ count }
               key={ serviceTypeName }
             />)
           }

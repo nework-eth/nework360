@@ -65,7 +65,7 @@ class Page extends Component {
           required={ false }
         >
           { getFieldDecorator('userName', {
-            rules: [ { required: true, message: '请输入姓名!' } ],
+            rules: [ { required: true, message: '请输入姓名' } ],
           })(
             <Input
               placeholder="姓名"
@@ -80,7 +80,13 @@ class Page extends Component {
           required={ false }
         >
           { getFieldDecorator('password', {
-            rules: [ { required: true, message: '请输入密码!' } ],
+            rules: [
+              { required: true, message: '请输入密码' },
+              { max: 16, message: '必须为6-16位,不能为纯数字' },
+              { min: 6, message: '必须为6-16位,不能为纯数字' },
+              { pattern: /[a-zA-Z]/, message: '必须为6-16位,不能为纯数字' },
+              { pattern: /^[a-zA-Z0-9]+$/, message: '请输入正确格式的密码' },
+            ],
           })(
             <Input
               type="password"
@@ -104,7 +110,11 @@ class Page extends Component {
               <Option value="+86">中国（+86）</Option>
             </Select>
             { getFieldDecorator('phoneNumber', {
-              rules: [ { required: true, message: '请输入手机号码!' } ],
+              rules: [
+                { required: true, message: '请输入手机号' },
+                { len: 11, message: '请输入正确格式的手机号' },
+                { pattern: /^1[3578]/, message: '请输入正确格式的手机号' },
+              ],
             })(
               <Input
                 placeholder="输入手机号"
@@ -156,6 +166,12 @@ class Page extends Component {
         <span className="captions">已经有账号了？<Link to="/auth/login">去登录</Link></span>
       </Form>
     )
+  }
+
+  componentDidMount () {
+    if (this.props.location.state.phoneNumber) {
+      this.props.form.setFieldsValue({ phoneNumber: this.props.location.state.phoneNumber })
+    }
   }
 }
 

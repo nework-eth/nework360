@@ -1,9 +1,9 @@
+import { Button, Form, Icon, Input, message } from 'antd'
 import React, { Component } from 'react'
-import { Form, Icon, Input, Button, message } from 'antd'
-import './static/style/index.less'
-import { forgetPasswordSendCode, changePassword } from '../../service/auth'
 
-import { Link, browserHistory } from 'react-router'
+import { browserHistory, Link } from 'react-router'
+import { changePassword, forgetPasswordSendCode } from '../../service/auth'
+import './static/style/index.less'
 
 const FormItem = Form.Item
 const InputGroup = Input.Group
@@ -133,6 +133,12 @@ class Page extends Component {
         </Link>
       </Form>
     )
+  }
+
+  componentDidMount () {
+    if (this.props.location.state.phoneNumber) {
+      this.props.form.setFieldsValue({ phoneNumber: this.props.location.state.phoneNumber })
+    }
   }
 }
 

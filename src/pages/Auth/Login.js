@@ -90,8 +90,14 @@ class Page extends Component {
           </Button>
         </FormItem>
         <div style={ FooterStyle }>
-          <span className="captions">还没有账号？<Link to="/auth/register">去注册</Link></span>
-          <span className="captions"><Link to="/auth/forget-password">忘记密码</Link></span>
+          <span className="captions">还没有账号？<Link to={ {
+            pathname: '/auth/register',
+            state: { phoneNumber: this.props.form.getFieldValue('phoneNumber') },
+          } }>去注册</Link></span>
+          <span className="captions"><Link to={ {
+            pathname: '/auth/forget-password',
+            state: { phoneNumber: this.props.form.getFieldValue('phoneNumber') },
+          } }>忘记密码</Link></span>
         </div>
       </Form>
     )
