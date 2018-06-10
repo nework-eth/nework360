@@ -195,7 +195,7 @@ class ServiceList extends Component {
   componentDidMount () {
     this.getServiceTree()
     this.getNearServiceList()
-    if (this.props.location.state.selectedFirstService) {
+    if (this.props.location.state && this.props.location.state.selectedFirstService) {
       this.setState({
         selectedFirstService: this.props.location.state.selectedFirstService,
       })
