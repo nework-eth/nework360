@@ -33,7 +33,7 @@ class Page extends Component {
               browserHistory.push('/')
               return
             }
-            message.error('登录失败')
+            message.error(desc)
           })
           .catch(e => {
             message.error('请求服务器失败')
