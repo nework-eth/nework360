@@ -66,8 +66,8 @@ class SkillPage extends Component {
     serviceList: [],
     firstServiceList: [],
     secondServiceList: [],
-    latitude: '39.991489',
-    longitude: '116.355515',
+    latitude: '',
+    longitude: '',
     specAddrTooLong: false,
     inputTypeTooLong: false,
     description: '',
@@ -161,13 +161,17 @@ class SkillPage extends Component {
     switch (this.state.step) {
       case 0:
         // if (this.state.location && this.state.specAddr) {
-        this.goNextStep()
-        this.getServiceList()
+        // if (!this.state.latitude) {
+        //   /* eslint-disable no-undef */
+        // }
+        // if (!this.state.latitude) {
+        this.geoCoder([ this.goNextStep, this.getServiceList ])
         return
-      // } else {
-      //   message.info('请填写地址')
-      //   return
       // }
+      // this.geoCoder()
+      // this.goNextStep()
+      // this.getServiceList()
+      // return
       case 1:
         if (this.state.selectedType) {
           this.goNextStep()
@@ -201,76 +205,70 @@ class SkillPage extends Component {
         this.goNextStep()
         return
       case 5:
-        if (this.state.avatarSrc) {
-          if (this.state.secondaryTypeList.some(item => item !== -1)) {
-            const { data: { code, data } } = await releaseSkill({
-              userId: this.props.user.userId,
-              latitude: this.state.latitude,
-              longitude: this.state.longitude,
-              serviceIds: this.state.secondaryTypeList.filter(item => item !== -1).join(','),
-            })
-            if (code !== 200) {
-              message.error('请求服务器失败')
-              return
-            }
-          }
-          if (this.state.secondaryTypeList.includes(-1) || this.state.selectedType === '其他') {
-            const { data: { desc, code } } = await postSkillTemp(JSON.stringify([
-              {
-                userId: this.props.user.userId,
-                latitude: this.state.latitude,
-                longitude: this.state.longitude,
-                serviceName: this.state.inputType || this.state.selectedType,
-                level: 'f',
-              },
-              {
-                districtId: this.state.cityId,
-                userId: this.props.user.userId,
-                location: this.state.location,
-                specAddr: this.state.specAddr,
-                latitude: this.state.latitude,
-                longitude: this.state.longitude,
-                serviceTime: this.state.serviceTimeList.join(','),
-                serviceName: this.state.secondaryInputType,
-                level: 's',
-              },
-            ]))
-            if (code !== 200) {
-              message.error('请求服务器失败')
-              return
-            }
-          }
-          const { data: { code, desc } } = await updateUser({
-            districtId: this.state.cityId,
+        if (this.state.secondaryTypeList.some(item => item !== -1)) {
+          const { data: { code, data } } = await releaseSkill({
             userId: this.props.user.userId,
-            location: this.state.location,
-            specAddr: this.state.specAddr,
             latitude: this.state.latitude,
             longitude: this.state.longitude,
-            serviceTime: this.state.serviceTimeList.join(','),
-            description: this.state.description,
-            isPartyB: true,
+            serviceIds: this.state.secondaryTypeList.filter(item => item !== -1).join(','),
           })
           if (code !== 200) {
             message.error('请求服务器失败')
             return
           }
-          this.setState({
-            step: this.state.step + 1,
-            progressPercent: (this.state.step + 1) * 10 + 10,
-          })
-          message.success('发布技能成功')
-          const res = await getUserById({ userId: this.props.user.userId })
-          if (res.data.code !== 200) {
+        }
+        if (this.state.secondaryTypeList.includes(-1) || this.state.selectedType === '其他') {
+          const { data: { desc, code } } = await postSkillTemp(JSON.stringify([
+            {
+              userId: this.props.user.userId,
+              latitude: this.state.latitude,
+              longitude: this.state.longitude,
+              serviceName: this.state.inputType || this.state.selectedType,
+              level: 'f',
+            },
+            {
+              districtId: this.state.cityId,
+              userId: this.props.user.userId,
+              location: this.state.location,
+              specAddr: this.state.specAddr,
+              latitude: this.state.latitude,
+              longitude: this.state.longitude,
+              serviceTime: this.state.serviceTimeList.join(','),
+              serviceName: this.state.secondaryInputType,
+              level: 's',
+            },
+          ]))
+          if (code !== 200) {
             message.error('请求服务器失败')
             return
           }
-          this.props.setUser(res.data.data)
-          return
-        } else {
-          message.info('请上传头像')
+        }
+        const { data: { code, desc } } = await updateUser({
+          districtId: this.state.cityId,
+          userId: this.props.user.userId,
+          location: this.state.location,
+          specAddr: this.state.specAddr,
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
+          serviceTime: this.state.serviceTimeList.join(','),
+          description: this.state.description,
+          isPartyB: true,
+        })
+        if (code !== 200) {
+          message.error('请求服务器失败')
           return
         }
+        this.setState({
+          step: this.state.step + 1,
+          progressPercent: (this.state.step + 1) * 10 + 10,
+        })
+        message.success('发布技能成功')
+        const res = await getUserById({ userId: this.props.user.userId })
+        if (res.data.code !== 200) {
+          message.error('请求服务器失败')
+          return
+        }
+        this.props.setUser(res.data.data)
         return
       case 6:
         this.goNextStep()
@@ -294,7 +292,9 @@ class SkillPage extends Component {
       try {
         /* eslint-disable no-undef */
         AMap.plugin('AMap.Autocomplete', () => {
-          resolve()
+          AMap.plugin('AMap.Geocoder', () => {
+            resolve()
+          })
         })
       } catch (e) {
         reject(e)
@@ -409,6 +409,7 @@ class SkillPage extends Component {
   }
 
   handleLocationChange = (value) => {
+    console.log('change')
     this.getLocationOptions(value)
     this.setState({
       location: value,
@@ -630,14 +631,15 @@ class SkillPage extends Component {
     }
   }
 
-  handleLocationSelect = (value) => {
-    const name = value.split(' ')[ 2 ]
-    const { location } = this.state.locationOptions.find(item => item.name === name)
-    this.setState({
-      latitude: location.lat,
-      longitude: location.lng,
-    })
-  }
+  // handleLocationSelect = (value) => {
+  //   console.log('select')
+  //   const name = value.split(' ')[ 2 ]
+  //   const { location } = this.state.locationOptions.find(item => item.name === name)
+  //   this.setState({
+  //     latitude: location.lat,
+  //     longitude: location.lng,
+  //   })
+  // }
 
   updateImageSrc = (src, type) =>
     updateUser({
@@ -658,6 +660,27 @@ class SkillPage extends Component {
     if (code !== 200) {
       message.error(desc)
     }
+  }
+
+  geoCoder = (cbArr) => {
+    this.mapApi.then(() => {
+      /* eslint-disable no-undef */
+      const geocoder = new AMap.Geocoder({
+        city: this.state.selectedCity,
+      })
+      //地理编码,返回地理编码结果
+      geocoder.getLocation(`${this.state.location} ${this.state.specAddr}`, (status, result) => {
+        if (status === 'complete' && result.info === 'OK' && result.geocodes.length === 1) {
+          this.setState({
+            latitude: result.geocodes[ 0 ].location.lat,
+            longitude: result.geocodes[ 0 ].location.lng,
+          })
+          cbArr.forEach(item => item())
+          return
+        }
+        message.error('地址位置不够精确，请确保你所添加的信息是正确的')
+      })
+    })
   }
 }
 
