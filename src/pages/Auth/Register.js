@@ -12,12 +12,12 @@ const Option = Select.Option
 class Page extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
-    this.props.form.validateFields(async (err, { messageCode, password, phoneNumber, userName }) => {
+    this.props.form.validateFields(async (err, { messageCode, password, phoneNumber, nickName }) => {
       if (!err) {
         try {
           const { data: { code, desc } } = await register({
             phoneNumber,
-            nickname: userName,
+            nickName,
             pwd: password,
             code: messageCode,
           })
@@ -47,7 +47,7 @@ class Page extends Component {
           }
           message.error(desc)
         } catch (e) {
-          message.error('请求服务器失败')
+          message.error('请输入正确格式的手机号')
         }
       }
     })
@@ -64,8 +64,12 @@ class Page extends Component {
           colon={ false }
           required={ false }
         >
-          { getFieldDecorator('userName', {
-            rules: [ { required: true, message: '请输入姓名' } ],
+          { getFieldDecorator('nickName', {
+            rules: [
+              { required: true, message: '请输入姓名' },
+              { pattern: /^[\u4e00-\u9fa5a-zA-Z&/()._| ]+$/, message: '不超过50字符，只允许中英文及&/()._|' },
+              { max: 50, message: '不超过50字符，只允许中英文及&/()._|' },
+            ],
           })(
             <Input
               placeholder="姓名"
