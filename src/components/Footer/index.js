@@ -37,7 +37,7 @@ class Footer extends Component {
           <div className="link">
             <p>友情链接</p>
             <p><a target="_blank" rel="noopener noreferrer" href="https://www.pmcaff.com">PMCAFF.com</a></p>
-            <p><a target="_blank" rel="noopener noreferrer" href="https://http://www.waibaodashi.com/">外包大师</a></p>
+            <p><a target="_blank" rel="noopener noreferrer" href="http://www.waibaodashi.com">外包大师</a></p>
             <p><a target="_blank" rel="noopener noreferrer" href="http://atdesigner.pmcaff.com/#/">@设计狮</a></p>
           </div>
         </div>
