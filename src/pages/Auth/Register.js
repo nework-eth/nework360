@@ -8,7 +8,11 @@ const FormItem = Form.Item
 const InputGroup = Input.Group
 const Option = Select.Option
 
-@Form.create()
+const onValuesChange = (props, changeValue) => {
+  console.log(props, changeValue)
+}
+
+@Form.create({ onValuesChange })
 class Page extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
