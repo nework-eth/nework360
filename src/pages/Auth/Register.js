@@ -8,11 +8,7 @@ const FormItem = Form.Item
 const InputGroup = Input.Group
 const Option = Select.Option
 
-const onValuesChange = (props, changeValue) => {
-  console.log(props, changeValue)
-}
-
-@Form.create({ onValuesChange })
+@Form.create()
 class Page extends Component {
   handleSubmit = (e) => {
     e.preventDefault()
@@ -154,6 +150,7 @@ class Page extends Component {
             <Button
               className="get-message-button"
               onClick={ this.sendCode }
+              disabled={ !this.props.form.getFieldValue('phoneNumber') || this.props.form.getFieldError('phoneNumber') }
             >
               获取验证码
             </Button>
