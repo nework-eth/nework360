@@ -10,23 +10,6 @@ import { setCityId, setCityName, setCountryId, setUser } from './actions'
 import { positionReducer, userReducer } from './reducer'
 import './static/style/index.less'
 
-const menu = (
-  <Menu>
-    <Menu.Item className="nav-ant-menu-item">
-      <Link to="/profile">我的主页</Link>
-    </Menu.Item>
-    <Menu.Item className="nav-ant-menu-item">
-      <Link to="/wallet">钱包</Link>
-    </Menu.Item>
-    <Menu.Item className="nav-ant-menu-item">
-      <Link to="/editData">设置</Link>
-    </Menu.Item>
-    <Menu.Item className="nav-ant-menu-item">
-      <Link to="/editData">设置</Link>
-    </Menu.Item>
-  </Menu>
-)
-
 const specialLinkStyle = {
   color: '#082135',
   textDecoration: 'none',
