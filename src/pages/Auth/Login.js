@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { browserHistory, Link } from 'react-router'
+import { Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { setUser, setUserId } from '../../components/NavMenu/actions'
 import { login } from '../../service/auth'
@@ -17,33 +17,171 @@ const mapDispatch = (dispatch) => bindActionCreators({
 }, dispatch)
 
 @connect(null, mapDispatch)
-@Form.create()
+// @Form.create()
 class Page extends Component {
-  handleSubmit = (e) => {
+  handleSubmit = async (e) => {
     e.preventDefault()
-    this.props.form.validateFields(async (err, { phoneNumber, password }) => {
-      if (!err) {
-        await login({ phoneNumber, pwd: password })
-          .then(({ data: { code, desc, data } }) => {
-            if (code === 200 && desc === 'success') {
-              message.success('登录成功')
-              console.log(data)
-              this.props.setUser(data)
-              this.props.setUserId(data.userId)
-              browserHistory.push('/')
-              return
-            }
-            message.error(desc)
-          })
-          .catch(e => {
-            message.error('请求服务器失败')
-          })
+    const { phoneNumber, pwd } = this.state
+    if (!phoneNumber.value) {
+      return message.error('请输入手机号')
+    }
+    if (!pwd.value) {
+      return message.error('请输入密码')
+    }
+    if (phoneNumber.errorMsg) {
+      return message.error('请输入正确格式的手机号')
+    }
+    if (pwd.errorMsg) {
+      return message.error('请输入正确格式的密码')
+    }
+    try {
+      const { data: { code, desc } } = await login({ phoneNumber, pwd })
+      if (code !== 200) {
+        return message.error(desc)
       }
-    })
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+
+    // this.props.form.validateFields(async (err, { phoneNumber, password }) => {
+    //   if (!err) {
+    //     await login({ phoneNumber, pwd: password })
+    //       .then(({ data: { code, desc, data } }) => {
+    //         if (code === 200 && desc === 'success') {
+    //           message.success('登录成功')
+    //           console.log(data)
+    //           this.props.setUser(data)
+    //           this.props.setUserId(data.userId)
+    //           browserHistory.push('/')
+    //           return
+    //         }
+    //         message.error(desc)
+    //       })
+    //       .catch(e => {
+    //         message.error('请求服务器失败')
+    //       })
+    //   }
+    // })
+  }
+
+  state = {
+    phoneNumber: {
+      value: '',
+    },
+    pwd: {
+      value: '',
+    },
+  }
+  handlePhoneNumberChange = (value) => {
+    this.setState((preState) => ({
+      phoneNumber: {
+        ...preState.phoneNumber,
+        value,
+      },
+    }))
+  }
+  handlePwdChange = (value) => {
+    this.setState((preState) => ({
+      pwd: {
+        ...preState.pwd,
+        value,
+      },
+    }))
+  }
+  validatePhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '请输入手机号',
+      }
+    }
+    if (phoneNumber.length < 5) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '请输入正确格式手机号',
+      }
+    }
+    if (phoneNumber.length > 11) {
+      return {
+        value: phoneNumber.slice(0, 11),
+        validateStatus: 'error',
+        errorMsg: '请输入正确格式手机号',
+      }
+    }
+    if (!/^1[\d]{10}$/.test(phoneNumber)) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '手机号格式不正确',
+      }
+    }
+    return {
+      validateStatus: 'success',
+      errorMsg: null,
+    }
+  }
+  handlePhoneNumberBlur = () => {
+    this.setState((preState) => ({
+      phoneNumber: {
+        value: preState.phoneNumber.value,
+        ...this.validatePhoneNumber(preState.phoneNumber.value),
+      },
+    }))
+  }
+  validatePwd = (pwd) => {
+    if (!pwd) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '请输入密码',
+      }
+    }
+    if (pwd.length > 16) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '字数不能多于16位',
+        value: pwd.value.slice(0, 16),
+      }
+    }
+    if (pwd.length < 6) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '字数不能少于6位',
+      }
+    }
+    if (/^\d+$/.test(pwd)) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '不能为纯数字',
+      }
+    }
+    if (pwd.includes(' ')) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '密码不能包含空格',
+      }
+    }
+    if (/^[A-Za-z0-9&/()._|]+$/) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '密码只能输入大小写英文、数字、特殊字符（除空格）',
+      }
+    }
+    return {
+      validateStatus: 'success',
+      errorMsg: null,
+    }
+  }
+  handlePwdBlur = () => {
+    this.setState((preState) => ({
+      phoneNumber: {
+        value: preState.pwd.value,
+        ...this.validatePwd(preState.pwd.value),
+      },
+    }))
   }
 
   render () {
-    const { getFieldDecorator } = this.props.form
+    // const { getFieldDecorator } = this.props.form
+    const { phoneNumber, pwd } = this.state
     return (
       <Form onSubmit={ this.handleSubmit } className="form-container">
         <h2>欢迎回来</h2>
@@ -52,31 +190,41 @@ class Page extends Component {
           className="form-item"
           colon={ false }
           required={ false }
+          help={ phoneNumber.errorMsg }
+          validateStatus={ phoneNumber.validateStatus }
         >
-          { getFieldDecorator('phoneNumber', {
-            rules: [ { required: true, message: '请输入手机号!' } ],
-          })(
-            <Input
-              placeholder="输入手机号"
-              className="form-input"
-            />,
-          ) }
+          { /*{ getFieldDecorator('phoneNumber', {*/ }
+          { /*rules: [ { required: true, message: '请输入手机号!' } ],*/ }
+          { /*})(*/ }
+          <Input
+            placeholder="输入手机号"
+            className="form-input"
+            value={ phoneNumber.value }
+            onChange={ this.handlePhoneNumberChange }
+            onBlur={ this.handlePhoneNumberBlur }
+          />
+          { /*// ) }*/ }
         </FormItem>
         <FormItem
           label="密码"
           className="form-item"
           colon={ false }
           required={ false }
+          help={ pwd.errorMsg }
+          validateStatus={ phoneNumber.validateStatus }
         >
-          { getFieldDecorator('password', {
-            rules: [ { required: true, message: '请输入密码!' } ],
-          })(
-            <Input
-              type="password"
-              placeholder="输入密码"
-              className="form-input"
-            />,
-          ) }
+          { /*{ getFieldDecorator('password', {*/ }
+          { /*rules: [ { required: true, message: '请输入密码!' } ],*/ }
+          { /*})(*/ }
+          <Input
+            type="password"
+            placeholder="输入密码"
+            className="form-input"
+            value={ pwd.value }
+            onChange={ this.handlePwdChange }
+            onBlur={ this.handlePwdBlur }
+          />
+          { /*) }*/ }
         </FormItem>
         <FormItem
           className="form-item"
@@ -92,11 +240,11 @@ class Page extends Component {
         <div style={ FooterStyle }>
           <span className="captions">还没有账号？<Link to={ {
             pathname: '/auth/register',
-            state: { phoneNumber: this.props.form.getFieldValue('phoneNumber') },
+            state: { phoneNumber },
           } }>去注册</Link></span>
           <span className="captions"><Link to={ {
             pathname: '/auth/forget-password',
-            state: { phoneNumber: this.props.form.getFieldValue('phoneNumber') },
+            state: { phoneNumber },
           } }>忘记密码</Link></span>
         </div>
       </Form>

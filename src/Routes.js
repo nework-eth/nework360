@@ -111,11 +111,11 @@ const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (
   <Router history={ history } createElement={ createElement }>
-    <Route path="/auth" component={ AuthPage }>
+    <Route component={ AuthPage }>
       <Route path="counter" getComponent={ getCounterPage }/>
-      <Route path="login" getComponent={ getLoginPage }/>
-      <Route path="register" getComponent={ getRegisterPage }/>
-      <Route path="forget-password" getComponent={ getForgetPassword }/>
+      <Route path="/login" getComponent={ getLoginPage }/>
+      <Route path="/register" getComponent={ getRegisterPage }/>
+      <Route path="/forget-password" getComponent={ getForgetPassword }/>
     </Route>
     <Route path="/" component={ Homepage }>
       <IndexRoute getComponent={ getSearchPage }/>

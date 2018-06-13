@@ -1,7 +1,7 @@
 import { Button, Form, Icon, Input, message } from 'antd'
 import React, { Component } from 'react'
 
-import { browserHistory, Link } from 'react-router'
+import { Link } from 'react-router'
 import { changePassword, forgetPasswordSendCode } from '../../service/auth'
 import './static/style/index.less'
 
@@ -10,45 +10,319 @@ const InputGroup = Input.Group
 
 @Form.create()
 class Page extends Component {
-  handleSubmit = (e) => {
+
+  state = {
+    pwd: {
+      value: '',
+    },
+    phoneNumber: {
+      value: '',
+    },
+    messageCode: {
+      value: '',
+    },
+    messageButton: {
+      value: '获取验证码',
+      disabled: true,
+    },
+    disableTime: 0,
+  }
+
+  handleSubmit = async (e) => {
     e.preventDefault()
-    this.props.form.validateFields(async (err, { messageCode, password, phoneNumber }) => {
-      if (!err) {
-        try {
-          const { data: { code, desc } } = changePassword({ phoneNumber, pwd: password, code: messageCode })
-          if (code === 200) {
-            message.success('修改密码成功', () => {
-              browserHistory.push('/auth/login')
-            })
-            return
-          }
-          message.error(desc)
-        } catch (e) {
-          message.error('请求服务器失败')
-        }
+    // this.props.form.validateFields(async (err, { messageCode, password, phoneNumber }) => {
+    //   if (!err) {
+    // const {
+    //   phoneNumber,
+    //   pwd,
+    //   messageCode,
+    // } = this.state
+    // try {
+    //   const { data: { code, desc } } = changePassword({
+    //     phoneNumber: phoneNumber.value,
+    //     pwd: pwd.value,
+    //     code: messageCode.value,
+    //   })
+    //   if (code === 200) {
+    //     message.success('修改密码成功', () => {
+    //       browserHistory.push('/auth/login')
+    //     })
+    //     return
+    //   }
+    //   message.error(desc)
+    // } catch (e) {
+    //   message.error('请求服务器失败')
+    // }
+    // }
+    // })
+    const {
+      phoneNumber,
+      pwd,
+      messageCode,
+    } = this.state
+    if (!phoneNumber.value) {
+      message.error('请输入手机号')
+      return
+    }
+    if (!pwd.value) {
+      message.error('请输入密码')
+      return
+    }
+    if (!messageCode.value) {
+      message.error('请输入验证码')
+      return
+    }
+    if (phoneNumber.errorMsg) {
+      message.error('请输入正确格式的手机号')
+      return
+    }
+    if (pwd.errorMsg) {
+      message.error('请输入正确格式的密码')
+      return
+    }
+    if (messageCode.errorMsg) {
+      message.error('请输入正确格式的验证码')
+      return
+    }
+    try {
+      const { data: { desc, code } } = await changePassword({
+        code: messageCode.value,
+        phoneNumber: phoneNumber.value,
+        pwd: pwd.value,
+      })
+      if (code !== 200) {
+        message.error(desc)
+        return
       }
+      message.success('修改密码成功')
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
+  }
+
+  startTimer = () => {
+    if (this.timer) {
+      return
+    }
+    this.setState({
+      disabledTime: 60,
+    }, () => {
+      this.timer = this.timerReduce(() => this.timer = null)
     })
+  }
+
+  timerReduce = (cb) => {
+    if (this.state.disableTime) {
+      this.setState((preState) => ({
+        disableTime: preState.disableTime - 1,
+      }))
+      setTimeout(() => this.timerReduce(cb), 1000)
+      return
+    }
+    cb()
+  }
+
+  handleMessageButtonClick = async () => {
+    try {
+      const { data: { code, desc } } = await forgetPasswordSendCode({ phoneNumber: this.state.phoneNumber })
+      if (code === 200) {
+        message.success('已发送短信验证码')
+        this.startTimer()
+        return
+      }
+      message.error(desc)
+    } catch (e) {
+      message.error('请求服务器失败')
+    }
   }
 
   sendCode = () => {
-    this.props.form.validateFields([ 'phoneNumber' ], async (err, { phoneNumber }) => {
-      if (!err) {
-        try {
-          const { data: { code, desc } } = await forgetPasswordSendCode({ phoneNumber })
-          if (code === 200) {
-            message.success('已发送短信验证码')
-            return
-          }
-          message.error(desc)
-        } catch (e) {
-          message.error('请求服务器失败')
-        }
+    // this.props.form.validateFields([ 'phoneNumber' ], async (err, { phoneNumber }) => {
+    //   if (!err) {
+    //     try {
+    //       const { data: { code, desc } } = await forgetPasswordSendCode({ phoneNumber })
+    //       if (code === 200) {
+    //         message.success('已发送短信验证码')
+    //         return
+    //       }
+    //       message.error(desc)
+    //     } catch (e) {
+    //       message.error('请求服务器失败')
+    //     }
+    //   }
+    // })
+  }
+  handlePhoneNumberChange = (value) => {
+    this.setState((preState) => ({
+      phoneNumber: {
+        ...preState.phoneNumber,
+        value,
+      },
+    }))
+    if (this.state.messageButton.value === '获取验证码') {
+      const { validateStatus } = this.validatePhoneNumber(this.state.phoneNumber)
+      if (validateStatus === 'success') {
+        this.setState((preState) => ({
+          messageButton: {
+            ...preState.messageButton,
+            disabled: false,
+          },
+        }))
+      } else {
+        this.setState((preState) => ({
+          messageButton: {
+            ...preState.messageButton,
+            disabled: true,
+          },
+        }))
       }
-    })
+    }
+  }
+  validatePhoneNumber = (phoneNumber) => {
+    if (!phoneNumber) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '请输入手机号',
+      }
+    }
+    if (phoneNumber.length < 5) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '请输入正确格式手机号',
+      }
+    }
+    if (phoneNumber.length > 11) {
+      return {
+        value: phoneNumber.slice(0, 11),
+        validateStatus: 'error',
+        errorMsg: '请输入正确格式手机号',
+      }
+    }
+    if (!/^1[\d]{10}$/.test(phoneNumber)) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '手机号格式不正确',
+      }
+    }
+    return {
+      validateStatus: 'success',
+      errorMsg: null,
+    }
+  }
+  handlePhoneNumberBlur = () => this.setState((preState) => ({
+    phoneNumber: {
+      value: preState.phoneNumber.value,
+      ...this.validatePhoneNumber(preState.phoneNumber.value),
+    },
+  }))
+  validateMessageCode = (messageCode) => {
+    if (!messageCode) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '请输入验证码',
+      }
+    }
+
+    if (messageCode.length < 4) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '验证码错误',
+      }
+    }
+
+    if (messageCode.length > 4) {
+      return {
+        value: messageCode.slice(0, 4),
+      }
+    }
+
+    if (/^\d{4}$/.test(messageCode)) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '验证码错误',
+      }
+    }
+
+    return {
+      validateStatus: 'success',
+      errorMsg: null,
+    }
+  }
+  handleMessageCodeBlur = () => this.setState((preState) => ({
+    messageCode: {
+      value: preState.messageCode.value,
+      ...this.validateMessageCode(preState.messageCode.value),
+    },
+  }))
+  handlePwdChange = (value) => {
+    this.setState((preState) => ({
+      pwd: {
+        ...preState.pwd,
+        value,
+      },
+    }))
+  }
+  validatePwd = (pwd) => {
+    if (!pwd) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '请输入密码',
+      }
+    }
+    if (pwd.length > 16) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '字数不能多于16位',
+        value: pwd.value.slice(0, 16),
+      }
+    }
+    if (pwd.length < 6) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '字数不能少于6位',
+      }
+    }
+    if (/^\d+$/.test(pwd)) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '不能为纯数字',
+      }
+    }
+    if (pwd.includes(' ')) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '密码不能包含空格',
+      }
+    }
+    if (/^[A-Za-z0-9&/()._|]+$/) {
+      return {
+        validateStatus: 'error',
+        errorMsg: '密码只能输入大小写英文、数字、特殊字符（除空格）',
+      }
+    }
+    return {
+      validateStatus: 'success',
+      errorMsg: null,
+    }
+  }
+  handlePwdBlur = () => {
+    this.setState((preState) => ({
+      phoneNumber: {
+        value: preState.pwd.value,
+        ...this.validatePwd(preState.pwd.value),
+      },
+    }))
   }
 
   render () {
-    const { getFieldDecorator } = this.props.form
+    // const { getFieldDecorator } = this.props.form
+    const {
+      phoneNumber,
+      pwd,
+      messageCode,
+      messageButton,
+      disableTime,
+    } = this.state
     return (
       <Form onSubmit={ this.handleSubmit } className="form-container">
         <h2>忘记密码</h2>
@@ -57,40 +331,51 @@ class Page extends Component {
           className="form-item"
           colon={ false }
           required={ false }
+          help={ phoneNumber.errorMsg }
+          validateStatus={ phoneNumber.validateStatus }
         >
-          { getFieldDecorator('phoneNumber', {
-            rules: [ { required: true, message: '请输入手机号!' } ],
-          })(
-            <Input
-              placeholder="输入手机号"
-              className="form-input"
-            />,
-          ) }
+          { /*{ getFieldDecorator('phoneNumber', {*/ }
+          { /*rules: [ { required: true, message: '请输入手机号!' } ],*/ }
+          { /*})(*/ }
+          <Input
+            placeholder="输入手机号"
+            className="form-input"
+            value={ phoneNumber.value }
+            onChange={ this.handlePhoneNumberChange }
+            onBlur={ this.handlePhoneNumberBlur }
+          />
+          { /*) }*/ }
         </FormItem>
         <FormItem
           label="短信验证码"
           className="form-item"
           colon={ false }
           required={ false }
+          help={ messageCode.errorMsg }
+          validateStatus={ messageCode.validateStatus }
         >
           <InputGroup compact>
-            { getFieldDecorator('messageCode', {
-              rules: [ { required: true, message: '请输入短信验证码!' } ],
-            })(
-              <Input
-                placeholder="4位数字短信验证码"
-                className="form-input"
-                style={ {
-                  width: '70%',
-                  borderRight: 'none',
-                } }
-              />,
-            ) }
+            { /*{ getFieldDecorator('messageCode', {*/ }
+            { /*rules: [ { required: true, message: '请输入短信验证码!' } ],*/ }
+            { /*})(*/ }
+            <Input
+              placeholder="4位数字短信验证码"
+              className="form-input"
+              style={ {
+                width: '70%',
+                borderRight: 'none',
+              } }
+              value={ messageCode.value }
+              onBlur={ this.handleMessageCodeBlur }
+            />
+            { /*,*/ }
+            { /*) }*/ }
             <Button
               className="get-message-button"
-              onClick={ this.sendCode }
+              onClick={ this.handleMessageButtonClick }
+              disabled={ disableTime || messageButton.disabled }
             >
-              获取验证码
+              { disableTime ? `${disableTime}S` : messageButton.value }
             </Button>
           </InputGroup>
         </FormItem>
@@ -99,16 +384,22 @@ class Page extends Component {
           className="form-item"
           colon={ false }
           required={ false }
+          help={ pwd.errorMsg }
+          validateStatus={ pwd.validateStatus }
         >
-          { getFieldDecorator('password', {
-            rules: [ { required: true, message: '请输入新密码!' } ],
-          })(
-            <Input
-              type="password"
-              placeholder="设置新密码"
-              className="form-input"
-            />,
-          ) }
+          { /*{ getFieldDecorator('password', {*/ }
+          { /*rules: [ { required: true, message: '请输入新密码!' } ],*/ }
+          { /*})(*/ }
+          <Input
+            type="password"
+            placeholder="设置新密码"
+            className="form-input"
+            value={ pwd.value }
+            onChange={ this.handlePwdChange }
+            onBlur={ this.handlePwdBlur }
+          />
+          { /*,*/ }
+          { /*) }*/ }
         </FormItem>
         <FormItem
           className="form-item"
@@ -137,10 +428,13 @@ class Page extends Component {
 
   componentDidMount () {
     if (this.props.location.state && this.props.location.state.phoneNumber) {
-      this.props.form.setFieldsValue({ phoneNumber: this.props.location.state.phoneNumber })
+      // this.props.form.setFieldsValue({ phoneNumber: this.props.location.state.phoneNumber })
+      this.setState({
+        phoneNumber: this.props.location.state.phoneNumber,
+      })
     }
   }
+
 }
 
 export { Page as page }
-

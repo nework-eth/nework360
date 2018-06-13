@@ -190,7 +190,7 @@ class Profile extends Component {
             </Carousel>
           </div> }
           {
-            isPartyB &&
+            // isPartyB &&
             <div>
               <h3 className="location">营业时间与地点</h3>
               <div className="time-location-container">
@@ -216,7 +216,9 @@ class Profile extends Component {
 
   componentDidMount () {
     /* eslint-disable no-undef */
-    const map = new AMap.Map('mapContainer')
+    // const map = new AMap.Map('mapContainer')
+    /* eslint-disable no-undef */
+    console.log('AMap++++', AMap)
     this.getUserById()
     this.getSkillByUserId()
   }
