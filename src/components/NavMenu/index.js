@@ -65,7 +65,7 @@ class NavMenu extends Component {
       return
     }
     this.props.setUser({})
-    browserHistory.push('/auth/login')
+    browserHistory.push('/login')
   }
 
   render () {
@@ -115,18 +115,19 @@ class NavMenu extends Component {
                         </Menu.Item>
                       </Menu>
                     }>
-                      <img src={ this.props.avatar } alt="头像" width={ 30 } height={ 30 } className="avatar"/>
+                      <img src={ this.props.avatar || './images/headshot-default.png' } alt="头像" width={ 30 }
+                        height={ 30 } className="avatar"/>
                     </Dropdown>
                   </li>
                 </div>
               )
               : <div className="li-wrapper">
-                <li style={ { paddingRight: '20px' } } className="li-item">帮助</li>
+                <li style={ { paddingRight: '20px', cursor: 'pointer' } } className="li-item">帮助</li>
                 <li className="vertical-line"/>
-                <li className="li-item"><Link to="/auth/login" style={ specialLinkStyle }>登录</Link></li>
+                <li className="li-item"><Link to="/login" style={ specialLinkStyle }>登录</Link></li>
                 <li
                   className="li-item" style={ { paddingLeft: '0' } }>
-                  <Link to="/auth/register" style={ specialLinkStyle }>注册</Link>
+                  <Link to="/register" style={ specialLinkStyle }>注册</Link>
                 </li>
               </div>
           }

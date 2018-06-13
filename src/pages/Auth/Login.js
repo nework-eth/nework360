@@ -1,7 +1,7 @@
 import { Button, Form, Input, message } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { setUser, setUserId } from '../../components/NavMenu/actions'
 import { login } from '../../service/auth'
@@ -17,7 +17,6 @@ const mapDispatch = (dispatch) => bindActionCreators({
 }, dispatch)
 
 @connect(null, mapDispatch)
-// @Form.create()
 class Page extends Component {
   handleSubmit = async (e) => {
     e.preventDefault()
@@ -35,10 +34,14 @@ class Page extends Component {
       return message.error('请输入正确格式的密码')
     }
     try {
-      const { data: { code, desc } } = await login({ phoneNumber, pwd })
+      const { data: { code, desc, data } } = await login({ phoneNumber: phoneNumber.value, pwd: pwd.value })
       if (code !== 200) {
         return message.error(desc)
       }
+      this.props.setUser(data)
+      this.props.setUserId(data.userId)
+      message.success('登录成功')
+      browserHistory.push('/')
     } catch (e) {
       message.error('请求服务器失败')
     }
@@ -72,22 +75,27 @@ class Page extends Component {
       value: '',
     },
   }
-  handlePhoneNumberChange = (value) => {
+
+  handlePhoneNumberChange = (e) => {
+    const value = e.target.value
     this.setState((preState) => ({
       phoneNumber: {
         ...preState.phoneNumber,
-        value,
+        value: value.length > 11 ? value.slice(0, 11) : value,
       },
     }))
   }
-  handlePwdChange = (value) => {
+
+  handlePwdChange = (e) => {
+    const value = e.target.value
     this.setState((preState) => ({
       pwd: {
         ...preState.pwd,
-        value,
+        value: value.length > 16 ? value.slice(0, 16) : value,
       },
     }))
   }
+
   validatePhoneNumber = (phoneNumber) => {
     if (!phoneNumber) {
       return {
@@ -95,7 +103,7 @@ class Page extends Component {
         errorMsg: '请输入手机号',
       }
     }
-    if (phoneNumber.length < 5) {
+    if (phoneNumber.length < 11) {
       return {
         validateStatus: 'error',
         errorMsg: '请输入正确格式手机号',
@@ -159,7 +167,7 @@ class Page extends Component {
         errorMsg: '密码不能包含空格',
       }
     }
-    if (/^[A-Za-z0-9&/()._|]+$/) {
+    if (!/^[A-Za-z0-9&/()._|]+$/.test(pwd)) {
       return {
         validateStatus: 'error',
         errorMsg: '密码只能输入大小写英文、数字、特殊字符（除空格）',
@@ -172,7 +180,7 @@ class Page extends Component {
   }
   handlePwdBlur = () => {
     this.setState((preState) => ({
-      phoneNumber: {
+      pwd: {
         value: preState.pwd.value,
         ...this.validatePwd(preState.pwd.value),
       },
@@ -193,9 +201,6 @@ class Page extends Component {
           help={ phoneNumber.errorMsg }
           validateStatus={ phoneNumber.validateStatus }
         >
-          { /*{ getFieldDecorator('phoneNumber', {*/ }
-          { /*rules: [ { required: true, message: '请输入手机号!' } ],*/ }
-          { /*})(*/ }
           <Input
             placeholder="输入手机号"
             className="form-input"
@@ -203,7 +208,6 @@ class Page extends Component {
             onChange={ this.handlePhoneNumberChange }
             onBlur={ this.handlePhoneNumberBlur }
           />
-          { /*// ) }*/ }
         </FormItem>
         <FormItem
           label="密码"
@@ -211,11 +215,8 @@ class Page extends Component {
           colon={ false }
           required={ false }
           help={ pwd.errorMsg }
-          validateStatus={ phoneNumber.validateStatus }
+          validateStatus={ pwd.validateStatus }
         >
-          { /*{ getFieldDecorator('password', {*/ }
-          { /*rules: [ { required: true, message: '请输入密码!' } ],*/ }
-          { /*})(*/ }
           <Input
             type="password"
             placeholder="输入密码"
@@ -224,7 +225,6 @@ class Page extends Component {
             onChange={ this.handlePwdChange }
             onBlur={ this.handlePwdBlur }
           />
-          { /*) }*/ }
         </FormItem>
         <FormItem
           className="form-item"
@@ -239,16 +239,26 @@ class Page extends Component {
         </FormItem>
         <div style={ FooterStyle }>
           <span className="captions">还没有账号？<Link to={ {
-            pathname: '/auth/register',
-            state: { phoneNumber },
+            pathname: '/register',
+            state: { phoneNumber: phoneNumber.value },
           } }>去注册</Link></span>
           <span className="captions"><Link to={ {
-            pathname: '/auth/forget-password',
-            state: { phoneNumber },
+            pathname: '/forget-password',
+            state: { phoneNumber: phoneNumber.value },
           } }>忘记密码</Link></span>
         </div>
       </Form>
     )
+  }
+
+  componentDidMount () {
+    if (this.props.location.state && this.props.location.state.phoneNumber) {
+      this.setState({
+        phoneNumber: {
+          value: this.props.location.state.phoneNumber,
+        },
+      })
+    }
   }
 }
 

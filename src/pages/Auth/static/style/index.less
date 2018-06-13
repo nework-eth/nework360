@@ -1,6 +1,20 @@
-.form-container {
-  margin: 100px auto 0;
-  width: 700px;
+.auth-container {
+  padding-top: 70px;
+  display: flex;
+  flex-flow: column;
+  min-height: calc(100vh);
+  background-image: url("../images/login-bg.png");
+  background-size: cover;
+  main {
+    flex: 1;
+    padding: 0 calc(50vw - 350px);
+    .form-wrapper {
+      margin-top: 100px;
+    }
+  }
+}
+
+.form-container.form-container {
   padding: 50px 90px;
   background-color: #fff;
   box-shadow: 0 0 10px 0 rgba(9, 34, 53, 0.10);
@@ -52,7 +66,7 @@
     background-color: #fff;
     color: #092235;
     font-weight: normal;
-    border-radius: 2px!important;
+    border-radius: 2px !important;
     &:hover, &:focus {
       color: #008bf7;
       background-color: #fff;

@@ -276,7 +276,7 @@ function EditDataForm ({
         <h2>照片</h2>
         <p>清晰的工作或生活照片，会成为你和顾客互相认识的重要途径。请确保使用清晰的照片，并确认其中不包含你不希望其他人看到的个人敏感信息。</p>
         <div className="image-wrapper">
-          <img src={ avatar } alt="头像" width={ 200 } height={ 200 }/>
+          <img src={ avatar || './images/headshot-default.png' } alt="头像" width={ 200 } height={ 200 }/>
           <img src="./images/headshot-mask.png" alt="头像遮罩" width={ 200 } height={ 200 } className="mask"/>
         </div>
         <div className="button-wrapper">

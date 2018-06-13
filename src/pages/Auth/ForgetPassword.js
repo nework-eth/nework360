@@ -1,14 +1,12 @@
 import { Button, Form, Icon, Input, message } from 'antd'
 import React, { Component } from 'react'
-
-import { Link } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 import { changePassword, forgetPasswordSendCode } from '../../service/auth'
 import './static/style/index.less'
 
 const FormItem = Form.Item
 const InputGroup = Input.Group
 
-@Form.create()
 class Page extends Component {
 
   state = {
@@ -25,36 +23,11 @@ class Page extends Component {
       value: '获取验证码',
       disabled: true,
     },
-    disableTime: 0,
+    disabledTime: 0,
   }
 
   handleSubmit = async (e) => {
     e.preventDefault()
-    // this.props.form.validateFields(async (err, { messageCode, password, phoneNumber }) => {
-    //   if (!err) {
-    // const {
-    //   phoneNumber,
-    //   pwd,
-    //   messageCode,
-    // } = this.state
-    // try {
-    //   const { data: { code, desc } } = changePassword({
-    //     phoneNumber: phoneNumber.value,
-    //     pwd: pwd.value,
-    //     code: messageCode.value,
-    //   })
-    //   if (code === 200) {
-    //     message.success('修改密码成功', () => {
-    //       browserHistory.push('/auth/login')
-    //     })
-    //     return
-    //   }
-    //   message.error(desc)
-    // } catch (e) {
-    //   message.error('请求服务器失败')
-    // }
-    // }
-    // })
     const {
       phoneNumber,
       pwd,
@@ -64,24 +37,24 @@ class Page extends Component {
       message.error('请输入手机号')
       return
     }
-    if (!pwd.value) {
-      message.error('请输入密码')
-      return
-    }
     if (!messageCode.value) {
       message.error('请输入验证码')
+      return
+    }
+    if (!pwd.value) {
+      message.error('请输入密码')
       return
     }
     if (phoneNumber.errorMsg) {
       message.error('请输入正确格式的手机号')
       return
     }
-    if (pwd.errorMsg) {
-      message.error('请输入正确格式的密码')
-      return
-    }
     if (messageCode.errorMsg) {
       message.error('请输入正确格式的验证码')
+      return
+    }
+    if (pwd.errorMsg) {
+      message.error('请输入正确格式的密码')
       return
     }
     try {
@@ -95,6 +68,7 @@ class Page extends Component {
         return
       }
       message.success('修改密码成功')
+      browserHistory.push('/login')
     } catch (e) {
       message.error('请求服务器失败')
     }
@@ -112,9 +86,9 @@ class Page extends Component {
   }
 
   timerReduce = (cb) => {
-    if (this.state.disableTime) {
+    if (this.state.disabledTime) {
       this.setState((preState) => ({
-        disableTime: preState.disableTime - 1,
+        disabledTime: preState.disabledTime - 1,
       }))
       setTimeout(() => this.timerReduce(cb), 1000)
       return
@@ -124,7 +98,7 @@ class Page extends Component {
 
   handleMessageButtonClick = async () => {
     try {
-      const { data: { code, desc } } = await forgetPasswordSendCode({ phoneNumber: this.state.phoneNumber })
+      const { data: { code, desc } } = await forgetPasswordSendCode({ phoneNumber: this.state.phoneNumber.value })
       if (code === 200) {
         message.success('已发送短信验证码')
         this.startTimer()
@@ -136,47 +110,34 @@ class Page extends Component {
     }
   }
 
-  sendCode = () => {
-    // this.props.form.validateFields([ 'phoneNumber' ], async (err, { phoneNumber }) => {
-    //   if (!err) {
-    //     try {
-    //       const { data: { code, desc } } = await forgetPasswordSendCode({ phoneNumber })
-    //       if (code === 200) {
-    //         message.success('已发送短信验证码')
-    //         return
-    //       }
-    //       message.error(desc)
-    //     } catch (e) {
-    //       message.error('请求服务器失败')
-    //     }
-    //   }
-    // })
-  }
-  handlePhoneNumberChange = (value) => {
+  handlePhoneNumberChange = (e) => {
+    const value = e.target.value
     this.setState((preState) => ({
       phoneNumber: {
         ...preState.phoneNumber,
-        value,
+        value: value.length > 11 ? value.slice(0, 11) : value,
       },
-    }))
-    if (this.state.messageButton.value === '获取验证码') {
-      const { validateStatus } = this.validatePhoneNumber(this.state.phoneNumber)
-      if (validateStatus === 'success') {
-        this.setState((preState) => ({
-          messageButton: {
-            ...preState.messageButton,
-            disabled: false,
-          },
-        }))
-      } else {
-        this.setState((preState) => ({
-          messageButton: {
-            ...preState.messageButton,
-            disabled: true,
-          },
-        }))
+    }), () => {
+      if (this.state.messageButton.value === '获取验证码') {
+        const { validateStatus, errorMsg } = this.validatePhoneNumber(this.state.phoneNumber.value)
+        console.log(validateStatus, errorMsg)
+        if (validateStatus === 'success') {
+          this.setState((preState) => ({
+            messageButton: {
+              ...preState.messageButton,
+              disabled: false,
+            },
+          }))
+        } else {
+          this.setState((preState) => ({
+            messageButton: {
+              ...preState.messageButton,
+              disabled: true,
+            },
+          }))
+        }
       }
-    }
+    })
   }
   validatePhoneNumber = (phoneNumber) => {
     if (!phoneNumber) {
@@ -209,12 +170,14 @@ class Page extends Component {
       errorMsg: null,
     }
   }
+
   handlePhoneNumberBlur = () => this.setState((preState) => ({
     phoneNumber: {
       value: preState.phoneNumber.value,
       ...this.validatePhoneNumber(preState.phoneNumber.value),
     },
   }))
+
   validateMessageCode = (messageCode) => {
     if (!messageCode) {
       return {
@@ -236,7 +199,9 @@ class Page extends Component {
       }
     }
 
-    if (/^\d{4}$/.test(messageCode)) {
+    console.log(/^\d{4}$/.test(messageCode))
+
+    if (!/^\d{4}$/.test(messageCode)) {
       return {
         validateStatus: 'error',
         errorMsg: '验证码错误',
@@ -248,20 +213,31 @@ class Page extends Component {
       errorMsg: null,
     }
   }
+
+  handleMessageCodeChange = (e) => ((value) => this.setState((preState) => ({
+    messageCode: {
+      ...preState,
+      value: value.length > 4 ? value.slice(0, 4) : value,
+    },
+  })))(e.target.value)
+
   handleMessageCodeBlur = () => this.setState((preState) => ({
     messageCode: {
       value: preState.messageCode.value,
       ...this.validateMessageCode(preState.messageCode.value),
     },
   }))
-  handlePwdChange = (value) => {
+
+  handlePwdChange = (e) => {
+    const value = e.target.value
     this.setState((preState) => ({
       pwd: {
         ...preState.pwd,
-        value,
+        value: value.length > 16 ? value.slice(0, 16) : value,
       },
     }))
   }
+
   validatePwd = (pwd) => {
     if (!pwd) {
       return {
@@ -294,7 +270,7 @@ class Page extends Component {
         errorMsg: '密码不能包含空格',
       }
     }
-    if (/^[A-Za-z0-9&/()._|]+$/) {
+    if (!/^[A-Za-z0-9&/()._|]+$/.test(pwd)) {
       return {
         validateStatus: 'error',
         errorMsg: '密码只能输入大小写英文、数字、特殊字符（除空格）',
@@ -307,7 +283,7 @@ class Page extends Component {
   }
   handlePwdBlur = () => {
     this.setState((preState) => ({
-      phoneNumber: {
+      pwd: {
         value: preState.pwd.value,
         ...this.validatePwd(preState.pwd.value),
       },
@@ -315,13 +291,12 @@ class Page extends Component {
   }
 
   render () {
-    // const { getFieldDecorator } = this.props.form
     const {
       phoneNumber,
       pwd,
       messageCode,
       messageButton,
-      disableTime,
+      disabledTime,
     } = this.state
     return (
       <Form onSubmit={ this.handleSubmit } className="form-container">
@@ -334,9 +309,6 @@ class Page extends Component {
           help={ phoneNumber.errorMsg }
           validateStatus={ phoneNumber.validateStatus }
         >
-          { /*{ getFieldDecorator('phoneNumber', {*/ }
-          { /*rules: [ { required: true, message: '请输入手机号!' } ],*/ }
-          { /*})(*/ }
           <Input
             placeholder="输入手机号"
             className="form-input"
@@ -344,7 +316,6 @@ class Page extends Component {
             onChange={ this.handlePhoneNumberChange }
             onBlur={ this.handlePhoneNumberBlur }
           />
-          { /*) }*/ }
         </FormItem>
         <FormItem
           label="短信验证码"
@@ -355,9 +326,6 @@ class Page extends Component {
           validateStatus={ messageCode.validateStatus }
         >
           <InputGroup compact>
-            { /*{ getFieldDecorator('messageCode', {*/ }
-            { /*rules: [ { required: true, message: '请输入短信验证码!' } ],*/ }
-            { /*})(*/ }
             <Input
               placeholder="4位数字短信验证码"
               className="form-input"
@@ -366,16 +334,15 @@ class Page extends Component {
                 borderRight: 'none',
               } }
               value={ messageCode.value }
+              onChange={ this.handleMessageCodeChange }
               onBlur={ this.handleMessageCodeBlur }
             />
-            { /*,*/ }
-            { /*) }*/ }
             <Button
               className="get-message-button"
               onClick={ this.handleMessageButtonClick }
-              disabled={ disableTime || messageButton.disabled }
+              disabled={ disabledTime || messageButton.disabled }
             >
-              { disableTime ? `${disableTime}S` : messageButton.value }
+              { disabledTime ? `${disabledTime}S` : messageButton.value }
             </Button>
           </InputGroup>
         </FormItem>
@@ -387,9 +354,6 @@ class Page extends Component {
           help={ pwd.errorMsg }
           validateStatus={ pwd.validateStatus }
         >
-          { /*{ getFieldDecorator('password', {*/ }
-          { /*rules: [ { required: true, message: '请输入新密码!' } ],*/ }
-          { /*})(*/ }
           <Input
             type="password"
             placeholder="设置新密码"
@@ -398,8 +362,6 @@ class Page extends Component {
             onChange={ this.handlePwdChange }
             onBlur={ this.handlePwdBlur }
           />
-          { /*,*/ }
-          { /*) }*/ }
         </FormItem>
         <FormItem
           className="form-item"
@@ -414,7 +376,10 @@ class Page extends Component {
         </FormItem>
         <Link
           className="footer-link"
-          to="/auth/login"
+          to={ {
+            pathname: '/login',
+            state: { phoneNumber: phoneNumber.value },
+          } }
         >
           <Icon
             type="left-circle-o"
@@ -430,7 +395,9 @@ class Page extends Component {
     if (this.props.location.state && this.props.location.state.phoneNumber) {
       // this.props.form.setFieldsValue({ phoneNumber: this.props.location.state.phoneNumber })
       this.setState({
-        phoneNumber: this.props.location.state.phoneNumber,
+        phoneNumber: {
+          value: this.props.location.state.phoneNumber,
+        },
       })
     }
   }

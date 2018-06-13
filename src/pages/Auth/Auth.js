@@ -1,22 +1,17 @@
 import React from 'react'
 
 import { view as TopMenu } from '../../components/NavMenu'
-import backgroundImage from './static/images/login-bg.png'
-
-const containerStyle = {
-  width: '100%',
-  minHeight: '100%',
-  backgroundImage: `url(${backgroundImage})`,
-  backgroundSize: 'cover',
-}
+import './static/style/index.less'
 
 const Page = ({ children }) => {
   return (
-    <div style={ containerStyle }>
+    <div className="auth-container">
       <TopMenu/>
-      <div>
-        { children }
-      </div>
+      <main>
+        <div className="form-wrapper">
+          { children }
+        </div>
+      </main>
     </div>
   )
 }

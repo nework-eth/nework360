@@ -1,21 +1,15 @@
 import React from 'react'
 import { view as Footer } from '../../components/Footer'
 import { view as TopMenu } from '../../components/NavMenu'
-
-const containerStyle = {
-  position: 'relative',
-  width: '100%',
-  minHeight: '100%',
-  paddingBottom: '353px',
-}
+import './static/style/index.less'
 
 const Homepage = ({ children }) => {
   return (
-    <div style={ containerStyle }>
+    <div className="homepage-container">
       <TopMenu/>
-      <div>
+      <main>
         { children }
-      </div>
+      </main>
       <Footer/>
     </div>
   )
