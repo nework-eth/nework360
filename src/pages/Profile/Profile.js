@@ -74,10 +74,13 @@ class Profile extends Component {
   getUserById = async () => {
     try {
       const { data: { data, desc, code } } = await getUserById({ userId: this.props.user.userId })
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
       this.setState({ data })
-      console.log(data)
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   getSkillByUserId = async () => {
@@ -93,7 +96,7 @@ class Profile extends Component {
         skillList: secondarySkillList,
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -107,7 +110,7 @@ class Profile extends Component {
   }
 
   render () {
-    const { data: { avatar, nickName, isPartyB } } = this.state
+    const { data: { avatar, nickname, isPartyB } } = this.state
     return (
       <div className="profile-container">
         <main>
@@ -190,7 +193,7 @@ class Profile extends Component {
             </Carousel>
           </div> }
           {
-            // isPartyB &&
+            isPartyB &&
             <div>
               <h3 className="location">营业时间与地点</h3>
               <div className="time-location-container">

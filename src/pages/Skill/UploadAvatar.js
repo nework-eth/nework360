@@ -56,7 +56,7 @@ function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar, updateImageSrc }
                     handleUploadAvatar(info.file.response.data.path)
                     message.success('上传头像成功')
                   }).catch(e => {
-                    message.error('请求服务器失败')
+                    message.error('网络连接失败，请检查网络后重试')
                   })
                   return
                 }

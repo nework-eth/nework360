@@ -72,7 +72,7 @@ class SearchPage extends Component {
         firstLevelServiceList,
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   handleFirstServiceChange = (firstService) => {
@@ -87,7 +87,7 @@ class SearchPage extends Component {
       })
       console.log(code, data, desc)
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -106,7 +106,7 @@ class SearchPage extends Component {
         nearServiceList: data,
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -118,11 +118,9 @@ class SearchPage extends Component {
   virtualRouter = () => {
     const {
       pageState,
-      firstLevelServiceList,
       serviceTree,
       serviceImageList,
       selectedFirstService,
-      nearServiceList,
     } = this.state
     if (pageState === 'default') {
 

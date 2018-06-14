@@ -43,7 +43,7 @@ class Page extends Component {
       message.success('登录成功')
       browserHistory.push('/')
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
 
     // this.props.form.validateFields(async (err, { phoneNumber, password }) => {

@@ -127,7 +127,7 @@ class EditData extends Component {
     try {
       const { data: { code, data } } = await getCityTree()
       if (code !== 200) {
-        return message.error('请求服务器失败')
+        return message.error('网络连接失败，请检查网络后重试')
       }
       const tree = data
       window.tree = data
@@ -142,12 +142,12 @@ class EditData extends Component {
         cityData: tree[ this.state.data.country ][ this.state.data.province ],
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   getUserById = async () => {
     try {
-      const { data: { data, code } } = await getUserById({ userId: this.props.user.userId })
+      const { data: { data, code, desc } } = await getUserById({ userId: this.props.user.userId })
       console.log(data)
       this.setState({ data: { ...data, serviceTime: data.serviceTime.split(',') } })
       if (!data.isPartyB) {
@@ -156,10 +156,10 @@ class EditData extends Component {
         })
       }
       if (code !== 200) {
-        return message.error('请求服务器错误')
+        return message.error(desc)
       }
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -184,7 +184,7 @@ class EditData extends Component {
         skillList: [ ...secondarySkillList, ...data.skillTemp ],
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   handleInput = type => e => this.setState({
@@ -266,7 +266,7 @@ class EditData extends Component {
         this.afterUpdate()
       }
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   handleShowAddSkillModal = () => {
@@ -287,25 +287,25 @@ class EditData extends Component {
       }
       message.success('修改密码成功')
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
 
   }
 
   handleSave = (type) => async () => {
     try {
-      const { data: { code } } = await updateUser({
+      const { data: { code, desc } } = await updateUser({
         userId: this.props.user.userId,
         [ type ]: this.state.data[ type ],
       })
       if (code !== 200) {
-        message.error('请求服务器失败')
+        message.error(desc)
       } else {
         message.success('更新资料成功')
         this.afterUpdate()
       }
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   getPhoneCode = async () => {
@@ -317,7 +317,7 @@ class EditData extends Component {
       }
       message.success('已发送验证码')
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -337,7 +337,7 @@ class EditData extends Component {
       }
       message.success('已发送验证码')
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -370,7 +370,7 @@ class EditData extends Component {
       message.success('验证手机号成功')
       this.handleModalCancel()
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   verifyEmail = async () => {
@@ -380,7 +380,7 @@ class EditData extends Component {
         code: this.state.mailCode,
       })
       if (code !== 200) {
-        message.error('认证失败')
+        message.error(desc)
         return
       } else {
         const { data: { code, desc } } = await updateUser({
@@ -388,14 +388,14 @@ class EditData extends Component {
           email: this.state.data.email,
         })
         if (code !== 200) {
-          message.error('认证失败')
+          message.error(desc)
           return
         }
         message.success('验证邮箱成功')
       }
       this.handleModalCancel()
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   deleteSkill = (skillId, isTemp, deleteIndex) => async () => {
@@ -413,7 +413,7 @@ class EditData extends Component {
       })
       message.success('删除技能成功')
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   getServiceTree = async () => {
@@ -432,8 +432,7 @@ class EditData extends Component {
         serviceTree: data,
       })
     } catch (e) {
-      message.error(e)
-      // message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   hideSkillModal = () => this.setState({
@@ -489,7 +488,7 @@ class EditData extends Component {
       if (promiseArr.length === 2) {
         const [ result1, result2 ] = await Promise.all(promiseArr)
         if (result1.data.code !== 200 || result2.data.code !== 200) {
-          message.error('请求服务器失败')
+          message.error('网络连接失败，请检查网络后重试')
           this.hideSkillModal()
           return
         }
@@ -584,15 +583,15 @@ class EditData extends Component {
   })
   afterUpdate = async () => {
     try {
-      const { data: { data, code } } = await getUserById({ userId: this.props.user.userId })
+      const { data: { data, code, desc } } = await getUserById({ userId: this.props.user.userId })
       if (code !== 200) {
-        message.error('请求服务器失败')
+        message.error(desc)
         return
       }
       this.props.setUser(data)
       this.getUserById()
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 

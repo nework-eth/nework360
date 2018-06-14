@@ -213,7 +213,7 @@ class SkillPage extends Component {
             serviceIds: this.state.secondaryTypeList.filter(item => item !== -1).join(','),
           })
           if (code !== 200) {
-            message.error('请求服务器失败')
+            message.error('网络连接失败，请检查网络后重试')
             return
           }
         }
@@ -239,7 +239,7 @@ class SkillPage extends Component {
             },
           ]))
           if (code !== 200) {
-            message.error('请求服务器失败')
+            message.error('网络连接失败，请检查网络后重试')
             return
           }
         }
@@ -255,7 +255,7 @@ class SkillPage extends Component {
           isPartyB: true,
         })
         if (code !== 200) {
-          message.error('请求服务器失败')
+          message.error('网络连接失败，请检查网络后重试')
           return
         }
         this.setState({
@@ -265,7 +265,7 @@ class SkillPage extends Component {
         message.success('发布技能成功')
         const res = await getUserById({ userId: this.props.user.userId })
         if (res.data.code !== 200) {
-          message.error('请求服务器失败')
+          message.error('网络连接失败，请检查网络后重试')
           return
         }
         this.props.setUser(res.data.data)
@@ -306,7 +306,7 @@ class SkillPage extends Component {
     try {
       const { data: { code, data } } = await getCityTree()
       if (code !== 200) {
-        return message.error('请求服务器失败')
+        return message.error('网络连接失败，请检查网络后重试')
       }
       const tree = data
       window.tree = data
@@ -321,7 +321,7 @@ class SkillPage extends Component {
         cityData: tree[ '中国' ][ '北京' ],
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 

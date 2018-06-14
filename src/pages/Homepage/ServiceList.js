@@ -32,7 +32,7 @@ class ServiceList extends Component {
         firstLevelServiceList,
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   getFirstServiceList = async () => {
@@ -43,7 +43,7 @@ class ServiceList extends Component {
       })
       console.log(code, data, desc)
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   getNearServiceList = async () => {
@@ -61,7 +61,7 @@ class ServiceList extends Component {
         nearServiceList: data,
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   handleFirstServiceChange = (firstService) => {

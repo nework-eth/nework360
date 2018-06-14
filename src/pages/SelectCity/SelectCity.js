@@ -127,7 +127,7 @@ class SelectCity extends Component {
         hotCityList: data,
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -143,7 +143,7 @@ class SelectCity extends Component {
         filterCityList: letterCityList,
       })
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -151,7 +151,7 @@ class SelectCity extends Component {
     try {
       const { data: { code, data } } = await getCityTree()
       if (code !== 200) {
-        return message.error('请求服务器失败')
+        return message.error('网络连接失败，请检查网络后重试')
       }
       const tree = data
       console.log(tree)
@@ -170,7 +170,7 @@ class SelectCity extends Component {
       this.props.setCityId(110)
       this.props.setCountryId(1)
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
   handleCountryChange = (value) => {

@@ -143,7 +143,7 @@ class NavMenu extends Component {
         this.props.setCityName(desc)
       }
     } catch (e) {
-      message.error('请求服务器失败')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
