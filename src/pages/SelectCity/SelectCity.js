@@ -6,16 +6,10 @@ import { browserHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { stateKey } from '../../components/NavMenu'
 import { setCityId, setCityName, setCountryId } from '../../components/NavMenu/actions'
-import { getCityByLetter, getCityBySearch, getCityTree, getHotCity } from '../../service/homepage'
+import { getCityByLetter, getCityBySearch, getCityTree, getDistByParam, getHotCity } from '../../service/homepage'
 import './static/style/index.less'
 
 const Option = Select.Option
-
-const containerStyle = {
-  position: 'relative',
-  width: '100%',
-  minHeight: '100%',
-}
 
 const LetterCity = ({ letter, letterCityList, handleClick }) => {
   return (
@@ -75,6 +69,8 @@ class SelectCity extends Component {
     cityData: [],
     tree: [],
     hotCityList: [],
+    countryList: [],
+    countryId: 1,
   }
 
   getCityBySearch = (value) => {
@@ -133,14 +129,32 @@ class SelectCity extends Component {
 
   getCityByLetter = async () => {
     try {
-      const { data: { data } } = await getCityByLetter({ countryId: this.props.countryId || 1 })
+      const { data: { data, code, desc } } = await getCityByLetter({ countryId: this.state.countryId || 1 })
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
       const letterCityList = Object.entries(data).filter(([ letter, letterCityList ]) => {
         return letterCityList.length > 0
       })
-      console.log(letterCityList)
       this.setState({
         letterCityList,
         filterCityList: letterCityList,
+      })
+    } catch (e) {
+      message.error('网络连接失败，请检查网络后重试')
+    }
+  }
+
+  getCountryList = async () => {
+    try {
+      const { data: { data, code, desc } } = await getDistByParam({ level: 'n', limit: -1 })
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
+      this.setState({
+        countryList: data,
       })
     } catch (e) {
       message.error('网络连接失败，请检查网络后重试')
@@ -166,20 +180,25 @@ class SelectCity extends Component {
         // cityOptions: letterCityList,
         // selectedCity: letterCityList[0]
       })
-      this.props.setCityName('北京')
-      this.props.setCityId(110)
-      this.props.setCountryId(1)
+      // this.props.setCityName('北京')
+      // this.props.setCityId(110)
+      // this.props.setCountryId(1)
     } catch (e) {
       message.error('网络连接失败，请检查网络后重试')
     }
   }
   handleCountryChange = (value) => {
-    console.log(this.state.tree[ value ])
     const provinceOptions = Object.keys(this.state.tree[ value ])
-    const selectedProvince = provinceOptions[ 0 ]
-    const cityData = this.state.tree[ value ][ selectedProvince ]
+    // const selectedProvince = provinceOptions[ 0 ]
+    // const cityData = this.state.tree[ value ][ selectedProvince ]
     // const cityOptions = cityData.map(item => item.chinese)
     // const selectedCity = cityOptions[ 0 ]
+    const country = this.state.countryList.find(item => item.chinese === value)
+    if (country && country.districtId) {
+      this.setState({
+        countryId: country.districtId,
+      }, () => this.getCityByLetter())
+    }
     this.setState({
       selectedCountry: value,
       provinceOptions,
@@ -198,6 +217,7 @@ class SelectCity extends Component {
     this.getCityByLetter()
     this.getCityTree()
     this.getHotCity()
+    this.getCountryList()
   }
 
   handleProvinceChange = (value) => {
@@ -245,7 +265,6 @@ class SelectCity extends Component {
       hotCityList,
     } = this.state
     return (
-      <div style={ containerStyle }>
         <div className="select-city-container">
           <h2>选择城市</h2>
           <div className="search-container">
@@ -360,7 +379,6 @@ class SelectCity extends Component {
             )
           }
         </div>
-      </div>
     )
   }
 }

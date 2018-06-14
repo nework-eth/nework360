@@ -46,7 +46,7 @@ function UploadAvatar ({ avatarSrc, userId, handleUploadAvatar, updateImageSrc }
               }
               if (info.file.status === 'done') {
                 if (info.file.response.code === 200) {
-                  console.log(info)
+
                   updateImageSrc(info.file.response.data.path, 'avatar').then(res => {
                     console.log('res', res)
                     if (res.data.code !== 200) {

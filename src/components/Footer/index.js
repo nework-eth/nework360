@@ -10,19 +10,19 @@ class Footer extends Component {
             <i className="iconfont icon-logo" style={ { fontSize: '24px' } }/>
             <div className="footer-icon-container">
               <div className="icon-wrapper"
-                style={ { backgroundColor: '#0FB047' } }
+                style={ { backgroundColor: '#0FB047', cursor: 'pointer' } }
               >
                 <i className="iconfont icon-wechat"/>
               </div>
               <div
                 className="icon-wrapper"
-                style={ { backgroundColor: '#219FEF' } }
+                style={ { backgroundColor: '#219FEF', cursor: 'pointer' } }
               >
                 <i className="iconfont icon-twitter"/>
               </div>
               <div
                 className="icon-wrapper"
-                style={ { backgroundColor: '#292929' } }
+                style={ { backgroundColor: '#292929', cursor: 'pointer' } }
               >
                 <i className="iconfont icon-medium"/>
               </div>

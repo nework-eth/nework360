@@ -142,24 +142,24 @@ class EditData extends Component {
         cityData: tree[ this.state.data.country ][ this.state.data.province ],
       })
     } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+      console.log(e)
+      // message.error('网络连接失败，请检查网络后重试')
     }
   }
   getUserById = async () => {
     try {
       const { data: { data, code, desc } } = await getUserById({ userId: this.props.user.userId })
-      console.log(data)
+      if (code !== 200) {
+        return message.error(desc)
+      }
       this.setState({ data: { ...data, serviceTime: data.serviceTime.split(',') } })
       if (!data.isPartyB) {
         this.setState({
           menuItemList: this.state.menuItemList.filter(item => item.key !== 'skill'),
         })
       }
-      if (code !== 200) {
-        return message.error(desc)
-      }
     } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+      // message.error('网络连接失败，请检查网络后重试')
     }
   }
 

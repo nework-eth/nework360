@@ -16,3 +16,5 @@ export const getListServiceByParam = params => axios(`${baseUrl}/service/listSer
 export const getHotCity = () => axios(`${baseUrl}/skill/getHotCity`)
 
 export const getListServiceByDist = params => axios(`${baseUrl}/service/listServiceByDist`, { params })
+
+export const getDistByParam = params => axios(`${baseUrl}/district/listDistrictByParam`, { params })
