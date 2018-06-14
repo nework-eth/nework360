@@ -129,6 +129,8 @@ class SkillPage extends Component {
           uploadUrl={ uploadUrl }
           handleUploadAvatar={ this.handleUploadAvatar }
           updateImageSrc={ this.updateImageSrc }
+          errorTip={ this.state.avatarErrorTip }
+          setErrorTip={ this.setErrorTip }
         />
       case 6:
         return <PartlyComplete/>

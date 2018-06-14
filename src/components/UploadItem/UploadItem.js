@@ -16,6 +16,7 @@ import React, { Component } from 'react'
 class UploadItem extends Component {
   state = {
     loading: false,
+    errorTip: '',
   }
   handleChange = (info) => {
     if (info.file.status === 'uploading') {
@@ -41,6 +42,25 @@ class UploadItem extends Component {
       })
     }
   }
+  beforeUpload = (file) => {
+    this.setState({
+      errorTip: '',
+    })
+    const isLt20M = file.size / 1024 / 1024 < 20
+    if (!isLt20M) {
+      this.setState({
+        errorTip: '请上传20M以内jpg/jpeg/gif/bmp/png格式的图片',
+      })
+    }
+    const typeArray = [ 'image/jpeg', 'image/png', 'image/bmp' ]
+    const typeValid = typeArray.includes(file.type)
+    if (!typeValid) {
+      this.setState({
+        errorTip: '请上传20M以内jpg/jpeg/gif/bmp/png格式的图片',
+      })
+    }
+    return isLt20M && typeValid
+  }
 
   render () {
     const uploadButton = (
@@ -49,24 +69,30 @@ class UploadItem extends Component {
       </div>
     )
     const imageUrl = this.props.src
-    const { action, column, userId, handleChange } = this.props
+    const { action, column, userId } = this.props
     return (
-      <Upload
-        name="file"
-        listType="picture-card"
-        className="upload-item"
-        showUploadList={ false }
-        action={ action }
-        data={
-          {
-            userId,
-            column,
+      <div>
+        <Upload
+          name="file"
+          listType="picture-card"
+          className="upload-item"
+          beforeUpload={ this.beforeUpload }
+          showUploadList={ false }
+          action={ action }
+          data={
+            {
+              userId,
+              column,
+            }
           }
-        }
-        onChange={ this.handleChange }
-      >
-        { imageUrl ? <img src={ imageUrl } alt="avatar"/> : uploadButton }
-      </Upload>
+          onChange={ this.handleChange }
+        >
+          { imageUrl ? <img src={ imageUrl } alt="avatar"/> : uploadButton }
+        </Upload>
+        <div className="error-tip" style={ { width: '218px' } }>
+          { this.state.errorTip }
+        </div>
+      </div>
     )
   }
 }
