@@ -96,8 +96,10 @@ function UploadCerificate ({
             }
           </div>
       }
-      <p className="introduction">请保证证件及面部信息清晰可见，以保证快速通过认证</p>
-      <p className="introduction">你的身份信息不会透露给顾客和其他服务商</p>
+      <p className="introduction"><i className="iconfont icon-identity-tip"
+        style={ { fontSize: '16px' } }/>&nbsp;请保证证件及面部信息清晰可见，以保证快速通过认证</p>
+      <p className="introduction"><i className="iconfont icon-identity-lock"
+        style={ { fontSize: '16px' } }/>&nbsp;你的身份信息不会透露给顾客和其他服务商</p>
     </div>
   )
 }
