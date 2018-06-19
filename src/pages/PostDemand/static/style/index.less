@@ -1,0 +1,40 @@
+.post-demand-container {
+  display: flex;
+  flex-flow: column;
+  min-height: calc(100vh - 70px);
+  .template-wrapper {
+    .template-content {
+      margin-top: 50px;
+      .form-item-wrapper {
+        margin-top: 50px;
+      }
+    }
+  }
+  main {
+    flex: 1;
+    padding: 0 calc(50vw - 350px);
+  }
+  .post-demand-footer-container {
+    padding: 25px calc(50vw - 350px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+    .ant-btn {
+      width: 160px;
+      height: 50px;
+    }
+    p {
+      color: #008bf7;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      i {
+        font-size: 20px;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+    }
+  }
+}

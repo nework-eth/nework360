@@ -107,6 +107,16 @@ const getWalletPage = async (nextState, callback) => callback(
   (await import(/* webpackChunkName: "Wallet" */'./pages/Wallet/Wallet.js')).page,
 )
 
+const getRequirement = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "Requirement" */'./pages/Requirement/RequirementHomepage.js')).page,
+)
+
+const postDemand = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "PostDemand" */'./pages/PostDemand/PostDemand.js')).page,
+)
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 const Routes = () => (
@@ -128,6 +138,8 @@ const Routes = () => (
       <Route path="/profile" getComponent={ getProfilePage }/>
       <Route path="/editData" getComponent={ getEditDataPage }/>
       <Route path="/wallet" getComponent={ getWalletPage }/>
+      <Route path="/requirement-homepage" getComponent={ getRequirement }/>
+      <Route path="/post-demand" getComponent={ postDemand }/>
     </Route>
   </Router>
 )
