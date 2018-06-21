@@ -289,6 +289,7 @@ class SkillPage extends Component {
         return
     }
   }
+
   mapInit = () => {
     this.mapApi = new Promise((resolve, reject) => {
       try {

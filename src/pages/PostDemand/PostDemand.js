@@ -1,79 +1,76 @@
 import { message, Progress } from 'antd'
 import React, { Component } from 'react'
-import { getTemplate } from '../../service/demand'
+import { createDemand, getTemplate } from '../../service/demand'
 import { view as Footer } from './Footer'
 import './static/style/index.less'
 import { view as Template } from './Template'
 
-const filterIdiotData = (page) => {
-  let result = []
-  let temp = null
-  for (let {
-    id,
-    content,
-    isNessary,
-    instruction,
-    isMultChoice,
-    templateItemType,
-  } of page) {
-    if (templateItemType === 'text') {
-      temp = {
-        title: content,
+const filterData = (pageData) => {
+  const textArray = pageData.filter((item, index) => index % 2 === 0)
+  console.log('textArray', textArray)
+  const formItemArray = pageData.filter((item, index) => index % 2 !== 0)
+  console.log('formItemArray', formItemArray)
+  return formItemArray.map(({
+                              id,
+                              pageNum,
+                              content,
+                              isNessary,
+                              isMultChoice,
+                              templateItemType,
+                            }, index) => {
+    if (templateItemType === 'select') {
+      return {
+        id,
+        pageNum,
+        index: index * 2 + 1,
+        options: content,
+        type: templateItemType,
+        isNecessary: isNessary,
+        isMultiChoice: isMultChoice,
+        title: textArray[ index ].content,
       }
-    } else if (temp) {
-      if (templateItemType === 'select') {
-        result.push({
-          id: id,
-          type: templateItemType,
-          ...temp,
-          options: content,
-          isNecessary: isNessary,
-          isMultiChoice: isMultChoice,
-        })
-        temp = null
-        continue
-      }
-      if (templateItemType === 'location') {
-        result.push({
-          id: id,
-          type: templateItemType,
-          ...temp,
-          isNecessary: isNessary,
-        })
-      }
-
     } else {
-      if (templateItemType === 'time') {
-        result.push({
-          id: id,
-          type: templateItemType,
-          title: content,
-          isNecessary: isNessary,
-        })
-        continue
-      }
-      if (templateItemType === 'input') {
-        result.push({
-          id: id,
-          type: templateItemType,
-          title: instruction,
-          isNecessary: isNessary,
-        })
+      return {
+        id,
+        pageNum,
+        index: index * 2 + 1,
+        type: templateItemType,
+        isNecessary: isNessary,
+        isMultiChoice: isMultChoice,
+        title: textArray[ index ].content,
       }
     }
+  })
+}
+
+const generateResult = (pages) => pages.map(page => page.map(item => ({
+  ...item,
+  resultValue: generateInitValue(item.templateItemType),
+})))
+
+const generateInitValue = (type) => {
+  switch (type) {
+    case 'select':
+      return []
+    case 'time':
+      return null
+    default:
+      return ''
   }
-  return result
 }
 
 class PostDemand extends Component {
 
   state = {
+    data: [ [] ],
     pages: [],
     originData: [],
     pageIndex: 0,
     progressPercent: 0,
     progressStep: 0,
+    locationOptions: [],
   }
+
   getTemplate = async () => {
     try {
       const { data: { data, code, desc } } = await getTemplate({ serviceId: 22 })
@@ -82,22 +79,111 @@ class PostDemand extends Component {
         return
       }
       this.setState({
-        originData: data.pages,
-        pages: data.pages.map(page => filterIdiotData(page)),
+        data: generateResult(data.pages),
+        pages: data.pages.map(page => filterData(page)),
         progressStep: 100 / data.pages.length,
       })
-      console.log((data.pages.map(page => filterIdiotData(page))[ 0 ]))
-      // const res = await getTemplate({ serviceId: 22 })
-      // console.log(res)
+      console.log('result', generateResult(data.pages))
+      console.log('pageIndex', this.state.pageIndex)
+      console.log()
     } catch (e) {
       message.error('网络连接失败，请检查网络后重试')
     }
   }
+  goLastPage = () => {
+    this.setState(({ pageIndex, progressPercent, progressStep }) => ({
+      pageIndex: pageIndex - 1,
+      progressPercent: progressPercent - progressStep,
+    }))
+  }
+  goNextPage = () => {
+    this.setState(({ pageIndex, progressPercent, progressStep }) => ({
+      pageIndex: pageIndex + 1,
+      progressPercent: progressPercent + progressStep,
+    }))
+  }
+  mapInit = () => {
+    this.mapApi = new Promise((resolve, reject) => {
+      try {
+        /* eslint-disable no-undef */
+        AMap.plugin('AMap.Autocomplete', () => {
+          resolve()
+        })
+      } catch (e) {
+        reject(e)
+      }
+    })
+  }
+  getLocationOptions = keyword => {
+    this.mapApi.then(() => {
+      /* eslint-disable no-undef */
+      this.placeSearch = new AMap.Autocomplete({
+        // todo: 去掉假数据
+        city: (this.props.user && this.props.user.city) || '北京',
+        cityLimit: true,
+      })
+      keyword && this.placeSearch.search(keyword, (status, result) => {
+        if (status === 'complete' && result.info === 'OK') {
+          console.log(result.tips)
+          this.setState({
+            locationOptions: result.tips.slice(0, 5),
+          })
+        }
+      })
+    })
+  }
+  createDemand = async () => {
+    try {
+      const { data: { code, desc } } = await createDemand(
+        {
+          pages: this.state.data,
+        },
+        {
+          templateId: 22,
+          userId: 1,
+        },
+      )
+      if (code !== 200) {
+        message.error(desc)
+        return
+      }
+      message.success('发布需求成功')
+    } catch (e) {
+      message.error('网络连接失败，请检查网络后重试')
+    }
+  }
+  handleGoNextButtonClick = () => {
+    if (this.state.pageIndex < this.state.data.length - 1) {
+      this.goNextPage()
+      return
+    }
+    this.createDemand()
+  }
+  handleChange = ({ pageNum, index }) => (value) => {
+    console.log(value)
+    this.setState(({ data }) => {
+      const temp = JSON.parse(JSON.stringify(data))
+      temp[ pageNum ][ index ].resultValue = value
+      return { data: temp }
+    })
+  }
+  handleLocationChange = ({ pageNum, index }) => (value) => {
+    console.log(value)
+    console.log(pageNum, index)
+    this.getLocationOptions(value)
+    this.setState(({ data }) => {
+      const temp = JSON.parse(JSON.stringify(data))
+      temp[ pageNum ][ index ].resultValue = value
+      return { data: temp }
+    })
+  }
 
   render () {
     const {
+      data,
       pages,
       pageIndex,
+      locationOptions,
       progressPercent,
     } = this.state
     return (<div className="post-demand-container">
@@ -115,17 +201,32 @@ class PostDemand extends Component {
         />
         <div className="template-wrapper">
           {
-            pages[ pageIndex ] && pages[ pageIndex ].map(item => <Template { ...item } key={ item.id }/>)
+            pages[ pageIndex ] && pages[ pageIndex ].map(item =>
+              <Template
+                { ...item }
+                key={ item.id }
+                value={ data[ pageIndex ][ item.index ].resultValue }
+                handleChange={ this.handleChange({ pageNum: pageIndex, index: item.index }) }
+                locationOptions={ locationOptions }
+                handleLocationChange={ this.handleLocationChange({ pageNum: pageIndex, index: item.index }) }
+              />)
           }
         </div>
       </main>
-      <Footer/>
+      <Footer
+        pageData={ data[ pageIndex ] }
+        pageIndex={ pageIndex }
+        goLastPage={ this.goLastPage }
+        handleGoNextButtonClick={ this.handleGoNextButtonClick }
+      />
     </div>)
   }
 
   componentDidMount () {
     this.getTemplate()
+    this.mapInit()
   }
+
 }
 
 export { PostDemand as page }

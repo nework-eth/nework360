@@ -2,17 +2,24 @@ import { Button } from 'antd'
 import React from 'react'
 
 function Footer ({
-                   handleGoBack,
-                   handleNextPage,
+                   pageData,
+                   goLastPage,
+                   pageIndex,
+                   handleGoNextButtonClick,
                  }) {
   return (<div className="post-demand-footer-container">
-    <p onClick={ handleGoBack }>
-      <i className="iconfont icon-return"/>
-      返回
+    <p onClick={ goLastPage }>
+      {
+        pageIndex ? <span>
+          <i className="iconfont icon-return"/>
+          返回
+        </span> : ''
+      }
     </p>
     <Button
       type="primary"
-      onClick={ handleNextPage }
+      disabled={ pageData.filter(item => item.isNessary).some(item => !item.resultValue) }
+      onClick={ handleGoNextButtonClick }
     >
       下一步
     </Button>

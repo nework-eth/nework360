@@ -1,18 +1,26 @@
 import React from 'react'
+import { DayPickerSingleDateController } from 'react-dates'
+import 'react-dates/initialize'
+import 'react-dates/lib/css/_datepicker.css'
 
-// import { DayPickerRangeController } from 'react-dates'
-
-function DateTemplate ({ title }) {
+function DateTemplate ({
+                         title,
+                         value,
+                         isMultiChoice,
+                         handleChange,
+                       }) {
   return (
     <div className="template-content">
       <h2>{ title }</h2>
+      { isMultiChoice && <p className="multi-tip">可选择多项</p> }
       <div className="form-item-wrapper">
-        { /*<DayPickerRangeController*/ }
-        { /*numberOfMonths={ 1 }*/ }
-        { /*hideKeyboardShortcutsPanel*/ }
-        { /*monthFormat="YYYY[年]M[月]"*/ }
-        { /*disabled*/ }
-        { /*/>*/ }
+        <DayPickerSingleDateController
+          numberOfMonths={ 1 }
+          hideKeyboardShortcutsPanel
+          monthFormat="YYYY[年]M[月]"
+          onDateChange={ handleChange }
+          date={ value }
+        />
       </div>
     </div>)
 }

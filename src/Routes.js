@@ -112,9 +112,29 @@ const getRequirement = async (nextState, callback) => callback(
   (await import(/* webpackChunkName: "Requirement" */'./pages/Requirement/RequirementHomepage.js')).page,
 )
 
-const postDemand = async (nextState, callback) => callback(
+const getPostDemand = async (nextState, callback) => callback(
   null,
   (await import(/* webpackChunkName: "PostDemand" */'./pages/PostDemand/PostDemand.js')).page,
+)
+
+const getList = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "List" */'./pages/List/List.js')).page,
+)
+
+const getOrderDetail = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "OrderDetail" */'./pages/OrderDetail/OrderDetail.js')).page,
+)
+
+const getNeedDetail = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "NeedDetail" */'./pages/NeedDetail/NeedDetail.js')).page,
+)
+
+const getClueCard = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "ClueCard" */'./pages/ClueCard/ClueCard.js')).page,
 )
 
 const history = syncHistoryWithStore(browserHistory, store)
@@ -139,7 +159,11 @@ const Routes = () => (
       <Route path="/editData" getComponent={ getEditDataPage }/>
       <Route path="/wallet" getComponent={ getWalletPage }/>
       <Route path="/requirement-homepage" getComponent={ getRequirement }/>
-      <Route path="/post-demand" getComponent={ postDemand }/>
+      <Route path="/post-demand" getComponent={ getPostDemand }/>
+      <Route path="/list" getComponent={ getList }/>
+      <Route path="/order-detail" getComponent={ getOrderDetail }/>
+      <Route path="/need-detail" getComponent={ getNeedDetail }/>
+      <Route path="/clue-card" getComponent={ getClueCard }/>
     </Route>
   </Router>
 )
