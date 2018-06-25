@@ -137,14 +137,18 @@ class NavMenu extends Component {
   }
 
   getCityByIp = async () => {
-    try {
-      const { data: { code, desc } } = await getCityByIp()
-      if (code === 200) {
-        this.props.setCityName(desc)
+    // try {
+    // const { data: { code, desc } } = await getCityByIp()
+    // if (code === 200) {
+    //   this.props.setCityName(desc)
+    // }
+    const data = await getCityByIp()
+    if (data !== '未知城市') {
+      this.props.setCityName(data)
       }
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
-    }
+    // } catch (e) {
+    //   message.error('网络连接失败，请检查网络后重试')
+    // }
   }
 
   componentDidMount () {

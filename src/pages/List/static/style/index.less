@@ -16,8 +16,9 @@
     }
     .need-list-item-wrapper {
       border: 1px solid #edf1f4;
+      margin-bottom: 20px;
       .need-list-item-title-wrapper {
-        padding: 30px 20px;
+        padding: 20px 30px;
         border-bottom: 1px solid #f6f8f9;
         background-color: #edf1f4;
         .need-list-item-title {
@@ -37,6 +38,76 @@
         }
         .need-list-item-operate {
           color: #008bf7;
+        }
+      }
+    }
+    .service-list-item-container {
+      border: 1px solid #edf1f4;
+      .service-list-item-top-wrapper {
+        padding: 20px 30px;
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #edf1f4;
+        background-color: #f6f8f9;
+        .service-list-item-title {
+          font-weight: bold;
+          margin-right: 10px;
+        }
+        .service-list-item-date {
+          color: #9ca6ae;
+        }
+        .service-list-item-operate {
+          color: #008bf7;
+        }
+      }
+      .service-list-item-content-wrapper {
+        display: flex;
+        .left, .middle, .right {
+          margin-top: 30px;
+          margin-bottom: 30px;
+          padding-left: 30px;
+          padding-right: 30px;
+          img {
+            border-radius: 50%;
+          }
+        }
+        .left {
+          flex: 0 0 350px;
+          .name {
+            margin-top: 20px;
+            margin-bottom: 3px;
+            font-weight: bold;
+          }
+          .left-avatar-wrapper {
+            display: flex;
+            justify-content: space-between;
+          }
+          .rate-wrapper {
+            display: flex;
+            align-items: center;
+            .iconfont {
+              font-size: 14px;
+            }
+            .rate {
+              font-weight: bold;
+              margin-left: 10px;
+              margin-right: 8px;
+            }
+            .evaluation {
+              color: #9ca6ae;
+            }
+          }
+          .date {
+            margin-top: 24px;
+          }
+        }
+        .middle {
+          flex: 0 0 359px;
+          border-left: 1px solid #edf1f4;
+          border-right: 1px solid #edf1f4;
+        }
+        .right {
+          flex: 0 0 349px;
         }
       }
     }

@@ -64,44 +64,46 @@ class PostDemand extends Component {
   state = {
     data: [ [] ],
     pages: [],
-    originData: [],
     pageIndex: 0,
-    progressPercent: 0,
+    originData: [],
+    templateId: '',
     progressStep: 0,
+    progressPercent: 0,
     locationOptions: [],
   }
 
   getTemplate = async () => {
-    try {
-      const { data: { data, code, desc } } = await getTemplate({ serviceId: 22 })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    // const { data: { data, code, desc } } = await getTemplate({ serviceId: 22 })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    const data = await getTemplate({ serviceId: 22 })
+    if (data) {
+      // console.log('data', data)
       this.setState({
         data: generateResult(data.pages),
         pages: data.pages.map(page => filterData(page)),
+        templateId: data.templateId,
         progressStep: 100 / data.pages.length,
       })
-      console.log('result', generateResult(data.pages))
-      console.log('pageIndex', this.state.pageIndex)
-      console.log()
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
   }
+
   goLastPage = () => {
     this.setState(({ pageIndex, progressPercent, progressStep }) => ({
       pageIndex: pageIndex - 1,
       progressPercent: progressPercent - progressStep,
     }))
   }
+
   goNextPage = () => {
     this.setState(({ pageIndex, progressPercent, progressStep }) => ({
       pageIndex: pageIndex + 1,
       progressPercent: progressPercent + progressStep,
     }))
   }
+
   mapInit = () => {
     this.mapApi = new Promise((resolve, reject) => {
       try {
@@ -114,6 +116,7 @@ class PostDemand extends Component {
       }
     })
   }
+
   getLocationOptions = keyword => {
     this.mapApi.then(() => {
       /* eslint-disable no-undef */
@@ -132,25 +135,30 @@ class PostDemand extends Component {
       })
     })
   }
+
   createDemand = async () => {
-    try {
-      const { data: { code, desc } } = await createDemand(
-        {
-          pages: this.state.data,
-        },
-        {
-          templateId: 22,
-          userId: 1,
-        },
-      )
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    // try {
+    const success = await createDemand(
+      {
+        pages: this.state.data,
+      },
+      {
+        // todo: 换成真实数据
+        districtId: 110,
+        serviceId: 22,
+        templateId: this.state.templateId,
+      },
+    )
+    if (success) {
       message.success('发布需求成功')
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    // } catch (e) {
+    //   message.error('网络连接失败，请检查网络后重试')
+    // }
   }
   handleGoNextButtonClick = () => {
     if (this.state.pageIndex < this.state.data.length - 1) {
@@ -159,8 +167,9 @@ class PostDemand extends Component {
     }
     this.createDemand()
   }
+
   handleChange = ({ pageNum, index }) => (value) => {
-    console.log(value)
+    // console.log(value)
     this.setState(({ data }) => {
       const temp = JSON.parse(JSON.stringify(data))
       temp[ pageNum ][ index ].resultValue = value
@@ -168,12 +177,21 @@ class PostDemand extends Component {
     })
   }
   handleLocationChange = ({ pageNum, index }) => (value) => {
-    console.log(value)
-    console.log(pageNum, index)
+    // console.log(value)
+    // console.log(pageNum, index)
     this.getLocationOptions(value)
     this.setState(({ data }) => {
       const temp = JSON.parse(JSON.stringify(data))
       temp[ pageNum ][ index ].resultValue = value
+      return { data: temp }
+    })
+  }
+
+  handleSpecAddressChange = ({ pageNum, index }) => (value) => {
+    // console.log(value)
+    this.setState(({ data }) => {
+      const temp = JSON.parse(JSON.stringify(data))
+      temp[ pageNum ][ index ].resultValue = [ temp[ pageNum ][ index ].resultValue.split(',')[ 0 ], value ].join(',')
       return { data: temp }
     })
   }
@@ -209,6 +227,7 @@ class PostDemand extends Component {
                 handleChange={ this.handleChange({ pageNum: pageIndex, index: item.index }) }
                 locationOptions={ locationOptions }
                 handleLocationChange={ this.handleLocationChange({ pageNum: pageIndex, index: item.index }) }
+                handleSpecAddressChange={ this.handleSpecAddressChange({ pageNum: pageIndex, index: item.index }) }
               />)
           }
         </div>

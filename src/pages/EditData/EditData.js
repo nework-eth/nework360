@@ -123,43 +123,52 @@ class EditData extends Component {
     selectedCity: '',
     locationOptions: [],
   }
+
   getCityTree = async () => {
     try {
-      const { data: { code, data } } = await getCityTree()
-      if (code !== 200) {
-        return message.error('网络连接失败，请检查网络后重试')
+      // const { data: { code, data } } = await getCityTree()
+      // if (code !== 200) {
+      //   return message.error('网络连接失败，请检查网络后重试')
+      // }
+      const data = await getCityTree()
+      if (data) {
+        const tree = data
+        const countryList = Object.keys(tree)
+        const provinceList = Object.keys(tree[ '中国' ])
+        const letterCityList = tree[ '中国' ][ '北京' ].map(item => item.chinese)
+        this.setState({
+          tree,
+          countryOptions: countryList,
+          provinceOptions: provinceList,
+          cityOptions: letterCityList,
+          cityData: tree[ this.state.data.country ][ this.state.data.province ],
+        })
       }
-      const tree = data
-      window.tree = data
-      const countryList = Object.keys(tree)
-      const provinceList = Object.keys(tree[ '中国' ])
-      const letterCityList = tree[ '中国' ][ '北京' ].map(item => item.chinese)
-      this.setState({
-        tree,
-        countryOptions: countryList,
-        provinceOptions: provinceList,
-        cityOptions: letterCityList,
-        cityData: tree[ this.state.data.country ][ this.state.data.province ],
-      })
     } catch (e) {
       console.log(e)
       // message.error('网络连接失败，请检查网络后重试')
     }
   }
+
   getUserById = async () => {
     try {
-      const { data: { data, code, desc } } = await getUserById({ userId: this.props.user.userId })
-      if (code !== 200) {
-        return message.error(desc)
-      }
-      this.setState({ data: { ...data, serviceTime: data.serviceTime.split(',') } })
-      if (!data.isPartyB) {
-        this.setState({
-          menuItemList: this.state.menuItemList.filter(item => item.key !== 'skill'),
-        })
+      // const { data: { data, code, desc } } = await getUserById({ userId: this.props.user.userId })
+      // if (code !== 200) {
+      //   return message.error(desc)
+      // }
+      const data = await getUserById({
+        userId: this.props.user.userId,
+      })
+      if (data) {
+        this.setState({ data: { ...data, serviceTime: data.serviceTime.split(',') } })
+        if (!data.isPartyB) {
+          this.setState({
+            menuItemList: this.state.menuItemList.filter(item => item.key !== 'skill'),
+          })
+        }
       }
     } catch (e) {
-      // message.error('网络连接失败，请检查网络后重试')
+      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -168,14 +177,15 @@ class EditData extends Component {
       selectedItem: key,
     })
   }
-  getSkillByUserId = async () => {
-    try {
-      const { data: { code, data, desc } } = await getSkillByUserId({ userId: this.props.user.userId })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
 
+  getSkillByUserId = async () => {
+    // const { data: { code, data, desc } } = await getSkillByUserId({ userId: this.props.user.userId })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    const data = await getSkillByUserId({ userId: this.props.user.userId })
+    if (data) {
       const secondarySkillList = Object
         .values(data.skill)
         .reduce((pre, cur) => [ ...pre, ...cur ])
@@ -183,16 +193,17 @@ class EditData extends Component {
       this.setState({
         skillList: [ ...secondarySkillList, ...data.skillTemp ],
       })
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
   }
+
   handleInput = type => e => this.setState({
     data: { ...this.state.data, [ type ]: e.target.value },
   })
+
   handleAvatarChange = avatar => this.setState({
     data: { ...this.state.data, ...{ avatar } },
   })
+
   handleServiceTimeChange = (serviceTime) => {
     this.setState({
       data: { ...this.state.data, serviceTime },
@@ -210,8 +221,9 @@ class EditData extends Component {
   handleNewPwdRepeatChange = e => this.setState({
     newPwdRepeat: e.target.value,
   })
+
   handleCountryChange = (value) => {
-    console.log('handleCountryChange', this.state.tree[ value ])
+    // console.log('handleCountryChange', this.state.tree[ value ])
     const provinceOptions = Object.keys(this.state.tree[ value ])
     const cityData = this.state.tree[ value ][ provinceOptions[ 0 ] ]
     const cityOptions = cityData.map(item => item.chinese)
@@ -228,6 +240,7 @@ class EditData extends Component {
       cityOptions,
     })
   }
+
   handleProvinceChange = (value) => {
     const cityData = this.state.tree[ this.state.data.country ][ value ]
     const cityOptions = cityData.map(item => item.chinese)
@@ -236,8 +249,8 @@ class EditData extends Component {
       cityData,
       cityOptions,
     })
-
   }
+
   handleCityChange = (value) => {
     this.setState({
       data: {
@@ -246,29 +259,35 @@ class EditData extends Component {
       },
     })
   }
+
   handleSaveBasic = async () => {
-    try {
-      console.log('handleSaveBasic')
-      console.log('cityData+++++', this.state.cityData)
-      const { data: { desc, code } } = await updateUser({
-        userId: this.props.user.userId,
-        nickname: this.state.data.nickname,
-        district: (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId),
-        serviceTime: this.state.data.serviceTime.join(','),
-        description: this.state.data.description,
-        location: this.state.data.location,
-        specAddr: this.state.data.specAddr,
-      })
-      if (code !== 200) {
-        message.error(desc)
-      } else {
-        message.success('更新资料成功')
-        this.afterUpdate()
-      }
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+    // console.log('handleSaveBasic')
+    // console.log('cityData+++++', this.state.cityData)
+    // const success = await updateUser({
+    //   userId: this.props.user.userId,
+    //   nickname: this.state.data.nickname,
+    //   district: (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId),
+    //   serviceTime: this.state.data.serviceTime.join(','),
+    //   description: this.state.data.description,
+    //   location: this.state.data.location,
+    //   specAddr: this.state.data.specAddr,
+    // })
+    // const { data: { desc, code } } =
+    const success = await updateUser({
+      userId: this.props.user.userId,
+      nickname: this.state.data.nickname,
+      district: (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId),
+      serviceTime: this.state.data.serviceTime.join(','),
+      description: this.state.data.description,
+      location: this.state.data.location,
+      specAddr: this.state.data.specAddr,
+    })
+    if (success) {
+      message.success('更新资料成功')
+      this.afterUpdate()
     }
   }
+
   handleShowAddSkillModal = () => {
     this.setState({
       skillModalVisible: true,
@@ -276,31 +295,44 @@ class EditData extends Component {
   }
 
   handleChangePwdSubmit = async () => {
-    try {
-      const { data: { code, desc } } = await changePwd({
-        pwd: this.state.pwd,
-        newPwd: this.state.newPwd,
-      })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    // try {
+    // const { data: { code, desc } } = await changePwd({
+    //   pwd: this.state.pwd,
+    //   newPwd: this.state.newPwd,
+    // })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    const success = await changePwd({
+      pwd: this.state.pwd,
+      newPwd: this.state.newPwd,
+    })
+    if (success) {
       message.success('修改密码成功')
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
-
+    // } catch (e) {
+    //   message.error('网络连接失败，请检查网络后重试')
+    // }
   }
 
   handleSave = (type) => async () => {
     try {
-      const { data: { code, desc } } = await updateUser({
+      // const { data: { code, desc } } = await updateUser({
+      //   userId: this.props.user.userId,
+      //   [ type ]: this.state.data[ type ],
+      // })
+      // if (code !== 200) {
+      //   message.error(desc)
+      // } else {
+      //   message.success('更新资料成功')
+      //   this.afterUpdate()
+      // }
+      const success = await updateUser({
         userId: this.props.user.userId,
         [ type ]: this.state.data[ type ],
       })
-      if (code !== 200) {
-        message.error(desc)
-      } else {
+      if (success) {
         message.success('更新资料成功')
         this.afterUpdate()
       }
@@ -308,16 +340,18 @@ class EditData extends Component {
       message.error('网络连接失败，请检查网络后重试')
     }
   }
+
   getPhoneCode = async () => {
-    try {
-      const { data: { code, desc } } = await getPhoneCode({ phoneNumber: this.state.data.phoneNumber })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    // const { data: { code, desc } } = await getPhoneCode({ phoneNumber: this.state.data.phoneNumber })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    const success = await getPhoneCode({
+      phoneNumber: this.state.data.phoneNumber,
+    })
+    if (success) {
       message.success('已发送验证码')
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -329,15 +363,14 @@ class EditData extends Component {
     })
   }
   getMailCode = async () => {
-    try {
-      const { data: { code, desc } } = await getMailCode({ email: this.state.data.email })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    // const { data: { code, desc } } = await getMailCode({ email: this.state.data.email })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    const success = await getMailCode({ email: this.state.data.email })
+    if (success) {
       message.success('已发送验证码')
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -346,101 +379,137 @@ class EditData extends Component {
     modalTitle: '',
     modalVisible: false,
   })
+
   handlePhoneCodeChange = e => this.setState({ phoneCode: e.target.value })
+
   handleMailCodeChange = e => this.setState({ mailCode: e.target.value })
+
   verifyPhoneNumber = async () => {
-    try {
-      const { data: { code, desc } } = await verifyPhoneNumber({
-        phoneNumber: this.state.data.phoneNumber,
-        code: this.state.phoneCode,
-      })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      } else {
-        const { data: { code, desc } } = await updateUser({
-          userId: this.state.data.userId,
-          phoneNumber: this.state.data.phoneNumber,
-        })
-        if (code !== 200) {
-          message.error(desc)
-          return
-        }
-      }
-      message.success('验证手机号成功')
-      this.handleModalCancel()
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+    // const { data: { code, desc } } = await verifyPhoneNumber({
+    //   phoneNumber: this.state.data.phoneNumber,
+    //   code: this.state.phoneCode,
+    // })
+    const verifyPhoneNumberSuccess = await verifyPhoneNumber({
+      phoneNumber: this.state.data.phoneNumber,
+      code: this.state.phoneCode,
+    })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // } else {
+    if (!verifyPhoneNumberSuccess) {
+      return
     }
+
+    const updateUserSuccess = await updateUser({
+      userId: this.state.data.userId,
+      phoneNumber: this.state.data.phoneNumber,
+    })
+
+    if (!updateUserSuccess) {
+      return
+    }
+    //   if (code !== 200) {
+    //     message.error(desc)
+    //     return
+    //   }
+    // }
+    message.success('验证手机号成功')
+    this.handleModalCancel()
   }
   verifyEmail = async () => {
-    try {
-      const { data: { code, desc } } = await verifyEmail({
-        email: this.state.data.email,
-        code: this.state.mailCode,
-      })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      } else {
-        const { data: { code, desc } } = await updateUser({
-          userId: this.props.user.userId,
-          email: this.state.data.email,
-        })
-        if (code !== 200) {
-          message.error(desc)
-          return
-        }
-        message.success('验证邮箱成功')
-      }
-      this.handleModalCancel()
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+    // const { data: { code, desc } } = await verifyEmail({
+    //   email: this.state.data.email,
+    //   code: this.state.mailCode,
+    // })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // } else {
+    //   const { data: { code, desc } } = await updateUser({
+    //     userId: this.props.user.userId,
+    //     email: this.state.data.email,
+    //   })
+    //   if (code !== 200) {
+    //     message.error(desc)
+    //     return
+    //   }
+    //   message.success('验证邮箱成功')
+    // }
+    // this.handleModalCancel()
+    const verifyEmailSuccess = await verifyEmail({
+      email: this.state.data.email,
+      code: this.state.mailCode,
+    })
+
+    if (!verifyEmailSuccess) {
+      return
     }
+
+    const updateUserSuccess = await updateUser({
+      userId: this.props.user.userId,
+      email: this.state.data.email,
+    })
+
+    if (!updateUserSuccess) {
+      return
+    }
+
+    message.success('验证邮箱成功')
   }
+
   deleteSkill = (skillId, isTemp, deleteIndex) => async () => {
-    try {
-      const { data: { code, desc } } = await deleteSkill({
-        isTemp,
-        skillId,
-      })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    // const { data: { code, desc } } = await deleteSkill({
+    //   isTemp,
+    //   skillId,
+    // })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    const success = await deleteSkill({
+      isTemp,
+      skillId,
+    })
+
+    if (success) {
       this.setState({
         skillList: this.state.skillList.filter((item, index) => index !== deleteIndex),
       })
       message.success('删除技能成功')
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
   }
+
   getServiceTree = async () => {
     try {
-      const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.user.district })
-      if (code !== 200) {
-        message.error(desc)
-        return
+      // const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.user.district })
+      // if (code !== 200) {
+      //   message.error(desc)
+      //   return
+      // }
+      const data = await getServiceTree({ cityId: this.props.user.district })
+      if (data) {
+        const firstServiceList = data.map(item => item.serviceTypeName)
+        // console.log('firstLevelServiceList', firstServiceList)
+        // console.log('serviceTree', data)
+        this.setState({
+          firstServiceList,
+          serviceTree: data,
+        })
       }
-      console.log(data)
-      const firstServiceList = data.map(item => item.serviceTypeName)
-      console.log('firstLevelServiceList', firstServiceList)
-      console.log('serviceTree', data)
-      this.setState({
-        firstServiceList,
-        serviceTree: data,
-      })
     } catch (e) {
       message.error('网络连接失败，请检查网络后重试')
     }
   }
+
   hideSkillModal = () => this.setState({
     skillModalVisible: false,
   })
+
   skillModalNextStep = () => this.setState({
     skillModalStep: 1,
   })
+
   handleFirstServiceSelect = (serviceName) => () => this.setState({
     selectedFirstService: serviceName,
     secondServiceList: [ ...this.state.serviceTree.find(item => item.serviceTypeName === serviceName).child, {
@@ -448,6 +517,7 @@ class EditData extends Component {
       serviceTypeId: -1,
     } ],
   })
+
   handleSecondServiceSelect = (skillId) => () => {
     if (this.state.selectedSecondService.includes(skillId)) {
       this.setState({
@@ -461,43 +531,43 @@ class EditData extends Component {
   }
 
   addSkill = async () => {
-    try {
-      console.log('add skill')
-      console.log(this.state.selectedSecondService)
-      let promiseArr = []
-      if (this.state.selectedSecondService.some(item => item >= 0)) {
-        console.log('first if')
-        promiseArr.push(this.postSkill())
-      }
-      if (this.state.selectedSecondService.includes(-1)) {
-        console.log('sec if')
-        promiseArr.push(this.postSkillTemp())
-      }
-      if (promiseArr.length === 1) {
-        console.log('third if')
-        const [ result ] = await Promise.all(promiseArr)
-        if (result.data.code !== 200) {
-          message.error(result.data.desc)
-          return
-        }
+    console.log('add skill')
+    console.log(this.state.selectedSecondService)
+    let promiseArr = []
+    if (this.state.selectedSecondService.some(item => item >= 0)) {
+      console.log('first if')
+      promiseArr.push(this.postSkill())
+    }
+    if (this.state.selectedSecondService.includes(-1)) {
+      console.log('sec if')
+      promiseArr.push(this.postSkillTemp())
+    }
+    if (promiseArr.length === 1) {
+      console.log('third if')
+      const [ result ] = await Promise.all(promiseArr)
+      // if (result.data.code !== 200) {
+      //   message.error(result.data.desc)
+      //   return
+      // }
+      if (result) {
         message.success('新增技能成功')
         this.getSkillByUserId()
         this.hideSkillModal()
-        return
       }
-      if (promiseArr.length === 2) {
-        const [ result1, result2 ] = await Promise.all(promiseArr)
-        if (result1.data.code !== 200 || result2.data.code !== 200) {
-          message.error('网络连接失败，请检查网络后重试')
-          this.hideSkillModal()
-          return
-        }
+      return
+    }
+    if (promiseArr.length === 2) {
+      const [ result1, result2 ] = await Promise.all(promiseArr)
+      // if (!result1 || !result2) {
+      //   message.error('网络连接失败，请检查网络后重试')
+      //   this.hideSkillModal()
+      //   return
+      // }
+      if (result1 && result2) {
         message.success('新增技能成功')
         this.hideSkillModal()
         this.getSkillByUserId()
       }
-    } catch (e) {
-      message.error(e)
     }
   }
 
@@ -529,6 +599,7 @@ class EditData extends Component {
         level: 's',
       },
     ]))
+
   handleLocationChange = (value) => {
     this.getLocationOptions(value)
     this.setState({
@@ -563,6 +634,7 @@ class EditData extends Component {
       })
     })
   }
+
   mapInit = () => {
     this.mapApi = new Promise((resolve, reject) => {
       try {
@@ -575,24 +647,30 @@ class EditData extends Component {
       }
     })
   }
+
   handleInputSecondServiceChange = (e) => this.setState({
     inputSecondService: e.target.value,
   })
+
   handleInputFirstServiceChange = (e) => this.setState({
     inputFirstService: e.target.value,
   })
+
   afterUpdate = async () => {
-    try {
-      const { data: { data, code, desc } } = await getUserById({ userId: this.props.user.userId })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    // try {
+    // const { data: { data, code, desc } } = await getUserById({ userId: this.props.user.userId })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    const data = await getUserById({ userId: this.props.user.userId })
+    if (data) {
       this.props.setUser(data)
       this.getUserById()
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
+    // } catch (e) {
+    //   message.error('网络连接失败，请检查网络后重试')
+    // }
   }
 
   render () {

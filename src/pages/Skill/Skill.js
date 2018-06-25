@@ -306,35 +306,35 @@ class SkillPage extends Component {
   }
 
   getCityTree = async () => {
-    try {
-      const { data: { code, data } } = await getCityTree()
-      if (code !== 200) {
-        return message.error('网络连接失败，请检查网络后重试')
-      }
-      const tree = data
-      window.tree = data
-      const countryList = Object.keys(tree)
-      const provinceList = Object.keys(tree[ '中国' ])
-      const letterCityList = tree[ '中国' ][ '北京' ].map(item => item.chinese)
-      this.setState({
-        tree,
-        countryOptions: countryList,
-        provinceOptions: provinceList,
-        cityOptions: letterCityList,
-        cityData: tree[ '中国' ][ '北京' ],
-      })
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
-    }
+    // try {
+    // const { data: { code, data } } = await getCityTree()
+    // if (code !== 200) {
+    //   return message.error('网络连接失败，请检查网络后重试')
+    // }
+    const data = await getCityTree()
+    const tree = data
+    window.tree = data
+    const countryList = Object.keys(tree)
+    const provinceList = Object.keys(tree[ '中国' ])
+    const letterCityList = tree[ '中国' ][ '北京' ].map(item => item.chinese)
+    this.setState({
+      tree,
+      countryOptions: countryList,
+      provinceOptions: provinceList,
+      cityOptions: letterCityList,
+      cityData: tree[ '中国' ][ '北京' ],
+    })
+    // } catch (e) {
+    //   message.error('网络连接失败，请检查网络后重试')
+    // }
   }
 
   handleCountryChange = (value) => {
-    console.log(this.state.tree[ value ])
+    // console.log(this.state.tree[ value ])
     const provinceOptions = Object.keys(this.state.tree[ value ])
     const selectedProvince = provinceOptions[ 0 ]
     const cityData = this.state.tree[ value ][ selectedProvince ]
     const cityOptions = cityData.map(item => item.chinese)
-    const selectedCity = cityOptions[ 0 ]
     this.setState({
       selectedCountry: value,
       provinceOptions,
@@ -351,7 +351,7 @@ class SkillPage extends Component {
   }
 
   handleProvinceChange = (value) => {
-    console.log(this.state.tree[ this.state.selectedCountry ][ value ])
+    // console.log(this.state.tree[ this.state.selectedCountry ][ value ])
     const cityData = this.state.tree[ this.state.selectedCountry ][ value ]
     const cityOptions = cityData.map(item => item.chinese)
     this.setState({
@@ -378,6 +378,7 @@ class SkillPage extends Component {
     step: this.state.step + 1,
     progressPercent: (this.state.step + 1) * 10 + 10,
   })
+
   getLocationOptions = (keyword) => {
     this.mapApi.then(() => {
       // if (this.state.lastCity && this.state.lastCity === this.state.selectedCity) {
@@ -412,7 +413,7 @@ class SkillPage extends Component {
   }
 
   handleLocationChange = (value) => {
-    console.log('change')
+    // console.log('change')
     this.getLocationOptions(value)
     this.setState({
       location: value,
@@ -450,6 +451,7 @@ class SkillPage extends Component {
       selectedType: type,
     })
   }
+
   handleDescriptionChange = (e) => {
     this.setState({
       description: e.target.value,
@@ -498,6 +500,7 @@ class SkillPage extends Component {
     })
     this.props.setUser({ ...this.props.user, avatar: url })
   }
+
   handleSpecAddrChange = (e) => {
     let str = e.target.value
     if (str.length > 100) {
@@ -612,13 +615,16 @@ class SkillPage extends Component {
 
   getServiceList = async () => {
     try {
-      const { data: { code, data, desc } } = await getServiceList({
+      // const { data: { code, data, desc } } = await getServiceList({
+      //   dist: this.state.selectedCity,
+      // })
+      // if (code !== 200) {
+      //   message.error(desc)
+      //   return
+      // }
+      const data = await getServiceList({
         dist: this.state.selectedCity,
       })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
       console.log('servicelist', data)
       this.setState({
         serviceList: data,
@@ -630,6 +636,7 @@ class SkillPage extends Component {
         secondServiceList: data.filter(item => item.level === 's'),
       })
     } catch (e) {
+      console.log(e)
       message.error(e)
     }
   }
@@ -656,13 +663,17 @@ class SkillPage extends Component {
   }
 
   updateStatus = async () => {
-    const { data: { desc, code } } = await updateUser({
+    // const { data: { desc, code } } = await updateUser({
+    //   userId: this.props.user.userId,
+    //   checkStatus: 1,
+    // })
+    // if (code !== 200) {
+    //   message.error(desc)
+    // }
+    await updateUser({
       userId: this.props.user.userId,
       checkStatus: 1,
     })
-    if (code !== 200) {
-      message.error(desc)
-    }
   }
 
   geoCoder = (cbArr) => {

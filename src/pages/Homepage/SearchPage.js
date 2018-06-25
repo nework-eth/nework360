@@ -58,15 +58,21 @@ class SearchPage extends Component {
 
   getServiceTree = async () => {
     try {
-      const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.cityId })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
-      console.log('serviceTree', data)
+      // const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.cityId })
+      // if (code !== 200) {
+      //   message.error(desc)
+      //   return
+      // }
+      // console.log('serviceTree', data)
+      // const firstLevelServiceList = data.map(item => item.serviceTypeName)
+      // console.log('firstLevelServiceList', firstLevelServiceList)
+      // console.log('serviceTree', data)
+      // this.setState({
+      //   serviceTree: data,
+      //   firstLevelServiceList,
+      // })
+      const data = await getServiceTree({ cityId: this.props.cityId })
       const firstLevelServiceList = data.map(item => item.serviceTypeName)
-      console.log('firstLevelServiceList', firstLevelServiceList)
-      console.log('serviceTree', data)
       this.setState({
         serviceTree: data,
         firstLevelServiceList,
@@ -80,34 +86,41 @@ class SearchPage extends Component {
   }
 
   getFirstServiceList = async () => {
-    try {
-      const { data: { code, data, desc } } = await getListServiceByParam({
-        dist: this.props.cityName,
-        level: 'f',
-      })
-      console.log(code, data, desc)
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
-    }
+    // const { data: { code, data, desc } } = await getListServiceByParam({
+    //   dist: this.props.cityName,
+    //   level: 'f',
+    // })
+    // console.log(code, data, desc)
+    getListServiceByParam({
+      dist: this.props.cityName,
+      level: 'f',
+    })
   }
 
   getNearServiceList = async () => {
-    try {
-      const { data: { code, data, desc } } = await getListServiceByDist({
+    // try {
+    // const { data: { code, data, desc } } = await getListServiceByDist({
+    //   dist: this.props.cityName,
+    //   level: 's',
+    // })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    // console.log('nearServiceList', data)
+    // this.setState({
+    //   nearServiceList: data,
+    // })
+    const data = await getListServiceByDist({
         dist: this.props.cityName,
         level: 's',
       })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
-      console.log('nearServiceList', data)
       this.setState({
         nearServiceList: data,
       })
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
-    }
+    // } catch (e) {
+    //   message.error('网络连接失败，请检查网络后重试')
+    // }
   }
 
   componentDidMount () {

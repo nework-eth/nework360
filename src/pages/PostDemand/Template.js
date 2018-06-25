@@ -14,6 +14,7 @@ function Template ({
                      isMultiChoice,
                      locationOptions,
                      handleLocationChange,
+                     handleSpecAddressChange,
                    }) {
   switch (type) {
     case 'input':
@@ -41,6 +42,7 @@ function Template ({
           value={ value }
           locationOptions={ locationOptions }
           handleLocationChange={ handleLocationChange }
+          handleSpecAddressChange={ handleSpecAddressChange }
         />
       )
     case 'time':

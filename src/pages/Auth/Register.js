@@ -70,21 +70,16 @@ class Page extends Component {
       message.error('请输入正确格式的验证码')
       return
     }
-    try {
-      const { data: { code, desc } } = await register({
-        phoneNumber: phoneNumber.value,
-        nickName: nickName.value,
-        pwd: pwd.value,
-        code: messageCode.value,
-      })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    const success = await register({
+      phoneNumber: phoneNumber.value,
+      nickName: nickName.value,
+      pwd: pwd.value,
+      code: messageCode.value,
+    })
+
+    if (success) {
       message.success('注册成功')
       browserHistory.push('/login')
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
     // this.props.form.validateFields(async (err, { messageCode, password, phoneNumber, nickName }) => {
     //   if (!err) {
@@ -126,6 +121,7 @@ class Page extends Component {
     //   }
     // })
   }
+
   handleNickNameChange = (e) => {
     let value = e.target.value
     this.setState((preState) => ({
@@ -135,12 +131,14 @@ class Page extends Component {
       },
     }))
   }
+
   handleNickNameBlur = () => this.setState((preState) => ({
     nickName: {
       value: preState.nickName.value,
       ...this.validateNickName(preState.nickName.value),
     },
   }))
+
   handlePhoneNumberChange = (e) => {
     const value = e.target.value
     this.setState((preState) => ({
@@ -170,12 +168,14 @@ class Page extends Component {
       }
     })
   }
+
   handlePhoneNumberBlur = () => this.setState((preState) => ({
     phoneNumber: {
       value: preState.phoneNumber.value,
       ...this.validatePhoneNumber(preState.phoneNumber.value),
     },
   }))
+
   handlePwdChange = (e) => {
     let value = e.target.value
     this.setState((preState) => ({
@@ -185,6 +185,7 @@ class Page extends Component {
       },
     }))
   }
+
   validatePhoneNumber = (phoneNumber) => {
     if (!phoneNumber) {
       return {
@@ -216,6 +217,7 @@ class Page extends Component {
       errorMsg: null,
     }
   }
+
   validateNickName = (nickName) => {
     if (!nickName) {
       return {
@@ -237,6 +239,7 @@ class Page extends Component {
       errorMsg: null,
     }
   }
+
   validatePwd = (pwd) => {
     if (!pwd) {
       return {
@@ -280,6 +283,7 @@ class Page extends Component {
       errorMsg: null,
     }
   }
+
   handlePwdBlur = () => {
     this.setState((preState) => ({
       pwd: {
@@ -288,6 +292,7 @@ class Page extends Component {
       },
     }))
   }
+
   handleMessageCodeChange = (e) => {
     const value = e.target.value
     this.setState((preState) => ({
@@ -297,6 +302,7 @@ class Page extends Component {
       },
     }))
   }
+
   validateMessageCode = (messageCode) => {
     if (!messageCode) {
       return {
@@ -318,8 +324,6 @@ class Page extends Component {
       }
     }
 
-    console.log(/^\d{4}$/.test(messageCode))
-
     if (!/^\d{4}$/.test(messageCode)) {
       return {
         validateStatus: 'error',
@@ -332,25 +336,32 @@ class Page extends Component {
       errorMsg: null,
     }
   }
+
   handleMessageCodeBlur = () => this.setState((preState) => ({
     messageCode: {
       value: preState.messageCode.value,
       ...this.validateMessageCode(preState.messageCode.value),
     },
   }))
+
   handleMessageButtonClick = async () => {
-    try {
-      const { data: { code, desc } } = await sendCode({ phoneNumber: this.state.phoneNumber.value })
-      if (code === 200) {
-        message.success('已发送短信验证码')
-        this.startTimer()
-        return
-      }
-      message.error(desc)
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+    // try {
+    // const { data: { code, desc } } = await sendCode({ phoneNumber: this.state.phoneNumber.value })
+    // if (code === 200) {
+    //   message.success('已发送短信验证码')
+    //   this.startTimer()
+    //   return
+    // }
+    const success = await sendCode({ phoneNumber: this.state.phoneNumber.value })
+    if (success) {
+      this.startTimer()
     }
+    // message.error(desc)
+    // } catch (e) {
+    //   message.error('网络连接失败，请检查网络后重试')
+    // }
   }
+
   startTimer = () => {
     if (this.timer) {
       return
@@ -361,6 +372,7 @@ class Page extends Component {
       this.timer = this.timerReduce(() => this.timer = null)
     })
   }
+
   timerReduce = (cb) => {
     if (this.state.disabledTime) {
       this.setState((preState) => ({

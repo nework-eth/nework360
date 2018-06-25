@@ -1,4 +1,4 @@
-import { Button, Carousel, message, Rate } from 'antd'
+import { Button, Carousel, Rate } from 'antd'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import React, { Component } from 'react'
@@ -72,32 +72,28 @@ class Profile extends Component {
     skillList: [],
   }
   getUserById = async () => {
-    try {
-      const { data: { data, desc, code } } = await getUserById({ userId: this.props.user.userId })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    // try {
+    const data = await getUserById({ userId: this.props.user.userId })
       this.setState({ data })
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
-    }
+    // } catch (e) {
+    //   message.error('网络连接失败，请检查网络后重试')
+    // }
   }
   getSkillByUserId = async () => {
-    try {
-      const { data: { code, data, desc } } = await getSkillByUserId({ userId: this.props.user.userId })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
+    // try {
+    // const { data: { code, data, desc } } = await getSkillByUserId({ userId: this.props.user.userId })
+    // if (code !== 200) {
+    //   message.error(desc)
+    //   return
+    // }
+    const data = await getSkillByUserId({ userId: this.props.user.userId })
       const secondarySkillList = Object.values(data).reduce((previousValue, currentValue) => [ ...previousValue, ...currentValue ])
-      console.log(secondarySkillList)
       this.setState({
         skillList: secondarySkillList,
       })
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
-    }
+    // } catch (e) {
+    //   message.error('网络连接失败，请检查网络后重试')
+    // }
   }
 
   constructor (props) {
@@ -201,7 +197,7 @@ class Profile extends Component {
                   numberOfMonths={ 1 }
                   hideKeyboardShortcutsPanel
                   monthFormat="YYYY[年]M[月]"
-                  disabled
+                  date={ moment() }
                 />
                 <div id="mapContainer"/>
               </div>
@@ -221,7 +217,7 @@ class Profile extends Component {
     /* eslint-disable no-undef */
     // const map = new AMap.Map('mapContainer')
     /* eslint-disable no-undef */
-    console.log('AMap++++', AMap)
+    // console.log('AMap++++', AMap)
     this.getUserById()
     this.getSkillByUserId()
   }

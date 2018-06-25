@@ -33,17 +33,15 @@ class Page extends Component {
     if (pwd.errorMsg) {
       return message.error('请输入正确格式的密码')
     }
-    try {
-      const { data: { code, desc, data } } = await login({ phoneNumber: phoneNumber.value, pwd: pwd.value })
-      if (code !== 200) {
-        return message.error(desc)
-      }
+    const data = await login({
+      phoneNumber: phoneNumber.value,
+      pwd: pwd.value,
+    })
+    if (data) {
       this.props.setUser(data)
       this.props.setUserId(data.userId)
       message.success('登录成功')
       browserHistory.push('/')
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
 
     // this.props.form.validateFields(async (err, { phoneNumber, password }) => {
@@ -127,6 +125,7 @@ class Page extends Component {
       errorMsg: null,
     }
   }
+
   handlePhoneNumberBlur = () => {
     this.setState((preState) => ({
       phoneNumber: {
@@ -135,6 +134,7 @@ class Page extends Component {
       },
     }))
   }
+
   validatePwd = (pwd) => {
     if (!pwd) {
       return {
@@ -178,6 +178,7 @@ class Page extends Component {
       errorMsg: null,
     }
   }
+
   handlePwdBlur = () => {
     this.setState((preState) => ({
       pwd: {

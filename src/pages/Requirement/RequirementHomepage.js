@@ -45,6 +45,15 @@ class RequirementHomePage extends Component {
       </div>
     )
   }
+
+  getNearBySkill = () => {
+
+  }
+
+  componentDidMount () {
+
+  }
+
 }
 
 export { RequirementHomePage as page }

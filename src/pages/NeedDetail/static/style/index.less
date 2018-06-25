@@ -1,0 +1,56 @@
+.need-detail-container {
+  display: flex;
+  flex-flow: column;
+  min-height: calc(100vh - 70px);
+  main {
+    flex: 1;
+    padding: 30px calc(50vw - 350px);
+  }
+  .need-detail-profile {
+    margin-bottom: 30px;
+    display: flex;
+    img {
+      margin-right: 20px;
+      border-radius: 50%;
+    }
+    .need-detail-profile-name {
+      font-size: 16px;
+      line-height: 30px;
+      font-weight: bold;
+    }
+    .need-detail-rate-wrapper {
+      display: flex;
+      align-items: center;
+      .ant-rate-star {
+        margin-right: 3px;
+      }
+      .rate {
+        font-weight: bold;
+        margin-left: 10px;
+        margin-right: 8px;
+      }
+      .evaluation {
+        color: #9ca6ae;
+      }
+    }
+  }
+  .need-detail-item-wrapper {
+    margin-top: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid #edf1f4;
+    p {
+      margin-top: 10px;
+    }
+  }
+  footer {
+    padding: 25px calc(50vw - 350px);
+    height: 100px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    .ant-btn {
+      width: 160px;
+      height: 50px;
+    }
+  }
+}

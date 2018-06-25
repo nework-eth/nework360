@@ -8,6 +8,7 @@ function LocationTemplate ({
                              value,
                              locationOptions,
                              handleLocationChange,
+                             handleSpecAddressChange,
                            }) {
   return (<div>
     <div className="template-content">
@@ -15,7 +16,7 @@ function LocationTemplate ({
       <div className="form-item-wrapper">
         <p>您的位置</p>
         <Select
-          value={ value }
+          value={ value.split(',')[ 0 ] }
           mode="combobox"
           showArrow={ false }
           className="place-select"
@@ -35,6 +36,8 @@ function LocationTemplate ({
         <p>楼栋/门牌号信息</p>
         <Input
           placeholder="请输入"
+          value={ value.split(',')[ 1 ] }
+          onChange={ (e) => handleSpecAddressChange(e.target.value) }
         />
       </div>
     </div>

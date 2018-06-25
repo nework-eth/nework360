@@ -58,17 +58,15 @@ class Page extends Component {
       return
     }
     try {
-      const { data: { desc, code } } = await changePassword({
+      const success = await changePassword({
         code: messageCode.value,
         phoneNumber: phoneNumber.value,
         pwd: pwd.value,
       })
-      if (code !== 200) {
-        message.error(desc)
-        return
+      if (success) {
+        message.success('修改密码成功')
+        browserHistory.push('/login')
       }
-      message.success('修改密码成功')
-      browserHistory.push('/login')
     } catch (e) {
       message.error('网络连接失败，请检查网络后重试')
     }
@@ -97,16 +95,10 @@ class Page extends Component {
   }
 
   handleMessageButtonClick = async () => {
-    try {
-      const { data: { code, desc } } = await forgetPasswordSendCode({ phoneNumber: this.state.phoneNumber.value })
-      if (code === 200) {
-        message.success('已发送短信验证码')
-        this.startTimer()
-        return
-      }
-      message.error(desc)
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+    const success = await forgetPasswordSendCode({ phoneNumber: this.state.phoneNumber.value })
+    if (success) {
+      message.success('已发送短信验证码')
+      this.startTimer()
     }
   }
 
@@ -139,6 +131,7 @@ class Page extends Component {
       }
     })
   }
+
   validatePhoneNumber = (phoneNumber) => {
     if (!phoneNumber) {
       return {
@@ -198,8 +191,6 @@ class Page extends Component {
         value: messageCode.slice(0, 4),
       }
     }
-
-    console.log(/^\d{4}$/.test(messageCode))
 
     if (!/^\d{4}$/.test(messageCode)) {
       return {
@@ -281,6 +272,7 @@ class Page extends Component {
       errorMsg: null,
     }
   }
+
   handlePwdBlur = () => {
     this.setState((preState) => ({
       pwd: {
