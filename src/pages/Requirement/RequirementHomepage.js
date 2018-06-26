@@ -1,9 +1,30 @@
 import { Button } from 'antd'
 import React, { Component } from 'react'
 import { view as Footer } from '../../components/Footer'
+import { getNearbySKill } from '../../service/requirement'
+import { view as ServicePersonCard } from './ServicePersonCard'
 import './static/style/homepage.less'
 
 class RequirementHomePage extends Component {
+
+  state = {
+    servicePersonList: [],
+    totalCount: '',
+  }
+  getNearBySkill = async () => {
+    const { data: { data, pageinfo } } = await getNearbySKill({
+      serviceId: 10,
+      userId: 22,
+    })
+    if (data) {
+      console.log(data)
+      this.setState({
+        servicePersonList: data,
+        totalCount: pageinfo.totalCount,
+      })
+    }
+  }
+
   render () {
     return (
       <div className="requirement-homepage-container">
@@ -13,6 +34,22 @@ class RequirementHomePage extends Component {
               <h1>仅需一分钟</h1>
               <h1>即可为您匹配专业的</h1>
               <h1>深度保洁 服务人员</h1>
+              <div className="stroke-1">
+                <img
+                  src="./images/stroke-1.png"
+                  alt="stroke"
+                  width="176"
+                  height="7"
+                />
+              </div>
+              <div className="stroke-2">
+                <img
+                  src="./images/stroke-2.png"
+                  alt="stroke"
+                  width="131"
+                  height="9.3"
+                />
+              </div>
               <Button type="primary">开始</Button>
               <div className="qa">
                 <h3>如何解决您的问题？</h3>
@@ -40,18 +77,36 @@ class RequirementHomePage extends Component {
               </div>
             </div>
           </div>
+          <div className="service-person-container">
+            <h2>您附近有 { this.state.totalCount } 位深度保洁的服务人员</h2>
+            <p>他们离您的当前位置较近，可迅速到达服务地点，响应您的诉求...</p>
+            <div className="service-person-card-wrapper">
+              {
+                this.state.servicePersonList.map(({
+                                                    hireTimes,
+                                                    evaluateScore,
+                                                    userBasicInfoVO,
+                                                  }) =>
+                  <ServicePersonCard
+                    key={ userBasicInfoVO.userId }
+                    nickname={ userBasicInfoVO.nickname }
+                    hireTimes={ hireTimes }
+                    evaluateCount={ evaluateScore.count }
+                    evaluateScore={ evaluateScore.ave }
+                    joinedTime={ userBasicInfoVO.createTime }
+                    avatarUrl={ userBasicInfoVO.avatar }
+                  />)
+              }
+            </div>
+          </div>
         </main>
         <Footer/>
       </div>
     )
   }
 
-  getNearBySkill = () => {
-
-  }
-
   componentDidMount () {
-
+    this.getNearBySkill()
   }
 
 }

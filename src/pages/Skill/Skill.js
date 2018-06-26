@@ -208,19 +208,18 @@ class SkillPage extends Component {
         return
       case 5:
         if (this.state.secondaryTypeList.some(item => item !== -1)) {
-          const { data: { code, data } } = await releaseSkill({
+          const { data: { code } } = await releaseSkill({
             userId: this.props.user.userId,
             latitude: this.state.latitude,
             longitude: this.state.longitude,
             serviceIds: this.state.secondaryTypeList.filter(item => item !== -1).join(','),
           })
           if (code !== 200) {
-            message.error('网络连接失败，请检查网络后重试')
             return
           }
         }
         if (this.state.secondaryTypeList.includes(-1) || this.state.selectedType === '其他') {
-          const { data: { desc, code } } = await postSkillTemp(JSON.stringify([
+          const { data: { code } } = await postSkillTemp(JSON.stringify([
             {
               userId: this.props.user.userId,
               latitude: this.state.latitude,
@@ -241,11 +240,10 @@ class SkillPage extends Component {
             },
           ]))
           if (code !== 200) {
-            message.error('网络连接失败，请检查网络后重试')
             return
           }
         }
-        const { data: { code, desc } } = await updateUser({
+        const { data: { code } } = await updateUser({
           districtId: this.state.cityId,
           userId: this.props.user.userId,
           location: this.state.location,
@@ -257,7 +255,6 @@ class SkillPage extends Component {
           isPartyB: true,
         })
         if (code !== 200) {
-          message.error('网络连接失败，请检查网络后重试')
           return
         }
         this.setState({
@@ -267,7 +264,6 @@ class SkillPage extends Component {
         message.success('发布技能成功')
         const res = await getUserById({ userId: this.props.user.userId })
         if (res.data.code !== 200) {
-          message.error('网络连接失败，请检查网络后重试')
           return
         }
         this.props.setUser(res.data.data)
@@ -306,14 +302,8 @@ class SkillPage extends Component {
   }
 
   getCityTree = async () => {
-    // try {
-    // const { data: { code, data } } = await getCityTree()
-    // if (code !== 200) {
-    //   return message.error('网络连接失败，请检查网络后重试')
-    // }
-    const data = await getCityTree()
+    const { data: { data } } = await getCityTree()
     const tree = data
-    window.tree = data
     const countryList = Object.keys(tree)
     const provinceList = Object.keys(tree[ '中国' ])
     const letterCityList = tree[ '中国' ][ '北京' ].map(item => item.chinese)
@@ -324,9 +314,6 @@ class SkillPage extends Component {
       cityOptions: letterCityList,
       cityData: tree[ '中国' ][ '北京' ],
     })
-    // } catch (e) {
-    //   message.error('网络连接失败，请检查网络后重试')
-    // }
   }
 
   handleCountryChange = (value) => {
@@ -622,10 +609,9 @@ class SkillPage extends Component {
       //   message.error(desc)
       //   return
       // }
-      const data = await getServiceList({
+      const { data: { data } } = await getServiceList({
         dist: this.state.selectedCity,
       })
-      console.log('servicelist', data)
       this.setState({
         serviceList: data,
         firstServiceList: [ ...data.filter(item => item.level === 'f'), {

@@ -130,7 +130,7 @@ class EditData extends Component {
       // if (code !== 200) {
       //   return message.error('网络连接失败，请检查网络后重试')
       // }
-      const data = await getCityTree()
+      const { data: { data } } = await getCityTree()
       if (data) {
         const tree = data
         const countryList = Object.keys(tree)
@@ -156,7 +156,7 @@ class EditData extends Component {
       // if (code !== 200) {
       //   return message.error(desc)
       // }
-      const data = await getUserById({
+      const { data: { data } } = await getUserById({
         userId: this.props.user.userId,
       })
       if (data) {
@@ -184,7 +184,7 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const data = await getSkillByUserId({ userId: this.props.user.userId })
+    const { data: { data } } = await getSkillByUserId({ userId: this.props.user.userId })
     if (data) {
       const secondarySkillList = Object
         .values(data.skill)
@@ -273,7 +273,7 @@ class EditData extends Component {
     //   specAddr: this.state.data.specAddr,
     // })
     // const { data: { desc, code } } =
-    const success = await updateUser({
+    const { data: { code } } = await updateUser({
       userId: this.props.user.userId,
       nickname: this.state.data.nickname,
       district: (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId),
@@ -282,7 +282,7 @@ class EditData extends Component {
       location: this.state.data.location,
       specAddr: this.state.data.specAddr,
     })
-    if (success) {
+    if (code === 200) {
       message.success('更新资料成功')
       this.afterUpdate()
     }
@@ -304,11 +304,11 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const success = await changePwd({
+    const { data: { code } } = await changePwd({
       pwd: this.state.pwd,
       newPwd: this.state.newPwd,
     })
-    if (success) {
+    if (code === 200) {
       message.success('修改密码成功')
     }
     // } catch (e) {
@@ -328,11 +328,11 @@ class EditData extends Component {
       //   message.success('更新资料成功')
       //   this.afterUpdate()
       // }
-      const success = await updateUser({
+      const { data: { code } } = await updateUser({
         userId: this.props.user.userId,
         [ type ]: this.state.data[ type ],
       })
-      if (success) {
+      if (code) {
         message.success('更新资料成功')
         this.afterUpdate()
       }
@@ -347,10 +347,10 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const success = await getPhoneCode({
+    const { data: { code } } = await getPhoneCode({
       phoneNumber: this.state.data.phoneNumber,
     })
-    if (success) {
+    if (code === 200) {
       message.success('已发送验证码')
     }
   }
@@ -368,8 +368,8 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const success = await getMailCode({ email: this.state.data.email })
-    if (success) {
+    const { data: { code } } = await getMailCode({ email: this.state.data.email })
+    if (code === 200) {
       message.success('已发送验证码')
     }
   }
@@ -389,7 +389,7 @@ class EditData extends Component {
     //   phoneNumber: this.state.data.phoneNumber,
     //   code: this.state.phoneCode,
     // })
-    const verifyPhoneNumberSuccess = await verifyPhoneNumber({
+    const { data: code } = await verifyPhoneNumber({
       phoneNumber: this.state.data.phoneNumber,
       code: this.state.phoneCode,
     })
@@ -397,16 +397,16 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // } else {
-    if (!verifyPhoneNumberSuccess) {
+    if (code !== 200) {
       return
     }
 
-    const updateUserSuccess = await updateUser({
+    const res = await updateUser({
       userId: this.state.data.userId,
       phoneNumber: this.state.data.phoneNumber,
     })
 
-    if (!updateUserSuccess) {
+    if (res.data.code !== 200) {
       return
     }
     //   if (code !== 200) {
@@ -437,21 +437,21 @@ class EditData extends Component {
     //   message.success('验证邮箱成功')
     // }
     // this.handleModalCancel()
-    const verifyEmailSuccess = await verifyEmail({
+    const { data: { code } } = await verifyEmail({
       email: this.state.data.email,
       code: this.state.mailCode,
     })
 
-    if (!verifyEmailSuccess) {
+    if (code !== 200) {
       return
     }
 
-    const updateUserSuccess = await updateUser({
+    const res = await updateUser({
       userId: this.props.user.userId,
       email: this.state.data.email,
     })
 
-    if (!updateUserSuccess) {
+    if (res.data.code !== 200) {
       return
     }
 
@@ -467,12 +467,12 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const success = await deleteSkill({
+    const { data: { code } } = await deleteSkill({
       isTemp,
       skillId,
     })
 
-    if (success) {
+    if (code === 200) {
       this.setState({
         skillList: this.state.skillList.filter((item, index) => index !== deleteIndex),
       })
@@ -487,7 +487,7 @@ class EditData extends Component {
       //   message.error(desc)
       //   return
       // }
-      const data = await getServiceTree({ cityId: this.props.user.district })
+      const { data: { data } } = await getServiceTree({ cityId: this.props.user.district })
       if (data) {
         const firstServiceList = data.map(item => item.serviceTypeName)
         // console.log('firstLevelServiceList', firstServiceList)
@@ -531,25 +531,21 @@ class EditData extends Component {
   }
 
   addSkill = async () => {
-    console.log('add skill')
-    console.log(this.state.selectedSecondService)
+    // console.log(this.state.selectedSecondService)
     let promiseArr = []
     if (this.state.selectedSecondService.some(item => item >= 0)) {
-      console.log('first if')
       promiseArr.push(this.postSkill())
     }
     if (this.state.selectedSecondService.includes(-1)) {
-      console.log('sec if')
       promiseArr.push(this.postSkillTemp())
     }
     if (promiseArr.length === 1) {
-      console.log('third if')
-      const [ result ] = await Promise.all(promiseArr)
+      const [ { code } ] = await Promise.all(promiseArr)
       // if (result.data.code !== 200) {
       //   message.error(result.data.desc)
       //   return
       // }
-      if (result) {
+      if (code === 200) {
         message.success('新增技能成功')
         this.getSkillByUserId()
         this.hideSkillModal()
@@ -557,13 +553,13 @@ class EditData extends Component {
       return
     }
     if (promiseArr.length === 2) {
-      const [ result1, result2 ] = await Promise.all(promiseArr)
+      const [ { code: code1 }, { code: code2 } ] = await Promise.all(promiseArr)
       // if (!result1 || !result2) {
       //   message.error('网络连接失败，请检查网络后重试')
       //   this.hideSkillModal()
       //   return
       // }
-      if (result1 && result2) {
+      if (code1 === 200 && code2 === 200) {
         message.success('新增技能成功')
         this.hideSkillModal()
         this.getSkillByUserId()
@@ -663,7 +659,7 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const data = await getUserById({ userId: this.props.user.userId })
+    const { data: { data } } = await getUserById({ userId: this.props.user.userId })
     if (data) {
       this.props.setUser(data)
       this.getUserById()

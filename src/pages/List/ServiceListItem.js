@@ -1,4 +1,4 @@
-import { Rate } from 'antd'
+import { Button, Rate } from 'antd'
 import React from 'react'
 
 const classNameSpace = 'service-list-item'
@@ -50,23 +50,77 @@ function ServiceListItem () {
             Hi，我常年从事木质地板清洁，在许多知名酒店服务过，经验丰富。您家地板的情况我已查看，我能为您解决，期待为您服务！
           </p>
         </div>
-        <div className="right">
-          <img
-            src="http://p66yu2wkf.bkt.clouddn.com/21_avatar__avatar-2.jpg"
-            alt="等待选择"
-            width="50"
-            height="50"
-          />
-          <p>
-            5人已报价
-          </p>
-          <p>等待客户选择服务人员</p>
-        </div>
-        { /*<div className="right">*/ }
-        { /*<p>恭喜，您已被选中</p>*/ }
-        { /*<Button type="primary">收款</Button>*/ }
-        { /*<p className="cancel-order">取消订单</p>*/ }
-        { /*</div>*/ }
+        {
+          false && <div className="right">
+            <img
+              src="./images/order-wait.png"
+              alt="等待选择"
+              width="50"
+              height="50"
+            />
+            <p>
+              5人已报价
+            </p>
+            <p>等待客户选择服务人员</p>
+          </div>
+        }
+        {
+          false && <div className="right">
+            <p className="congratulation">恭喜，您已被选中</p>
+            <Button type="primary">收款</Button>
+            <p className="cancel-order">取消订单</p>
+          </div>
+        }
+        {
+          false && <div className="right">
+            <img
+              src="./images/order-canceled.png"
+              alt="订单已取消"
+              width="50"
+              height="50"
+            />
+            <p>
+              订单已取消
+            </p>
+            <p className="delete-order">删除订单</p>
+          </div>
+        }
+        {
+          false && <div className="right">
+            <img
+              src="./images/order-paying.png"
+              alt="等待支付"
+              width="50"
+              height="50"
+            />
+            <p>等待支付</p>
+            <p>¥ 350</p>
+          </div>
+        }
+        {
+          false && <div className="right">
+            <p className="payed">已成功收款¥ 350</p>
+            <Button type="primary">评价</Button>
+          </div>
+        }
+        {
+          false && <div className="right">
+            <p className="payed">已成功收款¥ 350</p>
+            <Button>已评价</Button>
+          </div>
+        }
+        {
+          <div className="right">
+            <img
+              src="./images/order-fail.png"
+              alt="订单失败"
+              width="50"
+              height="50"
+            />
+            <p>已选择Make服务</p>
+            <p className="recall">撤回报价</p>
+          </div>
+        }
       </div>
     </div>
   )

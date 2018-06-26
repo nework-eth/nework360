@@ -1,4 +1,4 @@
-import { Dropdown, Menu, message } from 'antd'
+import { Dropdown, Menu } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory, Link } from 'react-router'
@@ -59,13 +59,11 @@ const mapDispatch = (dispatch) => bindActionCreators({
 @connect(mapState, mapDispatch)
 class NavMenu extends Component {
   handleSignOut = async () => {
-    const { data: { code, desc } } = await signOut()
-    if (code !== 200) {
-      message.error('退出登录失败')
-      return
+    const { data: { code } } = await signOut()
+    if (code === 200) {
+      this.props.setUser({})
+      browserHistory.push('/login')
     }
-    this.props.setUser({})
-    browserHistory.push('/login')
   }
 
   render () {
@@ -142,10 +140,12 @@ class NavMenu extends Component {
     // if (code === 200) {
     //   this.props.setCityName(desc)
     // }
-    const data = await getCityByIp()
+    const { data: { data } } = await getCityByIp()
     if (data !== '未知城市') {
       this.props.setCityName(data)
-      }
+    } else {
+      this.props.setCityName('北京')
+    }
     // } catch (e) {
     //   message.error('网络连接失败，请检查网络后重试')
     // }

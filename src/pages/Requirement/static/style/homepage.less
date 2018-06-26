@@ -8,6 +8,7 @@
       background-image: url("../images/bg-img-clean.png");
       background-size: cover;
       .top-content {
+        position: relative;
         margin-left: 430px;
         width: 700px;
         background: rgba(255, 255, 255, 0.9);
@@ -44,6 +45,91 @@
           }
           .tip:not(:last-of-type) {
             margin-bottom: 20px;
+          }
+        }
+        .stroke-1 {
+          position: absolute;
+          top: 354px;
+          left: 50px;
+        }
+        .stroke-2 {
+          position: absolute;
+          top: 361px;
+          left: 86px;
+        }
+      }
+    }
+    .service-person-container {
+      padding: 40px calc(50vw - 530px);
+      h2 {
+        margin-bottom: 10px;
+      }
+      .service-person-card-wrapper {
+        display: flex;
+        flex-wrap: wrap;
+        .service-person-card {
+          margin-top: 20px;
+          padding: 30px;
+          width: 340px;
+          border: 1px solid #edf1f4;
+          &:hover {
+            box-shadow: 0 10px 30px 0 rgba(9, 34, 53, 0.10);
+          }
+          &:not(:nth-of-type(3n+3)) {
+            margin-right: 20px;
+          }
+          .service-person-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            img {
+              border-radius: 50%;
+            }
+          }
+          .name {
+            margin-top: 20px;
+            margin-bottom: 3px;
+            font-size: 20px;
+            line-height: 30px;
+            font-weight: bold;
+          }
+          .rate-wrapper {
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            .iconfont {
+              font-size: 14px;
+            }
+            .ant-rate-star {
+              margin-right: 3px;
+            }
+            .rate {
+              margin-left: 10px;
+            }
+            .evaluation {
+              color: #9ca6ae;
+            }
+          }
+          .information-wrapper {
+            margin-bottom: 30px;
+            .row {
+              margin-bottom: 10px;
+              display: flex;
+              align-items: center;
+              .iconfont {
+                font-size: 24px;
+                margin-right: 10px;
+              }
+            }
+          }
+          .horizontal-line {
+            margin-bottom: 29px;
+            height: 1px;
+            background-color: #edf1f4;
+          }
+          .virtual-title {
+            margin-bottom: 20px;
+            font-weight: bold;
           }
         }
       }
