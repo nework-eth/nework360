@@ -1,5 +1,6 @@
 import { message } from 'antd'
 import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
 import { view as Footer } from '../../components/Footer/index.js'
 import { getNeedOrderList } from '../../service/list'
 import { view as NeedListItem } from './NeedListItem'
@@ -15,7 +16,7 @@ class List extends Component {
     limit: 10,
     needOrderList: [],
     serviceOrderList: [ 1 ],
-    listType: 'service',
+    listType: 'need',
   }
 
   getNeedOrderList = async () => {
@@ -28,7 +29,7 @@ class List extends Component {
       //   message.error(desc)
       //   return
       // }
-      const data = await getNeedOrderList({
+      const { data: { data } } = await getNeedOrderList({
         start: this.state.start,
         limit: this.state.limit,
       })
@@ -40,6 +41,13 @@ class List extends Component {
     } catch (e) {
       message.error('网络连接失败，请检查网络后重试')
     }
+  }
+  goNeedDetail = (needsId) => () => {
+    browserHistory.push({ pathname: '/need-detail', state: { needsId: needsId } })
+  }
+
+  componentDidMount () {
+    this.getNeedOrderList()
   }
 
   render () {
@@ -57,11 +65,23 @@ class List extends Component {
         <div className="content-wrapper">
           {
             listType === 'need'
-              ? needOrderList.map(({ tip, upateTime, quotes }) =>
+              ? needOrderList.map(({
+                                     tip,
+                                     quotes,
+                                     status,
+                                     needsId,
+                                     quoteId,
+                                     upateTime,
+                                     serviceName,
+                                   }) =>
                 <NeedListItem
-                  key={ tip }
-                  title={ tip }
+                  key={ needsId }
                   date={ formatDate(upateTime) }
+                  title={ serviceName }
+                  quotes={ quotes }
+                  status={ status }
+                  goNeedDetail={ this.goNeedDetail(needsId) }
+                  selectedQuote={ quotes.find(item => item.quoteId === quoteId) }
                   // imgList={ quotes.map(quote => quote.photo) }
                 />)
               : serviceOrderList.map(() =>
@@ -72,10 +92,6 @@ class List extends Component {
       </main>
       <Footer/>
     </div>)
-  }
-
-  componentDidMount () {
-    this.getNeedOrderList()
   }
 }
 

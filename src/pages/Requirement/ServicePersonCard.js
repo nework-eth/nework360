@@ -43,6 +43,7 @@ function ServicePersonCard ({
                               joinedTime,
                               evaluateScore,
                               evaluateCount,
+                              evaluation,
                             }) {
   return (
     <div className="service-person-card">
@@ -78,7 +79,7 @@ function ServicePersonCard ({
       </div>
       <div className="horizontal-line"/>
       <p className="virtual-title">
-        评论
+        { evaluation }
       </p>
       <div>查看更多</div>
     </div>

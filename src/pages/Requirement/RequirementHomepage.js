@@ -86,6 +86,7 @@ class RequirementHomePage extends Component {
                                                     hireTimes,
                                                     evaluateScore,
                                                     userBasicInfoVO,
+                                                    userEvaluate,
                                                   }) =>
                   <ServicePersonCard
                     key={ userBasicInfoVO.userId }
@@ -95,6 +96,7 @@ class RequirementHomePage extends Component {
                     evaluateScore={ evaluateScore.ave }
                     joinedTime={ userBasicInfoVO.createTime }
                     avatarUrl={ userBasicInfoVO.avatar }
+                    evaluation={ userEvaluate ? userEvaluate.content : '' }
                   />)
               }
             </div>

@@ -71,7 +71,7 @@ class SearchPage extends Component {
       //   serviceTree: data,
       //   firstLevelServiceList,
       // })
-      const data = await getServiceTree({ cityId: this.props.cityId })
+      const { data: { data } } = await getServiceTree({ cityId: this.props.cityId })
       const firstLevelServiceList = data.map(item => item.serviceTypeName)
       this.setState({
         serviceTree: data,
@@ -111,13 +111,13 @@ class SearchPage extends Component {
     // this.setState({
     //   nearServiceList: data,
     // })
-    const data = await getListServiceByDist({
-        dist: this.props.cityName,
-        level: 's',
-      })
-      this.setState({
-        nearServiceList: data,
-      })
+    const { data: { data } } = await getListServiceByDist({
+      dist: this.props.cityName,
+      level: 's',
+    })
+    this.setState({
+      nearServiceList: data,
+    })
     // } catch (e) {
     //   message.error('网络连接失败，请检查网络后重试')
     // }

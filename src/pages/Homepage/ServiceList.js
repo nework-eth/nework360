@@ -48,14 +48,10 @@ class ServiceList extends Component {
   }
   getNearServiceList = async () => {
     try {
-      const { data: { code, data, desc } } = await getListServiceByDist({
+      const { data: { data } } = await getListServiceByDist({
         dist: this.props.cityName,
         level: 's',
       })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
       console.log('nearServiceList', data)
       this.setState({
         nearServiceList: data,
