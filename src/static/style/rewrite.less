@@ -32,7 +32,9 @@
 }
 
 .ant-btn {
-  border-color: #9ca6ae;
+  &:not(.ant-btn-primary) {
+    border-color: #9ca6ae;
+  }
   &:hover, &:focus {
     background-color: #007dde;
     border-color: #007dde;

@@ -142,7 +142,7 @@ class NavMenu extends Component {
     // }
     const { data: { data } } = await getCityByIp()
     if (data !== '未知城市') {
-      this.props.setCityName(data)
+      this.props.setCityName(data.city)
     } else {
       this.props.setCityName('北京')
     }

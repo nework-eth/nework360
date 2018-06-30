@@ -8,6 +8,7 @@ import { combineReducers } from 'redux'
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Container } from './pages/Container/Container'
 import { page as Homepage } from './pages/Homepage/Homepage'
+import { page as Test } from './pages/Test/Test'
 
 import store from './Store.js'
 
@@ -122,9 +123,9 @@ const getList = async (nextState, callback) => callback(
   (await import(/* webpackChunkName: "List" */'./pages/List/List.js')).page,
 )
 
-const getOrderDetail = async (nextState, callback) => callback(
+const getNeedOrderDetail = async (nextState, callback) => callback(
   null,
-  (await import(/* webpackChunkName: "OrderDetail" */'./pages/OrderDetail/OrderDetail.js')).page,
+  (await import(/* webpackChunkName: "NeedOrderDetail" */'./pages/NeedOrderDetail/NeedOrderDetail.js')).page,
 )
 
 const getNeedDetail = async (nextState, callback) => callback(
@@ -161,10 +162,11 @@ const Routes = () => (
       <Route path="/requirement-homepage" getComponent={ getRequirement }/>
       <Route path="/post-demand" getComponent={ getPostDemand }/>
       <Route path="/list" getComponent={ getList }/>
-      <Route path="/order-detail" getComponent={ getOrderDetail }/>
+      <Route path="/need-order-detail" getComponent={ getNeedOrderDetail }/>
       <Route path="/need-detail" getComponent={ getNeedDetail }/>
       <Route path="/clue-card" getComponent={ getClueCard }/>
     </Route>
+    <Route path="/test" component={ Test }/>
   </Router>
 )
 

@@ -1,0 +1,101 @@
+.order-detail-container {
+  display: flex;
+  flex-flow: column;
+  min-height: calc(100vh - 70px);
+  main {
+    padding: 30px calc(50vw - 530px);
+    .order-detail-container-title-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      h2 {
+        margin-bottom: 20px;
+      }
+      .date {
+        color: #9ca6ae;
+      }
+    }
+    .middle {
+      margin-bottom: 23px;
+      display: flex;
+      align-items: center;
+      .rate {
+        font-weight: bold;
+        margin-left: 10px;
+        margin-right: 4px;
+      }
+      .evaluation {
+        color: #9ca6ae;
+      }
+    }
+    .bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .info-wrapper {
+        display: flex;
+        .iconfont {
+          font-size: 24px;
+          margin-right: 10px;
+        }
+        div {
+          display: flex;
+          align-items: center;
+        }
+        div:first-of-type {
+          margin-right: 30px;
+        }
+      }
+      .ant-btn {
+        width: 160px;
+        height: 50px;
+      }
+    }
+    .order-detail-list-item-wrapper {
+      position: relative;
+      margin-bottom: 20px;
+      padding: 30px;
+      cursor: pointer;
+      border: 1px solid #edf1f4;
+      .icon-selected {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        font-size: 20px;
+        color: #fff;
+      }
+      &:hover {
+        box-shadow: 0 10px 30px 0 rgba(9, 34, 53, 0.10);
+      }
+      .top-part {
+        display: flex;
+        justify-content: space-between;
+        .avatar-wrapper {
+          img {
+            border-radius: 50%;
+            margin-right: 30px;
+          }
+          .online-communicate {
+            color: #008bf7;
+          }
+        }
+        .amount {
+          font-size: 20px;
+          line-height: 30px;
+          color: #008bf7;
+        }
+      }
+      h3 {
+        margin-top: 20px;
+        margin-bottom: 3px;
+      }
+    }
+    .selected-order-detail-list-item {
+      border: 2px solid #008bf7;
+      background: linear-gradient(-135deg, #008bf7 30px, #fff 0);
+      &:hover {
+        background: linear-gradient(-135deg, #008bf7 30px, #fff 0);
+      }
+    }
+  }
+}

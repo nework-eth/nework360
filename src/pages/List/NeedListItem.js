@@ -15,6 +15,8 @@ function NeedListItem ({
                          status,
                          goNeedDetail,
                          selectedQuote,
+                         goNeedOrderDetail,
+                         showComplaintModal,
                        }) {
   return (
     <div className="need-list-item-wrapper">
@@ -27,15 +29,15 @@ function NeedListItem ({
             false && quotes.length ? <span>{ quotes.length }人报价，待选择服务人员</span> : ''
           }
           {
-            statusMap[ status ] === '等待报价' && <span>服务人员估算服务费用中，请耐心等待...</span>
+            statusMap[status] === '等待报价' && <span>服务人员估算服务费用中，请耐心等待...</span>
           }
           {
-            statusMap[ status ] === '等待选择服务' && <div>
+            statusMap[status] === '等待选择服务' && <div>
               {
-                quotes.map(({ photo, userId }) =>
+                quotes.map(({photo, userId}) =>
                   <img
                     key={ userId }
-                    src={ photo }
+                    src={ photo || './images/headshot-default.png' }
                     alt="头像"
                     width="50"
                     height="50"
@@ -46,10 +48,10 @@ function NeedListItem ({
             </div>
           }
           {
-            statusMap[ status ] === '等待服务' && <div>
+            statusMap[status] === '等待服务' && <div>
               {
                 <img
-                  src={ selectedQuote.photo }
+                  src={ selectedQuote.photo || './images/headshot-default.png' }
                   alt="头像"
                   width="50"
                   height="50"
@@ -59,10 +61,10 @@ function NeedListItem ({
             </div>
           }
           {
-            statusMap[ status ] === '等待支付' && <div>
+            statusMap[status] === '等待支付' && <div>
               {
                 <img
-                  src={ selectedQuote.photo }
+                  src={ selectedQuote.photo || './images/headshot-default.png' }
                   alt="头像"
                   width="50"
                   height="50"
@@ -72,10 +74,10 @@ function NeedListItem ({
             </div>
           }
           {
-            statusMap[ status ] === '支付成功' && <div>
+            statusMap[status] === '支付成功' && <div>
               {
                 <img
-                  src={ selectedQuote.photo }
+                  src={ selectedQuote.photo || './images/headshot-default.png' }
                   alt="头像"
                   width="50"
                   height="50"
@@ -87,20 +89,21 @@ function NeedListItem ({
         </div>
         <div className="need-list-item-operate">
           {
-            statusMap[ status ] === '等待报价' && <div><span>修改需求</span></div>
+            statusMap[status] === '等待报价' && <div><span>修改需求</span></div>
           }
           {
-            statusMap[ status ] === '等待选择' && <div><span onClick={ goNeedDetail }>查看详情</span></div>
+            statusMap[status] === '等待选择' && <div><span onClick={ goNeedDetail }>查看详情</span></div>
           }
           {
-            statusMap[ status ] === '等待服务' && <div><span>查看详情</span></div>
+            statusMap[status] === '等待服务' && <div><span onClick={ goNeedOrderDetail }>查看详情</span></div>
           }
           {
-            statusMap[ status ] === '等待支付' && <div><span>立即支付</span></div>
+            statusMap[status] === '等待支付' && <div><span>立即支付</span></div>
           }
           {
-            statusMap[ status ] === '支付完成' && (
-              <div><span>投诉</span><span>|</span><span>评价</span><span>|</span><span onClick={ goNeedDetail }>查看详情</span>
+            statusMap[status] === '支付成功' && (
+              <div><span onClick={ showComplaintModal }>投诉</span><span>|</span><span>评价</span><span>|</span><span
+                onClick={ goNeedDetail }>查看详情</span>
               </div>)
           }
         </div>

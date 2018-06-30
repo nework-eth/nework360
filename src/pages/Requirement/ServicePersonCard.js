@@ -1,5 +1,6 @@
 import { Rate } from 'antd'
 import React from 'react'
+import { getRelativeTime } from '../../utils'
 import './static/style/homepage.less'
 
 // class ServicePersonCard extends Component {
@@ -74,7 +75,7 @@ function ServicePersonCard ({
           <i className="iconfont icon-hire"/><span>被雇佣 { hireTimes } 次</span>
         </div>
         <div className="row">
-          <i className="iconfont icon-joined-time"/><span>已加入{ joinedTime }</span>
+          <i className="iconfont icon-joined-time"/><span>已加入{ getRelativeTime(joinedTime) }</span>
         </div>
       </div>
       <div className="horizontal-line"/>

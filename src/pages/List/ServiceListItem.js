@@ -3,13 +3,30 @@ import React from 'react'
 
 const classNameSpace = 'service-list-item'
 
-function ServiceListItem () {
+function ServiceListItem ({
+                            score,
+                            amount,
+                            status,
+                            nickname,
+                            avatarSrc,
+                            scoreCount,
+                            updateTime,
+                            joinedTime,
+                            quoteNumber,
+                            description,
+                            serviceName,
+                            cancelServiceOrder,
+                            deleteServiceOrder,
+                            withdrawServiceOrder,
+                            callForPayServiceOrder,
+                          }) {
   return (
     <div className={ `${classNameSpace}-container` }>
       <div className={ `${classNameSpace}-top-wrapper` }>
         <div className="info">
-          <span className={ `${classNameSpace}-title` }>深度保洁</span>
-          <span className={ `${classNameSpace}-date` }> 时间</span>
+          <span className={ `${classNameSpace}-title` }>{ serviceName }</span>
+          <span className={ `${classNameSpace}-date` }> { updateTime
+          }</span>
         </div>
         <div className={ `${classNameSpace}-operate` }>
           查看需求
@@ -19,7 +36,7 @@ function ServiceListItem () {
         <div className='left'>
           <div className="left-avatar-wrapper">
             <img
-              src="http://p66yu2wkf.bkt.clouddn.com/21_avatar__avatar-2.jpg"
+              src={ avatarSrc || './images/headshot-default.png' }
               alt="头像"
               width="50"
               height="50"
@@ -27,103 +44,140 @@ function ServiceListItem () {
             <div>在线沟通</div>
           </div>
           <div className="name">
-            Rennaiqian
+            { nickname }
           </div>
           <div className="rate-wrapper">
-            <Rate
+            { score && <Rate
               allowHalf
               disabled
-              defaultValue={ 4.5 }
+              defaultValue={ score }
               character={ <i className="iconfont icon-rate-star-full"/> }
-            />
-            <p className="rate">{ 4.5 }</p>
-            <p className="evaluation">(12条评价)</p>
+            /> }
+            { score && <p className="rate">{ score }</p> }
+            { score && <p className="evaluation">({ scoreCount }条评价)</p> }
           </div>
           <div className="date">
-            已加入三年两个月
+            已加入{ joinedTime }
           </div>
         </div>
         <div className='middle'>
-          <div className="price">¥ 320</div>
+          <div className="price">¥ { amount }</div>
           <div className="tip">我的报价金额</div>
           <p className="information">
-            Hi，我常年从事木质地板清洁，在许多知名酒店服务过，经验丰富。您家地板的情况我已查看，我能为您解决，期待为您服务！
+            { description }
           </p>
         </div>
         {
-          false && <div className="right">
-            <img
-              src="./images/order-wait.png"
-              alt="等待选择"
-              width="50"
-              height="50"
-            />
-            <p>
-              5人已报价
-            </p>
-            <p>等待客户选择服务人员</p>
-          </div>
-        }
-        {
-          false && <div className="right">
-            <p className="congratulation">恭喜，您已被选中</p>
-            <Button type="primary">收款</Button>
-            <p className="cancel-order">取消订单</p>
-          </div>
-        }
-        {
-          false && <div className="right">
-            <img
-              src="./images/order-canceled.png"
-              alt="订单已取消"
-              width="50"
-              height="50"
-            />
-            <p>
-              订单已取消
-            </p>
-            <p className="delete-order">删除订单</p>
-          </div>
-        }
-        {
-          false && <div className="right">
-            <img
-              src="./images/order-paying.png"
-              alt="等待支付"
-              width="50"
-              height="50"
-            />
-            <p>等待支付</p>
-            <p>¥ 350</p>
-          </div>
-        }
-        {
-          false && <div className="right">
-            <p className="payed">已成功收款¥ 350</p>
-            <Button type="primary">评价</Button>
-          </div>
-        }
-        {
-          false && <div className="right">
-            <p className="payed">已成功收款¥ 350</p>
-            <Button>已评价</Button>
-          </div>
-        }
-        {
-          <div className="right">
-            <img
-              src="./images/order-fail.png"
-              alt="订单失败"
-              width="50"
-              height="50"
-            />
-            <p>已选择Make服务</p>
-            <p className="recall">撤回报价</p>
-          </div>
+          OperatiePanel({
+            status,
+            amount,
+            quoteNumber,
+            cancelServiceOrder,
+            deleteServiceOrder,
+            withdrawServiceOrder,
+            callForPayServiceOrder,
+          })
         }
       </div>
     </div>
   )
+}
+
+const statusMap = {
+  'quote': '还未选择',
+  'bingo': '被选中',
+  'error': '错误',
+  'cancel': '已取消',
+  'withdraw': '已撤回',
+  'paywait': '等待支付',
+  'orderSucc': '订单完成',
+  'servicewait': '未选中',
+  'collectSucc': '收款成功',
+}
+
+function OperatiePanel ({
+                          status,
+                          amount,
+                          quoteNumber,
+                          cancelServiceOrder,
+                          deleteServiceOrder,
+                          withdrawServiceOrder,
+                          callForPayServiceOrder,
+                        }) {
+  if (statusMap[status] === '还未选择') {
+    return (
+      <div className="right">
+        <img
+          src="./images/order-wait.png"
+          alt="等待选择"
+          width="50"
+          height="50"
+        />
+        <p>
+          { quoteNumber }人已报价
+        </p>
+        <p>等待客户选择服务人员</p>
+      </div>
+    )
+  }
+  if (statusMap[status] === '被选中') {
+    return (
+      <div className="right">
+        <p className="congratulation">恭喜，您已被选中</p>
+        <Button type="primary" onClick={ callForPayServiceOrder }>收款</Button>
+        <p className="cancel-order" onClick={ cancelServiceOrder }>取消订单</p>
+      </div>
+    )
+  }
+  if (statusMap[status] === '未选中') {
+    return (<div className="right">
+      <img
+        src="./images/order-fail.png"
+        alt="订单失败"
+        width="50"
+        height="50"
+      />
+      <p>已选择Make服务</p>
+      <p className="recall" onClick={ withdrawServiceOrder }>撤回报价</p>
+    </div>)
+  }
+  if (statusMap[status] === '等待支付') {
+    return (<div className="right">
+      <img
+        src="./images/order-paying.png"
+        alt="等待选择"
+        width="50"
+        height="50"
+      />
+      <p>
+        等待支付
+      </p>
+      <p>¥ { amount }</p>
+    </div>)
+  }
+  if (statusMap[status] === '收款成功') {
+    return (<div className="right">
+      <p className="payed">已成功收款¥ { amount }</p>
+      <Button type="primary">评价</Button>
+    </div>)
+  }
+  if (statusMap[status] === '已取消') {
+    return (<div className="right">
+      <img
+        src="./images/order-canceled.png"
+        alt="订单已取消"
+        width="50"
+        height="50"
+      />
+      <p>
+        订单已取消
+      </p>
+      <p className="delete-order" onClick={ deleteServiceOrder }>删除订单</p>
+    </div>)
+  }
+  if (statusMap[status] === '错误') {
+    return (<div>错误</div>)
+  }
 }
 
 export { ServiceListItem as view }
