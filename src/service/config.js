@@ -1,6 +1,8 @@
 import { message } from 'antd'
 import axios from 'axios'
 
+axios.defaults.withCredentials = true
+
 axios.interceptors.response.use(res => {
   const { data: { code, desc } } = res
   if (code !== 200) {
@@ -13,4 +15,3 @@ axios.interceptors.response.use(res => {
 })
 
 export const baseUrl = 'http://nework-web.rdc.waibaodashi.com'
-// export const baseUrl = 'http://localhost:8080'
