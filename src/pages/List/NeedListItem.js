@@ -20,8 +20,11 @@ function NeedListItem ({
                        }) {
   return (
     <div className="need-list-item-wrapper">
-      <div className="need-list-item-title-wrapper"><span className="need-list-item-title">{ title }</span><span
-        className="need-list-item-date">{ date }</span>
+      <div className="need-list-item-title-wrapper">
+        <div>
+          <span className="need-list-item-title">{ title }</span><span
+          className="need-list-item-date">{ date }</span>
+        </div>
       </div>
       <div className="need-list-item-content-wrapper">
         <div className="need-list-item-content">

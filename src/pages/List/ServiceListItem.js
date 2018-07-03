@@ -15,18 +15,20 @@ function ServiceListItem ({
                             quoteNumber,
                             description,
                             serviceName,
+                            hasEvaluated,
+                            initiatePayment,
+                            showEvaluateModal,
                             cancelServiceOrder,
                             deleteServiceOrder,
                             withdrawServiceOrder,
-                            callForPayServiceOrder,
+                            showInitiatePaymentModal,
                           }) {
   return (
     <div className={ `${classNameSpace}-container` }>
       <div className={ `${classNameSpace}-top-wrapper` }>
         <div className="info">
-          <span className={ `${classNameSpace}-title` }>{ serviceName }</span>
-          <span className={ `${classNameSpace}-date` }> { updateTime
-          }</span>
+          <span className={ `${classNameSpace}-title` }>{ serviceName }</span><span
+          className={ `${classNameSpace}-date` }> { updateTime }</span>
         </div>
         <div className={ `${classNameSpace}-operate` }>
           查看需求
@@ -68,14 +70,17 @@ function ServiceListItem ({
           </p>
         </div>
         {
-          OperatiePanel({
+          OperatePanel({
             status,
             amount,
+            nickname,
             quoteNumber,
+            initiatePayment,
+            showEvaluateModal,
             cancelServiceOrder,
             deleteServiceOrder,
             withdrawServiceOrder,
-            callForPayServiceOrder,
+            showInitiatePaymentModal,
           })
         }
       </div>
@@ -92,18 +97,22 @@ const statusMap = {
   'paywait': '等待支付',
   'orderSucc': '订单完成',
   'servicewait': '未选中',
-  'collectSucc': '收款成功',
+  'collectSucc': '订单完成',
 }
 
-function OperatiePanel ({
-                          status,
-                          amount,
-                          quoteNumber,
-                          cancelServiceOrder,
-                          deleteServiceOrder,
-                          withdrawServiceOrder,
-                          callForPayServiceOrder,
-                        }) {
+function OperatePanel ({
+                         status,
+                         amount,
+                         quoteNumber,
+                         selectedUser,
+                         hasEvaluated,
+                         initiatePayment,
+                         showEvaluateModal,
+                         cancelServiceOrder,
+                         deleteServiceOrder,
+                         withdrawServiceOrder,
+                         showInitiatePaymentModal,
+                       }) {
   if (statusMap[status] === '还未选择') {
     return (
       <div className="right">
@@ -124,7 +133,7 @@ function OperatiePanel ({
     return (
       <div className="right">
         <p className="congratulation">恭喜，您已被选中</p>
-        <Button type="primary" onClick={ callForPayServiceOrder }>收款</Button>
+        <Button type="primary" onClick={ showInitiatePaymentModal }>收款</Button>
         <p className="cancel-order" onClick={ cancelServiceOrder }>取消订单</p>
       </div>
     )
@@ -137,7 +146,7 @@ function OperatiePanel ({
         width="50"
         height="50"
       />
-      <p>已选择Make服务</p>
+      <p>已选择{ selectedUser }服务</p>
       <p className="recall" onClick={ withdrawServiceOrder }>撤回报价</p>
     </div>)
   }
@@ -155,10 +164,14 @@ function OperatiePanel ({
       <p>¥ { amount }</p>
     </div>)
   }
-  if (statusMap[status] === '收款成功') {
+  if (statusMap[status] === '订单完成') {
     return (<div className="right">
       <p className="payed">已成功收款¥ { amount }</p>
-      <Button type="primary">评价</Button>
+      {
+        hasEvaluated
+          ? <Button type="primary" disabled>已评价</Button>
+          : <Button type="primary" onClick={ showEvaluateModal }>评价</Button>
+      }
     </div>)
   }
   if (statusMap[status] === '已取消') {

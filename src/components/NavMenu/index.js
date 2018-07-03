@@ -31,18 +31,18 @@ const initialState = {
 const state = store.getState()
 store.reset(combineReducers({
   ...store._reducers,
-  [ stateKey ]: positionReducer,
+  [stateKey]: positionReducer,
   user: userReducer,
 }), {
   ...state,
-  [ stateKey ]: initialState,
+  [stateKey]: initialState,
   user: {
     userId: '',
   },
 })
 
 const mapState = (state) => ({
-  cityName: state[ stateKey ].cityName,
+  cityName: state[stateKey].cityName,
   userId: state.user.userId,
   isPartyB: state.user.isPartyB,
   avatar: state.user.avatar,
@@ -58,27 +58,48 @@ const mapDispatch = (dispatch) => bindActionCreators({
 
 @connect(mapState, mapDispatch)
 class NavMenu extends Component {
+
+  state = {
+    messageList: [],
+  }
+
   handleSignOut = async () => {
-    const { data: { code } } = await signOut()
+    const {data: {code}} = await signOut()
     if (code === 200) {
       this.props.setUser({})
       browserHistory.push('/login')
     }
   }
+  getCityByIp = async () => {
+    const {data: {data}} = await getCityByIp()
+    if (data !== '未知城市') {
+      this.props.setCityName(data.city)
+    } else {
+      this.props.setCityName('北京')
+    }
+  }
+  getMessageListByParam = async () => {
+    const {data: {data, code}} = await this.getMessageListByParam({userId: this.props.userId})
+    if (code === 200) {
+      this.setState({
+        messageList: data,
+      })
+    }
+  }
 
   render () {
-    const { cityName } = this.props
+    const {cityName} = this.props
     return (
       <div className="top-nav-container">
         <ul>
           <div className="li-wrapper">
             <li className="li-item">
-              <Link to="/" style={ { color: '#092235' } }>
+              <Link to="/" style={ {color: '#092235'} }>
                 <i className="iconfont icon-logo logo-item"/>
               </Link>
             </li>
             <li className="vertical-line"/>
-            <Link className="li-item" style={ { paddingRight: '10px', textDecoration: 'none', color: '#092235' } }
+            <Link className="li-item" style={ {paddingRight: '10px', textDecoration: 'none', color: '#092235'} }
               to="/select-city">{ cityName }</Link>
           </div>
           {
@@ -94,7 +115,24 @@ class NavMenu extends Component {
                     <Link to="/" style={ userLinkStyle }>我的订单</Link>
                   </li>
                   <li className="li-item user-li-item">
-                    <Link to="/" style={ userLinkStyle }>消息中心</Link>
+                    <Dropdown overlay={
+                      <Menu>
+                        <Menu.Item className="nav-ant-menu-item">
+                          <Link to="/profile">我的主页</Link>
+                        </Menu.Item>
+                        <Menu.Item className="nav-ant-menu-item">
+                          <Link to="/wallet">钱包</Link>
+                        </Menu.Item>
+                        <Menu.Item className="nav-ant-menu-item">
+                          <Link to="/editData">设置</Link>
+                        </Menu.Item>
+                        <Menu.Item className="nav-ant-menu-item">
+                          <Link to="/" onClick={ this.handleSignOut }>退出登录</Link>
+                        </Menu.Item>
+                      </Menu>
+                    }>
+                      <span>消息中心</span>
+                    </Dropdown>
                   </li>
                   <li className="li-item user-li-item">
                     <Dropdown overlay={
@@ -120,11 +158,11 @@ class NavMenu extends Component {
                 </div>
               )
               : <div className="li-wrapper">
-                <li style={ { paddingRight: '20px', cursor: 'pointer' } } className="li-item">帮助</li>
+                <li style={ {paddingRight: '20px', cursor: 'pointer'} } className="li-item">帮助</li>
                 <li className="vertical-line"/>
                 <li className="li-item"><Link to="/login" style={ specialLinkStyle }>登录</Link></li>
                 <li
-                  className="li-item" style={ { paddingLeft: '0' } }>
+                  className="li-item" style={ {paddingLeft: '0'} }>
                   <Link to="/register" style={ specialLinkStyle }>注册</Link>
                 </li>
               </div>
@@ -134,25 +172,11 @@ class NavMenu extends Component {
     )
   }
 
-  getCityByIp = async () => {
-    // try {
-    // const { data: { code, desc } } = await getCityByIp()
-    // if (code === 200) {
-    //   this.props.setCityName(desc)
-    // }
-    const { data: { data } } = await getCityByIp()
-    if (data !== '未知城市') {
-      this.props.setCityName(data.city)
-    } else {
-      this.props.setCityName('北京')
-    }
-    // } catch (e) {
-    //   message.error('网络连接失败，请检查网络后重试')
-    // }
-  }
-
   componentDidMount () {
     this.getCityByIp()
+    if (this.props.userId) {
+
+    }
   }
 }
 

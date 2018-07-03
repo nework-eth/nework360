@@ -1,28 +1,20 @@
-import { Button, Input, Modal, Rate } from 'antd'
+import { Button, Input, Modal } from 'antd'
 import React, { Component } from 'react'
 
-const {TextArea} = Input
-
-class EvaluateModal extends Component {
+class InitiatePaymentModal extends Component {
   state = {
-    rateValue: 0,
-    textAreaValue: '',
+    value: '',
   }
 
   render () {
     const {
       visible,
-      nickname,
       handleCancel,
       handleSubmit,
     } = this.props
-    const {
-      rateValue,
-      textAreaValue,
-    } = this.state
     return (
       <Modal
-        title={ <h2>填写对 { nickname } 的评价</h2> }
+        title={ <h2>投诉</h2> }
         visible={ visible }
         style={ {
           top: 'calc(50% - 205px)',
@@ -40,24 +32,14 @@ class EvaluateModal extends Component {
         onCancel={ handleCancel }
       >
         <div>
-          <Rate
-            allowHalf
-            defaultValue={ rateValue }
-            character={ <i className="iconfont icon-rate-star-full" style={ {fontSize: '30px'} }/> }
-            onChange={ (rateValue) => this.setState({rateValue}) }
-          />
           <p style={ {
-            marginTop: '30px',
             fontWeight: 'bold',
             marginBottom: '10px',
           } }>
-            评价内容
+            输入收款金额
           </p>
-          <TextArea
-            rows={ 6 }
-            value={ textAreaValue }
-            style={ {padding: '13px 20px', resize: 'none'} }
-            onChange={ (e) => this.setState({textAreaValue: e.target.value}) }
+          <Input
+            onChange={ e => this.setState({value: e.target.value}) }
             placeholder="请输入"
           />
           <div style={ {marginTop: '30px'} }>
@@ -68,9 +50,9 @@ class EvaluateModal extends Component {
                 height: '50px',
                 marginRight: '20px',
               } }
-              onClick={ () => handleSubmit(rateValue, textAreaValue) }
+              onClick={ () => handleSubmit(this.state.value) }
             >
-              提交评价
+              发起收款
             </Button>
             <Button
               style={ {
@@ -88,5 +70,5 @@ class EvaluateModal extends Component {
   }
 }
 
-export { EvaluateModal }
+export { InitiatePaymentModal }
 

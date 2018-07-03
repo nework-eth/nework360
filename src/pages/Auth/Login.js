@@ -9,7 +9,7 @@ import './static/style/index.less'
 
 const FormItem = Form.Item
 
-const FooterStyle = { display: 'flex', justifyContent: 'space-between' }
+const FooterStyle = {display: 'flex', justifyContent: 'space-between'}
 
 const mapDispatch = (dispatch) => bindActionCreators({
   setUserId,
@@ -20,7 +20,7 @@ const mapDispatch = (dispatch) => bindActionCreators({
 class Page extends Component {
   handleSubmit = async (e) => {
     e.preventDefault()
-    const { phoneNumber, pwd } = this.state
+    const {phoneNumber, pwd} = this.state
     if (!phoneNumber.value) {
       return message.error('请输入手机号')
     }
@@ -33,11 +33,11 @@ class Page extends Component {
     if (pwd.errorMsg) {
       return message.error('请输入正确格式的密码')
     }
-    const data = await login({
+    const {data: {data, code}} = await login({
       phoneNumber: phoneNumber.value,
       pwd: pwd.value,
     })
-    if (data) {
+    if (code === 200) {
       this.props.setUser(data)
       this.props.setUserId(data.userId)
       message.success('登录成功')
@@ -190,7 +190,7 @@ class Page extends Component {
 
   render () {
     // const { getFieldDecorator } = this.props.form
-    const { phoneNumber, pwd } = this.state
+    const {phoneNumber, pwd} = this.state
     return (
       <Form onSubmit={ this.handleSubmit } className="form-container">
         <h2>欢迎回来</h2>
@@ -241,11 +241,11 @@ class Page extends Component {
         <div style={ FooterStyle }>
           <span className="captions">还没有账号？<Link to={ {
             pathname: '/register',
-            state: { phoneNumber: phoneNumber.value },
+            state: {phoneNumber: phoneNumber.value},
           } }>去注册</Link></span>
           <span className="captions"><Link to={ {
             pathname: '/forget-password',
-            state: { phoneNumber: phoneNumber.value },
+            state: {phoneNumber: phoneNumber.value},
           } }>忘记密码</Link></span>
         </div>
       </Form>

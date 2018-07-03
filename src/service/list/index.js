@@ -1,4 +1,5 @@
 import axios from 'axios'
+import qs from 'qs'
 import { baseUrl } from '../config'
 
 export const getNeedOrderList = params => axios(`${baseUrl}/postDemand/getOrderNeedsList`, {params})
@@ -11,4 +12,6 @@ export const deleteServiceOrder = params => axios(`${baseUrl}/tenderDemand/delet
 
 export const withdrawServiceOrder = params => axios(`${baseUrl}/tenderDemand/withdrawQuote`, {params})
 
-export const callForPayServiceOrder = params => axios(`${baseUrl}/tenderDemand/withdrawQuote`, {params})
+export const initiatePayment = params => axios(`${baseUrl}/tenderDemand/withdrawQuote`, {params})
+
+export const evaluate = data => axios.post(`${baseUrl}/evaluate/create`, qs.stringify(data))

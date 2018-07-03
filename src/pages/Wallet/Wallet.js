@@ -1,10 +1,17 @@
 import { Menu, Table } from 'antd'
 import React, { Component } from 'react'
+import { getUserAccount, getUserTransactionRecord } from '../../service/wallet'
 import './static/style/index.less'
 
 const MenuItem = Menu.Item
 
-function Content ({ selectedItem, data }) {
+function Content ({
+                    nkc,
+                    clue,
+                    money,
+                    selectedItem,
+                    transactionRecordList,
+                  }) {
   if (selectedItem === 'balance') {
     return (
       <div>
@@ -20,7 +27,7 @@ function Content ({ selectedItem, data }) {
                 height="40"
               />
               <p className="title">
-                12,800.00
+                { money / 100 }
               </p>
               <p className="balance-type">人民币（CNY）</p>
               <a href="/">提现</a>
@@ -36,7 +43,7 @@ function Content ({ selectedItem, data }) {
                 height="40"
               />
               <p className="title">
-                9,800
+                { nkc }
               </p>
               <p className="balance-type">NKC</p>
               <a href="/">提现</a>
@@ -52,7 +59,7 @@ function Content ({ selectedItem, data }) {
                 height="40"
               />
               <p className="title">
-                98
+                { clue }
               </p>
               <p className="balance-type">线索卡（张）</p>
               <a href="/">购买</a>
@@ -66,8 +73,8 @@ function Content ({ selectedItem, data }) {
     const columns = [
       {
         title: '流水号',
-        dataIndex: 'id',
-        key: 'id',
+        dataIndex: 'recordOrderId',
+        key: 'recordOrderId',
         width: 120,
       },
       {
@@ -75,6 +82,9 @@ function Content ({ selectedItem, data }) {
         dataIndex: 'amount',
         key: 'amount',
         width: 130,
+        render (value) {
+          return parseInt(value, 10) / 100
+        },
       },
       {
         title: '交易类型',
@@ -84,8 +94,8 @@ function Content ({ selectedItem, data }) {
       },
       {
         title: '账户',
-        dataIndex: 'account',
-        key: 'account',
+        dataIndex: 'userAName',
+        key: 'userAName',
         width: 100,
       },
       {
@@ -93,80 +103,32 @@ function Content ({ selectedItem, data }) {
         dataIndex: 'status',
         key: 'status',
         width: 100,
+        render (value) {
+          switch (value) {
+            case 'pay_success':
+              return '支付成功'
+            case 'receipt_success':
+              return '收款成功'
+            default:
+              return ''
+          }
+        },
       },
       {
         title: '交易时间',
-        dataIndex: 'date',
-        key: 'date',
+        dataIndex: 'updateTime',
+        key: 'updateTime',
         width: 130,
       },
     ]
 
-    const data = [
-      {
-        id: 'RE413413134',
-        amount: '2000',
-        type: 'pay',
-        account: 'ren',
-        status: 'success',
-        date: '2018-06-20',
-      },
-      {
-        id: 'RE413413135',
-        amount: '2000',
-        type: 'pay',
-        account: 'ren',
-        status: 'success',
-        date: '2018-06-20',
-      },
-      {
-        id: 'RE413413136',
-        amount: '2000',
-        type: 'pay',
-        account: 'ren',
-        status: 'success',
-        date: '2018-06-20',
-      },
-      {
-        id: 'RE413413137',
-        amount: '2000',
-        type: 'pay',
-        account: 'ren',
-        status: 'success',
-        date: '2018-06-20',
-      },
-      {
-        id: 'RE413413138',
-        amount: '2000',
-        type: 'pay',
-        account: 'ren',
-        status: 'success',
-        date: '2018-06-20',
-      },
-      {
-        id: 'RE413413139',
-        amount: '2000',
-        type: 'pay',
-        account: 'ren',
-        status: 'success',
-        date: '2018-06-20',
-      },
-      {
-        id: 'RE413413140',
-        amount: '2000',
-        type: 'pay',
-        account: 'ren',
-        status: 'success',
-        date: '2018-06-20',
-      },
-    ]
     return (
       <div>
         <h2>交易记录</h2>
         <Table
           rowKey="id"
           columns={ columns }
-          dataSource={ data }
+          dataSource={ transactionRecordList }
           bordered={ false }
           rowClassName="table-row"
         />
@@ -177,32 +139,72 @@ function Content ({ selectedItem, data }) {
 
 class Wallet extends Component {
   state = {
+    money: '',
+    nkc: '',
+    clue: '',
     selectedItem: 'balance',
+    transactionRecordList: [],
   }
-  handleClick = ({ key }) => {
+
+  handleClick = ({key}) => {
     this.setState({
       selectedItem: key,
     })
   }
+  getUserAccount = async () => {
+    const {data: {data, code}} = await getUserAccount()
+    if (code === 200) {
+      this.setState({
+        money: data.money,
+        nkc: data.nkc,
+        clue: data.cule,
+      })
+    }
+  }
+  getUserTransactionRecord = async () => {
+    const {data: {data, code}} = await getUserTransactionRecord()
+    if (code === 200) {
+      this.setState({
+        transactionRecordList: data,
+      })
+    }
+  }
 
   render () {
-    const { selectedItem } = this.state
+    const {
+      nkc,
+      clue,
+      money,
+      selectedItem,
+      transactionRecordList,
+    } = this.state
     return (
       <div className="wallet-container">
         <Menu
           onClick={ this.handleClick }
-          style={ { width: 188, height: 800 } }
-          defaultSelectedKeys={ [ 'balance' ] }
+          style={ {width: 188, height: 800} }
+          defaultSelectedKeys={ ['balance'] }
           mode="inline"
         >
           <MenuItem key="balance">账户余额</MenuItem>
           <MenuItem key="records">交易记录</MenuItem>
         </Menu>
         <div className="content">
-          <Content selectedItem={ selectedItem }/>
+          <Content
+            nkc={ nkc }
+            clue={ clue }
+            money={ money }
+            selectedItem={ selectedItem }
+            transactionRecordList={ transactionRecordList }
+          />
         </div>
       </div>
     )
+  }
+
+  componentDidMount () {
+    this.getUserAccount()
+    this.getUserTransactionRecord()
   }
 }
 

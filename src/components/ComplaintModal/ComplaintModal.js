@@ -6,7 +6,9 @@ function ComplaintModal ({visible, handleCancel}) {
     <Modal
       title={ <h2>投诉</h2> }
       visible={ visible }
-      style={ {top: 'calc(50% - 205px)'} }
+      style={ {
+        top: 'calc(50% - 205px)',
+      } }
       maskStyle={ {
         backgroundColor: '#edf1f4',
         opacity: 0.9,

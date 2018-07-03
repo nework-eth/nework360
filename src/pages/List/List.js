@@ -4,12 +4,14 @@ import { browserHistory } from 'react-router'
 import { ComplaintModal } from '../../components/ComplaintModal/ComplaintModal'
 import { EvaluateModal } from '../../components/EvaluateModal/EvaluateModal'
 import { view as Footer } from '../../components/Footer/index.js'
+import { InitiatePaymentModal } from '../../components/InitiatePaymentModal/InitiatePaymentModal'
 import {
-  callForPayServiceOrder,
   cancelServiceOrder,
   deleteServiceOrder,
+  evaluate,
   getNeedOrderList,
   getServiceOrderList,
+  initiatePayment,
   withdrawServiceOrder,
 } from '../../service/list'
 import { getRelativeTime } from '../../utils'
@@ -26,19 +28,18 @@ class List extends Component {
     limit: 10,
     listType: 'service',
     needOrderList: [],
+    evaluateUserId: '',
+    evaluateNeedsId: '',
+    evaluateNickname: '',
     serviceOrderList: [],
+    evaluateModalVisible: false,
+    initiatePaymentQuoteId: '',
     complaintModalVisible: false,
+    initiatePaymentModalVisible: false,
   }
+
   getNeedOrderList = async () => {
     try {
-      // const { data: { data, code, desc } } = await getNeedOrderList({
-      //   start: this.state.start,
-      //   limit: this.state.limit,
-      // })
-      // if (code !== 200) {
-      //   message.error(desc)
-      //   return
-      // }
       const {data: {data}} = await getNeedOrderList({
         start: this.state.start,
         limit: this.state.limit,
@@ -80,19 +81,63 @@ class List extends Component {
     const {data: {data, code}} = await withdrawServiceOrder({quoteId})
     console.log(code)
   }
-  callForPayServiceOrder = (quoteId, amount) => async () => {
-    const {data: {data, code}} = await callForPayServiceOrder({quoteId, amount})
+  initiatePayment = (quoteId, amount) => async () => {
+    const {data: {data, code}} = await initiatePayment({quoteId, amount})
     console.log(code)
   }
+  showComplaintModal = () => this.setState({complaintModalVisible: true})
   handleComplaintModalCancel = () => this.setState({complaintModalVisible: false})
-  showComplainModal = () => this.setState({complaintModalVisible: true})
+  showEvaluateModal = (userId, needsId, nickname) => () => this.setState({
+    evaluateUserId: userId,
+    evaluateNeedsId: needsId,
+    evaluateNickname: nickname,
+    evaluateModalVisible: true,
+  })
+  handleEvaluateModalCancel = () => this.setState({
+    evaluateUserId: '',
+    evaluateNeedsId: '',
+    evaluateNickname: '',
+    evaluateModalVisible: false,
+  })
+  handleEvaluateModalSubmit = async (score, content) => {
+    const {data: {code}} = await evaluate({
+      userId: this.state.evaluateUserId,
+      needsId: this.state.evaluateNeedsId,
+      score,
+      content,
+    })
+    if (code === 200) {
+      message.success('评价成功')
+    }
+    this.handleEvaluateModalCancel()
+  }
+  showInitiatePaymentModal = (quoteId) => () => {
+    this.setState({
+      initiatePaymentQuoteId: quoteId,
+      initiatePaymentModalVisible: true,
+    })
+  }
+  handleInitiatePaymentModalCancel = () => this.setState({
+    initiatePaymentQuoteId: '',
+    initiatePaymentModalVisible: false,
+  })
+  handleInitiatePaymentModalSubmit = async (amount) => {
+    const {data: {code}} = await initiatePayment({quoteId: this.state.initiatePaymentQuoteId, amount})
+    if (code === 200) {
+      message.success('收款成功')
+    }
+    this.handleInitiatePaymentModalCancel()
+  }
 
   render () {
     const {
       listType,
       needOrderList,
       serviceOrderList,
+      evaluateNickname,
+      evaluateModalVisible,
       complaintModalVisible,
+      initiatePaymentModalVisible,
     } = this.state
     return (<div className="list-page-container">
       <main>
@@ -117,6 +162,7 @@ class List extends Component {
                                      tip,
                                      quotes,
                                      status,
+                                     userId,
                                      needsId,
                                      quoteId,
                                      upateTime,
@@ -131,8 +177,7 @@ class List extends Component {
                   goNeedDetail={ this.goNeedDetail(needsId) }
                   selectedQuote={ quotes.find(item => item.quoteId === quoteId) }
                   goNeedOrderDetail={ this.goNeedOrderDetail }
-                  showComplaintModal={ this.showComplainModal }
-                  // imgList={ quotes.map(quote => quote.photo) }
+                  showComplaintModal={ this.showComplaintModal }
                 />)
               : serviceOrderList.map(({
                                         user: {
@@ -146,8 +191,12 @@ class List extends Component {
                                         status: {
                                           status,
                                           count: quoteNumber,
+                                          userB: selectedUser,
+                                          evaluate: hasEvaluated,
                                         },
                                         amount,
+                                        userId,
+                                        needsId,
                                         quoteId,
                                         updateTime,
                                         serviceName,
@@ -162,14 +211,18 @@ class List extends Component {
                   avatarUrl={ photo }
                   scoreCount={ score ? score.count : 0 }
                   joinedTime={ getRelativeTime(userCreateTime) }
-                  updateTime={ updateTime }
+                  updateTime={ formatDate(updateTime) }
                   quoteNumber={ quoteNumber }
                   description={ instruction }
                   serviceName={ serviceName }
+                  selectedUser={ selectedUser }
+                  hasEvaluated={ hasEvaluated }
+                  initiatePayment={ this.initiatePayment(quoteId, amount) }
+                  showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickname) }
                   cancelServiceOrder={ this.cancelServiceOrder(quoteId) }
                   deleteServiceOrder={ this.deleteServiceOrder(quoteId) }
                   withdrawServiceOrder={ this.withdrawServiceOrder(quoteId) }
-                  callForPayServiceOrder={ this.callForPayServiceOrder(quoteId, amount) }
+                  showInitiatePaymentModal={ this.showInitiatePaymentModal(quoteId) }
                 />,
               )
           }
@@ -179,7 +232,15 @@ class List extends Component {
           handleCancel={ this.handleComplaintModalCancel }
         />
         <EvaluateModal
-          visible={ true }
+          visible={ evaluateModalVisible }
+          nickname={ evaluateNickname }
+          handleCancel={ this.handleEvaluateModalCancel }
+          handleSubmit={ this.handleEvaluateModalSubmit }
+        />
+        <InitiatePaymentModal
+          visible={ initiatePaymentModalVisible }
+          handleCancel={ this.handleInitiatePaymentModalCancel }
+          handleSubmit={ this.handleInitiatePaymentModalSubmit }
         />
       </main>
       <Footer/>
@@ -189,6 +250,69 @@ class List extends Component {
   componentDidMount () {
     this.getNeedOrderList()
     this.getServiceOrderList()
+    /* eslint-disable no-undef */
+    pingpp_ui.init({
+      // 页面上需要展示的渠道，数组，数组顺序即页面展示出的渠道的顺序
+      // upmp_wap 渠道在微信内部无法使用，若用户未安装银联手机支付控件，则无法调起支付
+      channel: ['alipay_wap', 'wx_pub', 'upacp_wap', 'yeepay_wap', 'jdpay_wap', 'bfb_wap'],
+    }, function (channel) {
+      // 用户选择的支付渠道
+      pingpp.createPayment(JSON.stringify({
+        'id': 'ch_injTG4KGWPePS88WPGPyfzz5',
+        'object': 'charge',
+        'created': 1495694197,
+        'livemode': true,
+        'paid': true,
+        'refunded': false,
+        'reversed': true,
+        'app': 'app_4OOi9SGuD88GGqbL',
+        'channel': 'isv_scan',
+        'order_no': '149569419725834',
+        'client_ip': '127.0.0.1',
+        'amount': 1,
+        'amount_settle': 1,
+        'currency': 'cny',
+        'subject': 'cm isv_scan',
+        'body': 'cm isv_scan',
+        'extra': {
+          'scan_code': '130141564083799183',
+          'terminal_id': '00000001',
+          'pay_channel': 'wx',
+          'buyer_account': 'omYJss9x8g2TzmrxnUtrOr7qWhwc',
+          'chcd_discount': '0.00',
+          'mer_discount': '0.00',
+        },
+        'time_paid': 1495694546,
+        'time_expire': 1495780597,
+        'time_settle': null,
+        'transaction_no': '4002362001201705252516756579',
+        'refunds': {
+          'object': 'list',
+          'url': '/v1/charges/ch_injTG4KGWPePS88WPGPyfzz5/refunds',
+          'has_more': false,
+          'data': [],
+        },
+        'amount_refunded': 0,
+        'failure_code': null,
+        'failure_msg': null,
+        'metadata': {},
+        'credential': {},
+        'description': null,
+      }), function (result, err) {
+        // object 需是 Charge/Order/Recharge 的 JSON 字符串
+        // 可按需使用 alert 方法弹出 log
+        console.log(result)
+        console.log(err.msg)
+        console.log(err.extra)
+        if (result == 'success') {
+          // 只有微信公众号 (wx_pub)、QQ 公众号 (qpay_pub)支付成功的结果会在这里返回，其他的支付结果都会跳转到 extra 中对应的 URL
+        } else if (result == 'fail') {
+          // Ping++ 对象不正确或者微信公众号 / QQ公众号支付失败时会在此处返回
+        } else if (result == 'cancel') {
+          // 微信公众号支付取消支付
+        }
+      })
+    })
   }
 
 }

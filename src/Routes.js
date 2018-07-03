@@ -8,7 +8,6 @@ import { combineReducers } from 'redux'
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Container } from './pages/Container/Container'
 import { page as Homepage } from './pages/Homepage/Homepage'
-import { page as Test } from './pages/Test/Test'
 
 import store from './Store.js'
 
@@ -166,7 +165,6 @@ const Routes = () => (
       <Route path="/need-detail" getComponent={ getNeedDetail }/>
       <Route path="/clue-card" getComponent={ getClueCard }/>
     </Route>
-    <Route path="/test" component={ Test }/>
   </Router>
 )
 

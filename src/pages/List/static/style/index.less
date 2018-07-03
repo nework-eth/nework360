@@ -21,8 +21,8 @@
       margin-bottom: 20px;
       .need-list-item-title-wrapper {
         padding: 20px 30px;
-        border-bottom: 1px solid #f6f8f9;
-        background-color: #edf1f4;
+        border-bottom: 1px solid #edf1f4;
+        background-color: #f6f8f9;
         .need-list-item-title {
           margin-right: 10px;
           font-weight: bold;
@@ -57,9 +57,13 @@
       .service-list-item-top-wrapper {
         padding: 20px 30px;
         display: flex;
+        align-items: center;
         justify-content: space-between;
         border-bottom: 1px solid #edf1f4;
         background-color: #f6f8f9;
+        .info {
+          font-size: 0;
+        }
         .service-list-item-title {
           font-weight: bold;
           margin-right: 10px;
@@ -89,6 +93,9 @@
           .left-avatar-wrapper {
             display: flex;
             justify-content: space-between;
+            img {
+              border-radius: 50%;
+            }
           }
           .rate-wrapper {
             display: flex;
