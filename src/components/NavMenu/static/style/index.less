@@ -25,6 +25,7 @@
       }
       .user-li-item {
         padding-left: 0;
+        cursor: pointer;
       }
       .vertical-line {
         display: inline-block;
@@ -36,6 +37,68 @@
       .logo-item {
         font-size: 30px;
         line-height: 40px;
+      }
+    }
+  }
+  .message-panel-container {
+    position: absolute;
+    right: 10px;
+    width: 500px;
+    background-color: #fff;
+    border: 1px solid #edf1f4;
+    border-radius: 4px;
+    box-shadow: 0 0 20px 0 rgba(9, 34, 53, 0.10);
+    .message-panel-header {
+      padding: 20px 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .message-type-select {
+        .selected-type {
+          color: #008bf7;
+          border-bottom: 2px solid #008bf7;
+        }
+        span {
+          margin-right: 20px;
+          border-bottom: 2px solid transparent;
+        }
+      }
+      .ignore-all-operate {
+        color: #008bf7;
+      }
+    }
+    .message-item-container {
+      padding: 20px 30px;
+      border-top: 1px solid #EDF1F4;
+      .message-item-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .message-item-virtual-title {
+          font-weight: bold;
+        }
+        .message-item-date {
+          color: #9ca6ae;
+        }
+      }
+      .message-item-content-wrapper {
+        margin-top: 10px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .message-item-content {
+          width: 250px;
+        }
+        .message-item-operate-item {
+          color: #008bf7;
+          &:first-of-type {
+            padding-right: 10px;
+            border-right: 1px solid #edf1f4;
+          }
+          &:nth-of-type(2) {
+            padding-left: 10px;
+          }
+        }
       }
     }
   }

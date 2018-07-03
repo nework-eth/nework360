@@ -2,7 +2,7 @@ import moment from 'moment'
 import React, { Component } from 'react'
 import { view as Footer } from '../../components/Footer/index.js'
 import { IMModal } from '../../components/IMModal/IMModal'
-import { cancelOrder, getNeedOrderDetail, selectPartyB } from '../../service/needOrderDetail/needOrderDetail'
+import { cancelOrder, getNeedOrderDetail, getPayInfo, selectPartyB } from '../../service/needOrderDetail/index'
 import { view as NeedOrderDetailListItem } from './NeedOrderDetailLIstItem'
 import './static/style/index.less'
 
@@ -42,75 +42,19 @@ class NeedOrderDetail extends Component {
     selectedQuoteId: '',
   }
   getNeedOrderDetail = async () => {
-    const {data: {data}} = await getNeedOrderDetail({needsId: this.state.needsId})
-    this.setState({
-      data: data.orders[0],
-      quotes: data.orders[0].quotes,
-      orderStatus: data.orders[0].status,
-      selectedQuoteId: data.orders[0].quoteId,
-    })
+    const {data: {data, code}} = await getNeedOrderDetail({needsId: this.state.needsId})
+    if (code === 200) {
+      this.setState({
+        data: data.orders[0],
+        quotes: data.orders[0].quotes,
+        orderStatus: data.orders[0].status,
+        selectedQuoteId: data.orders[0].quoteId,
+      })
+    }
   }
   selectPartyB = (needsId, quoteId) => () => selectPartyB({needsId, quoteId})
   cancelOrder = () => cancelOrder({needsId: '201805261855396846258489'})
-
-  render () {
-    const {
-      title,
-      quotes,
-      needsId,
-      orderStatus,
-      selectedQuoteId,
-    } = this.state
-    return (
-      <div className="order-detail-container">
-        <main>
-          <div className="order-detail-container-title-wrapper">
-            <h2>{ title || '深度保洁' }</h2>
-            <div className="date">
-              { moment().format('YYYY年MM月DD日 HH:mm') }
-            </div>
-          </div>
-          {
-            quotes.map(({
-                          user: {
-                            score: {
-                              ave,
-                              count,
-                            },
-                            nickName,
-                            hireTimes,
-                            creatTime,
-                          },
-                          photo,
-                          amount,
-                          quoteId,
-                        }) =>
-              <NeedOrderDetailListItem
-                key={ quoteId }
-                score={ ave }
-                amount={ amount / 100 }
-                nickname={ nickName }
-                avatarSrc={ photo }
-                hireTimes={ hireTimes }
-                scoreCount={ count }
-                joinedTime={ creatTime }
-                cancelOrder={ cancelOrder }
-                selectPartyB={ this.selectPartyB(needsId, quoteId) }
-                buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId) }
-              />,
-            )
-          }
-        </main>
-        <IMModal
-          visible={ false }
-        />
-        <Footer/>
-      </div>
-    )
-  }
-
-  componentDidMount () {
-    this.getNeedOrderDetail()
+  IMInit = () => {
     /* eslint-disable no-undef */
     const conn = new WebIM.connection({
       isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
@@ -191,6 +135,76 @@ class NeedOrderDetail extends Component {
     })
     msg.body.chatType = 'singleChat'
     conn.send(msg.body)
+  }
+  pay = async () => {
+    const {data: {data, code}} = await getPayInfo({channel: 'wx_pub_qr', amount: 200, needsId: '222222'})
+    if (code === 200) {
+      pingpp.createPayment(data, function (result, err) {
+        console.log(result)
+        console.log('error', err)
+      })
+    }
+  }
+
+  render () {
+    const {
+      title,
+      quotes,
+      needsId,
+      orderStatus,
+      selectedQuoteId,
+    } = this.state
+    return (
+      <div className="order-detail-container">
+        <main>
+          <div className="order-detail-container-title-wrapper">
+            <h2>{ title || '深度保洁' }</h2>
+            <div className="date">
+              { moment().format('YYYY年MM月DD日 HH:mm') }
+            </div>
+          </div>
+          {
+            quotes.map(({
+                          user: {
+                            score: {
+                              ave,
+                              count,
+                            },
+                            nickName,
+                            hireTimes,
+                            creatTime,
+                          },
+                          photo,
+                          amount,
+                          quoteId,
+                        }) =>
+              <NeedOrderDetailListItem
+                pay={ this.pay }
+                key={ quoteId }
+                score={ ave }
+                amount={ amount / 100 }
+                nickname={ nickName }
+                avatarSrc={ photo }
+                hireTimes={ hireTimes }
+                scoreCount={ count }
+                joinedTime={ creatTime }
+                cancelOrder={ cancelOrder }
+                selectPartyB={ this.selectPartyB(needsId, quoteId) }
+                buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId) }
+              />,
+            )
+          }
+        </main>
+        <IMModal
+          visible={ false }
+        />
+        <Footer/>
+      </div>
+    )
+  }
+
+  componentDidMount () {
+    this.getNeedOrderDetail()
   }
 
 }

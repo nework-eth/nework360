@@ -5,6 +5,7 @@ import { browserHistory, Link } from 'react-router'
 import { bindActionCreators, combineReducers } from 'redux'
 import { signOut } from '../../service/auth'
 import { getCityByIp } from '../../service/homepage'
+import { getMessage, updateMessageStatus } from '../../service/navMenu'
 import store from '../../Store'
 import { setCityId, setCityName, setCountryId, setUser } from './actions'
 import { positionReducer, userReducer } from './reducer'
@@ -61,6 +62,7 @@ class NavMenu extends Component {
 
   state = {
     messageList: [],
+    selectedType: 'unread',
   }
 
   handleSignOut = async () => {
@@ -78,17 +80,48 @@ class NavMenu extends Component {
       this.props.setCityName('北京')
     }
   }
-  getMessageListByParam = async () => {
-    const {data: {data, code}} = await this.getMessageListByParam({userId: this.props.userId})
+  getMessage = async () => {
+    const {data: {data, code}} = await getMessage({userId: 21})
     if (code === 200) {
       this.setState({
         messageList: data,
       })
     }
   }
+  ignoreMessage = (id) => async () => {
+    const {data: {data, code}} = await
+      updateMessageStatus({id, status: -1})
+    if (code === 200) {
+      this.getMessage()
+    }
+  }
+  seeDetails = (action) => {
+    switch (action) {
+      case 'needs':
+        browserHistory.push('/needs-detail')
+        return
+      case 'trans':
+        browserHistory.push('/wallet')
+        return
+      case 'check':
+        browserHistory.push('/skill')
+        return
+      case 'im':
+        return
+      case 'order':
+        browserHistory.push('/needs-order-detail')
+        return
+      case 'non':
+        return
+    }
+  }
 
   render () {
     const {cityName} = this.props
+    const {
+      messageList,
+      selectedType,
+    } = this.state
     return (
       <div className="top-nav-container">
         <ul>
@@ -115,24 +148,7 @@ class NavMenu extends Component {
                     <Link to="/" style={ userLinkStyle }>我的订单</Link>
                   </li>
                   <li className="li-item user-li-item">
-                    <Dropdown overlay={
-                      <Menu>
-                        <Menu.Item className="nav-ant-menu-item">
-                          <Link to="/profile">我的主页</Link>
-                        </Menu.Item>
-                        <Menu.Item className="nav-ant-menu-item">
-                          <Link to="/wallet">钱包</Link>
-                        </Menu.Item>
-                        <Menu.Item className="nav-ant-menu-item">
-                          <Link to="/editData">设置</Link>
-                        </Menu.Item>
-                        <Menu.Item className="nav-ant-menu-item">
-                          <Link to="/" onClick={ this.handleSignOut }>退出登录</Link>
-                        </Menu.Item>
-                      </Menu>
-                    }>
-                      <span>消息中心</span>
-                    </Dropdown>
+                    <span>消息中心</span>
                   </li>
                   <li className="li-item user-li-item">
                     <Dropdown overlay={
@@ -168,16 +184,62 @@ class NavMenu extends Component {
               </div>
           }
         </ul>
+        <div className="message-panel-container">
+          <div className="message-panel-header">
+            <div className="message-type-select">
+              <span className={ selectedType === 'unread' ? 'selected-type' : '' }>未读消息</span>
+              <span>全部消息</span>
+            </div>
+            <div className="ignore-all-operate">全部忽略</div>
+          </div>
+          { messageList.map(({
+                               id,
+                               status,
+                               msgType,
+                               msgContent,
+                               updateTime,
+                             }) => <MessageItem
+            key={ id }
+            type={ msgType }
+            status={ status }
+            content={ msgContent }
+            updateTime={ updateTime }
+            ignoreMessage={ this.ignoreMessage(id) }
+          />) }
+        </div>
       </div>
     )
   }
 
   componentDidMount () {
     this.getCityByIp()
-    if (this.props.userId) {
-
-    }
+    this.getMessage()
+    // if (this.props.userId) {
+    //
+    // }
   }
+}
+
+const MessageItem = function ({
+                                type,
+                                content,
+                                updateTime,
+                                ignoreMessage,
+                              }) {
+  return (<div className="message-item-container">
+    <div className="message-item-header">
+      <p className="message-item-virtual-title">{ type }</p>
+      <p className="message-item-date">{ updateTime }</p>
+    </div>
+    <div className="message-item-content-wrapper">
+      <div className="message-item-content">{ content }</div>
+      <div className="message-item-operate">
+        <span className="message-item-operate-item" onClick={ ignoreMessage }>忽略</span>
+        <span className="message-item-operate-item">查看</span>
+      </div>
+    </div>
+  </div>)
+
 }
 
 export { NavMenu as view, stateKey, initialState }

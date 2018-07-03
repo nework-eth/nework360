@@ -32,7 +32,7 @@ const mapDispatch = (dispatch) => bindActionCreators({
   setUser,
 }, dispatch)
 
-function CardItem ({ imgSrc, title, isSelected, handleClick }) {
+function CardItem ({imgSrc, title, isSelected, handleClick}) {
   return (
     <div
       className={
@@ -54,7 +54,7 @@ function CardItem ({ imgSrc, title, isSelected, handleClick }) {
   )
 }
 
-function SecondaryCardItem ({ content, isChecked, handleClick }) {
+function SecondaryCardItem ({content, isChecked, handleClick}) {
   return (
     <div
       className={
@@ -130,18 +130,18 @@ class EditData extends Component {
       // if (code !== 200) {
       //   return message.error('网络连接失败，请检查网络后重试')
       // }
-      const { data: { data } } = await getCityTree()
+      const {data: {data}} = await getCityTree()
       if (data) {
         const tree = data
         const countryList = Object.keys(tree)
-        const provinceList = Object.keys(tree[ '中国' ])
-        const letterCityList = tree[ '中国' ][ '北京' ].map(item => item.chinese)
+        const provinceList = Object.keys(tree['中国'])
+        const letterCityList = tree['中国']['北京'].map(item => item.chinese)
         this.setState({
           tree,
           countryOptions: countryList,
           provinceOptions: provinceList,
           cityOptions: letterCityList,
-          cityData: tree[ this.state.data.country ][ this.state.data.province ],
+          cityData: tree[this.state.data.country][this.state.data.province],
         })
       }
     } catch (e) {
@@ -156,11 +156,11 @@ class EditData extends Component {
       // if (code !== 200) {
       //   return message.error(desc)
       // }
-      const { data: { data } } = await getUserById({
+      const {data: {data}} = await getUserById({
         userId: this.props.user.userId,
       })
       if (data) {
-        this.setState({ data: { ...data, serviceTime: data.serviceTime.split(',') } })
+        this.setState({data: {...data, serviceTime: data.serviceTime.split(',')}})
         if (!data.isPartyB) {
           this.setState({
             menuItemList: this.state.menuItemList.filter(item => item.key !== 'skill'),
@@ -172,7 +172,7 @@ class EditData extends Component {
     }
   }
 
-  handleClick = ({ key }) => {
+  handleClick = ({key}) => {
     this.setState({
       selectedItem: key,
     })
@@ -184,29 +184,29 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const { data: { data } } = await getSkillByUserId({ userId: this.props.user.userId })
+    const {data: {data}} = await getSkillByUserId({userId: this.props.user.userId})
     if (data) {
       const secondarySkillList = Object
         .values(data.skill)
-        .reduce((pre, cur) => [ ...pre, ...cur ])
+        .reduce((pre, cur) => [...pre, ...cur])
 
       this.setState({
-        skillList: [ ...secondarySkillList, ...data.skillTemp ],
+        skillList: [...secondarySkillList, ...data.skillTemp],
       })
     }
   }
 
   handleInput = type => e => this.setState({
-    data: { ...this.state.data, [ type ]: e.target.value },
+    data: {...this.state.data, [type]: e.target.value},
   })
 
   handleAvatarChange = avatar => this.setState({
-    data: { ...this.state.data, ...{ avatar } },
+    data: {...this.state.data, ...{avatar}},
   })
 
   handleServiceTimeChange = (serviceTime) => {
     this.setState({
-      data: { ...this.state.data, serviceTime },
+      data: {...this.state.data, serviceTime},
     })
   }
 
@@ -224,15 +224,15 @@ class EditData extends Component {
 
   handleCountryChange = (value) => {
     // console.log('handleCountryChange', this.state.tree[ value ])
-    const provinceOptions = Object.keys(this.state.tree[ value ])
-    const cityData = this.state.tree[ value ][ provinceOptions[ 0 ] ]
+    const provinceOptions = Object.keys(this.state.tree[value])
+    const cityData = this.state.tree[value][provinceOptions[0]]
     const cityOptions = cityData.map(item => item.chinese)
     this.setState({
       data: {
         ...this.state.data, ...{
           country: value,
-          province: Object.keys(this.state.tree[ value ])[ 0 ],
-          city: cityOptions[ 0 ],
+          province: Object.keys(this.state.tree[value])[0],
+          city: cityOptions[0],
         },
       },
       provinceOptions,
@@ -242,10 +242,10 @@ class EditData extends Component {
   }
 
   handleProvinceChange = (value) => {
-    const cityData = this.state.tree[ this.state.data.country ][ value ]
+    const cityData = this.state.tree[this.state.data.country][value]
     const cityOptions = cityData.map(item => item.chinese)
     this.setState({
-      data: { ...this.state.data, ...{ province: value, city: cityOptions[ 0 ] } },
+      data: {...this.state.data, ...{province: value, city: cityOptions[0]}},
       cityData,
       cityOptions,
     })
@@ -255,7 +255,7 @@ class EditData extends Component {
     this.setState({
       data: {
         ...this.state.data,
-        ...{ city: value },
+        ...{city: value},
       },
     })
   }
@@ -273,7 +273,7 @@ class EditData extends Component {
     //   specAddr: this.state.data.specAddr,
     // })
     // const { data: { desc, code } } =
-    const { data: { code } } = await updateUser({
+    const {data: {code}} = await updateUser({
       userId: this.props.user.userId,
       nickname: this.state.data.nickname,
       district: (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId),
@@ -304,7 +304,7 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const { data: { code } } = await changePwd({
+    const {data: {code}} = await changePwd({
       pwd: this.state.pwd,
       newPwd: this.state.newPwd,
     })
@@ -328,9 +328,9 @@ class EditData extends Component {
       //   message.success('更新资料成功')
       //   this.afterUpdate()
       // }
-      const { data: { code } } = await updateUser({
+      const {data: {code}} = await updateUser({
         userId: this.props.user.userId,
-        [ type ]: this.state.data[ type ],
+        [type]: this.state.data[type],
       })
       if (code) {
         message.success('更新资料成功')
@@ -347,7 +347,7 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const { data: { code } } = await getPhoneCode({
+    const {data: {code}} = await getPhoneCode({
       phoneNumber: this.state.data.phoneNumber,
     })
     if (code === 200) {
@@ -368,7 +368,7 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const { data: { code } } = await getMailCode({ email: this.state.data.email })
+    const {data: {code}} = await getMailCode({email: this.state.data.email})
     if (code === 200) {
       message.success('已发送验证码')
     }
@@ -380,16 +380,16 @@ class EditData extends Component {
     modalVisible: false,
   })
 
-  handlePhoneCodeChange = e => this.setState({ phoneCode: e.target.value })
+  handlePhoneCodeChange = e => this.setState({phoneCode: e.target.value})
 
-  handleMailCodeChange = e => this.setState({ mailCode: e.target.value })
+  handleMailCodeChange = e => this.setState({mailCode: e.target.value})
 
   verifyPhoneNumber = async () => {
     // const { data: { code, desc } } = await verifyPhoneNumber({
     //   phoneNumber: this.state.data.phoneNumber,
     //   code: this.state.phoneCode,
     // })
-    const { data: code } = await verifyPhoneNumber({
+    const {data: code} = await verifyPhoneNumber({
       phoneNumber: this.state.data.phoneNumber,
       code: this.state.phoneCode,
     })
@@ -437,7 +437,7 @@ class EditData extends Component {
     //   message.success('验证邮箱成功')
     // }
     // this.handleModalCancel()
-    const { data: { code } } = await verifyEmail({
+    const {data: {code}} = await verifyEmail({
       email: this.state.data.email,
       code: this.state.mailCode,
     })
@@ -467,7 +467,7 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const { data: { code } } = await deleteSkill({
+    const {data: {code}} = await deleteSkill({
       isTemp,
       skillId,
     })
@@ -487,7 +487,7 @@ class EditData extends Component {
       //   message.error(desc)
       //   return
       // }
-      const { data: { data } } = await getServiceTree({ cityId: this.props.user.district })
+      const {data: {data}} = await getServiceTree({cityId: this.props.user.district})
       if (data) {
         const firstServiceList = data.map(item => item.serviceTypeName)
         // console.log('firstLevelServiceList', firstServiceList)
@@ -512,10 +512,10 @@ class EditData extends Component {
 
   handleFirstServiceSelect = (serviceName) => () => this.setState({
     selectedFirstService: serviceName,
-    secondServiceList: [ ...this.state.serviceTree.find(item => item.serviceTypeName === serviceName).child, {
+    secondServiceList: [...this.state.serviceTree.find(item => item.serviceTypeName === serviceName).child, {
       serviceTypeName: '其他',
       serviceTypeId: -1,
-    } ],
+    }],
   })
 
   handleSecondServiceSelect = (skillId) => () => {
@@ -525,7 +525,7 @@ class EditData extends Component {
       })
     } else {
       this.setState({
-        selectedSecondService: [ ...this.state.selectedSecondService, skillId ],
+        selectedSecondService: [...this.state.selectedSecondService, skillId],
       })
     }
   }
@@ -540,7 +540,7 @@ class EditData extends Component {
       promiseArr.push(this.postSkillTemp())
     }
     if (promiseArr.length === 1) {
-      const [ { code } ] = await Promise.all(promiseArr)
+      const [{code}] = await Promise.all(promiseArr)
       // if (result.data.code !== 200) {
       //   message.error(result.data.desc)
       //   return
@@ -553,7 +553,7 @@ class EditData extends Component {
       return
     }
     if (promiseArr.length === 2) {
-      const [ { code: code1 }, { code: code2 } ] = await Promise.all(promiseArr)
+      const [{code: code1}, {code: code2}] = await Promise.all(promiseArr)
       // if (!result1 || !result2) {
       //   message.error('网络连接失败，请检查网络后重试')
       //   this.hideSkillModal()
@@ -599,7 +599,7 @@ class EditData extends Component {
   handleLocationChange = (value) => {
     this.getLocationOptions(value)
     this.setState({
-      data: { ...this.state.data, location: value },
+      data: {...this.state.data, location: value},
     })
   }
   getLocationOptions = (keyword) => {
@@ -619,7 +619,7 @@ class EditData extends Component {
       //   lastCity: this.state.selectedCity,
       // })
       /* eslint-disable no-undef */
-      this.placeSearch = new AMap.Autocomplete({ city: this.state.data.city })
+      this.placeSearch = new AMap.Autocomplete({city: this.state.data.city, cityLimit: true})
       keyword && this.placeSearch.search(keyword, (status, result) => {
         if (status === 'complete' && result.info === 'OK') {
           console.log(result.tips)
@@ -659,7 +659,7 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const { data: { data } } = await getUserById({ userId: this.props.user.userId })
+    const {data: {data}} = await getUserById({userId: this.props.user.userId})
     if (data) {
       this.props.setUser(data)
       this.getUserById()
@@ -700,11 +700,11 @@ class EditData extends Component {
       <div className="edit-data-container">
         <Menu
           onClick={ this.handleClick }
-          style={ { width: 188, minHeight: 800, height: '100%' } }
-          defaultSelectedKeys={ [ selectedItem ] }
+          style={ {width: 188, minHeight: 800, height: '100%'} }
+          defaultSelectedKeys={ [selectedItem] }
           mode="inline"
         >
-          { menuItemList.map(({ key, content }) => <MenuItem key={ key }>{ content }</MenuItem>) }
+          { menuItemList.map(({key, content}) => <MenuItem key={ key }>{ content }</MenuItem>) }
         </Menu>
         <div className="content">
           <EditDataForm
@@ -740,7 +740,7 @@ class EditData extends Component {
         <Modal
           title={ <h2>{ modalTitle }</h2> }
           visible={ modalVisible }
-          style={ { top: 'calc(50% - 205px)' } }
+          style={ {top: 'calc(50% - 205px)'} }
           maskStyle={ {
             backgroundColor: '#edf1f4',
             opacity: 0.9,
@@ -787,7 +787,7 @@ class EditData extends Component {
               <div className="secondary-type-container">
                 <div className="secondary-type-select-container">
                   {
-                    secondServiceList.map(({ serviceTypeName, serviceTypeId }) =>
+                    secondServiceList.map(({serviceTypeName, serviceTypeId}) =>
                       <SecondaryCardItem
                         content={ serviceTypeName }
                         key={ serviceTypeName }
@@ -798,7 +798,7 @@ class EditData extends Component {
                   }
                 </div>
                 <div
-                  style={ selectedSecondService.includes(-1) ? {} : { display: 'none' } }>
+                  style={ selectedSecondService.includes(-1) ? {} : {display: 'none'} }>
                   <p>
                     请填写具体的工作技能
                   </p>
@@ -822,7 +822,7 @@ class EditData extends Component {
                 }
                 <div style={ selectedFirstService === '其他' ? {
                   marginTop: '20px',
-                } : { display: 'none' } }>
+                } : {display: 'none'} }>
                   <p style={ {
                     fontWeight: 'bold',
                     marginBottom: '10px',

@@ -6,3 +6,5 @@ export const getNeedOrderDetail = params => axios(`${baseUrl}/postDemand/getOrde
 export const selectPartyB = params => axios(`${baseUrl}/postDemand/choose`, {params})
 
 export const cancelOrder = params => axios(`${baseUrl}/postDemand/cancel`, {params})
+
+export const getPayInfo = params => axios(`${baseUrl}/pay/orderNeed`, {params})

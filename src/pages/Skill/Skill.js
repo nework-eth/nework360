@@ -167,7 +167,7 @@ class SkillPage extends Component {
         //   /* eslint-disable no-undef */
         // }
         // if (!this.state.latitude) {
-        this.geoCoder([ this.goNextStep, this.getServiceList ])
+        this.geoCoder([this.goNextStep, this.getServiceList])
         return
       // }
       // this.geoCoder()
@@ -178,14 +178,14 @@ class SkillPage extends Component {
         if (this.state.selectedType) {
           this.goNextStep()
           const parentId = (this.state.firstServiceList
-            .find(item => item.serviceTypeName === this.state.selectedType)).serviceTypeId
+                                .find(item => item.serviceTypeName === this.state.selectedType)).serviceTypeId
           if (parentId >= 0) {
             this.setState({
-              secondServiceList: [ ...this.state.secondServiceList.filter(item => item.parentId === parentId), {
+              secondServiceList: [...this.state.secondServiceList.filter(item => item.parentId === parentId), {
                 serviceTypeName: '其他',
                 level: 's',
                 serviceTypeId: -1,
-              } ],
+              }],
             })
           } else {
             this.setState({
@@ -208,7 +208,7 @@ class SkillPage extends Component {
         return
       case 5:
         if (this.state.secondaryTypeList.some(item => item !== -1)) {
-          const { data: { code } } = await releaseSkill({
+          const {data: {code}} = await releaseSkill({
             userId: this.props.user.userId,
             latitude: this.state.latitude,
             longitude: this.state.longitude,
@@ -219,7 +219,7 @@ class SkillPage extends Component {
           }
         }
         if (this.state.secondaryTypeList.includes(-1) || this.state.selectedType === '其他') {
-          const { data: { code } } = await postSkillTemp(JSON.stringify([
+          const {data: {code}} = await postSkillTemp(JSON.stringify([
             {
               userId: this.props.user.userId,
               latitude: this.state.latitude,
@@ -243,7 +243,7 @@ class SkillPage extends Component {
             return
           }
         }
-        const { data: { code } } = await updateUser({
+        const {data: {code}} = await updateUser({
           districtId: this.state.cityId,
           userId: this.props.user.userId,
           location: this.state.location,
@@ -262,7 +262,7 @@ class SkillPage extends Component {
           progressPercent: (this.state.step + 1) * 10 + 10,
         })
         message.success('发布技能成功')
-        const res = await getUserById({ userId: this.props.user.userId })
+        const res = await getUserById({userId: this.props.user.userId})
         if (res.data.code !== 200) {
           return
         }
@@ -302,25 +302,25 @@ class SkillPage extends Component {
   }
 
   getCityTree = async () => {
-    const { data: { data } } = await getCityTree()
+    const {data: {data}} = await getCityTree()
     const tree = data
     const countryList = Object.keys(tree)
-    const provinceList = Object.keys(tree[ '中国' ])
-    const letterCityList = tree[ '中国' ][ '北京' ].map(item => item.chinese)
+    const provinceList = Object.keys(tree['中国'])
+    const letterCityList = tree['中国']['北京'].map(item => item.chinese)
     this.setState({
       tree,
       countryOptions: countryList,
       provinceOptions: provinceList,
       cityOptions: letterCityList,
-      cityData: tree[ '中国' ][ '北京' ],
+      cityData: tree['中国']['北京'],
     })
   }
 
   handleCountryChange = (value) => {
     // console.log(this.state.tree[ value ])
-    const provinceOptions = Object.keys(this.state.tree[ value ])
-    const selectedProvince = provinceOptions[ 0 ]
-    const cityData = this.state.tree[ value ][ selectedProvince ]
+    const provinceOptions = Object.keys(this.state.tree[value])
+    const selectedProvince = provinceOptions[0]
+    const cityData = this.state.tree[value][selectedProvince]
     const cityOptions = cityData.map(item => item.chinese)
     this.setState({
       selectedCountry: value,
@@ -339,7 +339,7 @@ class SkillPage extends Component {
 
   handleProvinceChange = (value) => {
     // console.log(this.state.tree[ this.state.selectedCountry ][ value ])
-    const cityData = this.state.tree[ this.state.selectedCountry ][ value ]
+    const cityData = this.state.tree[this.state.selectedCountry][value]
     const cityOptions = cityData.map(item => item.chinese)
     this.setState({
       selectedProvince: value,
@@ -383,7 +383,7 @@ class SkillPage extends Component {
       //   lastCity: this.state.selectedCity,
       // })
       /* eslint-disable no-undef */
-      this.placeSearch = new AMap.Autocomplete({ city: this.state.selectedCity })
+      this.placeSearch = new AMap.Autocomplete({city: this.state.selectedCity, cityLimit: true})
       keyword && this.placeSearch.search(keyword, (status, result) => {
         if (status === 'complete' && result.info === 'OK') {
           console.log(result.tips)
@@ -458,7 +458,7 @@ class SkillPage extends Component {
       })
     } else {
       this.setState({
-        secondaryTypeList: [ ...this.state.secondaryTypeList, id ],
+        secondaryTypeList: [...this.state.secondaryTypeList, id],
       })
     }
   }
@@ -470,7 +470,7 @@ class SkillPage extends Component {
       })
     } else {
       this.setState({
-        serviceTimeList: [ ...this.state.serviceTimeList, type ],
+        serviceTimeList: [...this.state.serviceTimeList, type],
       })
     }
   }
@@ -485,7 +485,7 @@ class SkillPage extends Component {
     this.setState({
       avatarSrc: url,
     })
-    this.props.setUser({ ...this.props.user, avatar: url })
+    this.props.setUser({...this.props.user, avatar: url})
   }
 
   handleSpecAddrChange = (e) => {
@@ -508,6 +508,98 @@ class SkillPage extends Component {
   constructor (props) {
     super(props)
     this.getLocationOptions = debounce(this.getLocationOptions, 800)
+  }
+
+  handleUpload = (type) => (url) => {
+    this.setState({
+      [type]: url,
+    })
+  }
+
+  // getCityIdByName = (cityName) => this.state.tree[ this.state.selectedCountry ]
+  //   && Array.isArray(this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ])
+  //   && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese ===
+  // cityName) && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item =>
+  // item.chinese === cityName).districtId
+  getServiceList = async () => {
+    try {
+      // const { data: { code, data, desc } } = await getServiceList({
+      //   dist: this.state.selectedCity,
+      // })
+      // if (code !== 200) {
+      //   message.error(desc)
+      //   return
+      // }
+      const {data: {data}} = await getServiceList({
+        dist: this.state.selectedCity,
+      })
+      this.setState({
+        serviceList: data,
+        firstServiceList: [...data.filter(item => item.level === 'f'), {
+          serviceTypeName: '其他',
+          level: 'f',
+          serviceTypeId: -1,
+        }],
+        secondServiceList: data.filter(item => item.level === 's'),
+      })
+    } catch (e) {
+      console.log(e)
+      message.error(e)
+    }
+  }
+  updateImageSrc = (src, type) =>
+    updateUser({
+      userId: this.props.user.userId,
+      [type]: src,
+    })
+
+  // handleLocationSelect = (value) => {
+  //   console.log('select')
+  //   const name = value.split(' ')[ 2 ]
+  //   const { location } = this.state.locationOptions.find(item => item.name === name)
+  //   this.setState({
+  //     latitude: location.lat,
+  //     longitude: location.lng,
+  //   })
+  // }
+  geoCoder = (cbArr) => {
+    this.mapApi.then(() => {
+      /* eslint-disable no-undef */
+      const geocoder = new AMap.Geocoder({
+        city: this.state.selectedCity,
+      })
+      //地理编码,返回地理编码结果
+      geocoder.getLocation(`${this.state.location} ${this.state.specAddr}`, (status, result) => {
+        if (status === 'complete' && result.info === 'OK' && result.geocodes.length === 1) {
+          this.setState({
+            latitude: result.geocodes[0].location.lat,
+            longitude: result.geocodes[0].location.lng,
+          })
+          cbArr.forEach(item => item())
+          return
+        }
+        message.error('地址位置不够精确，请确保你所添加的信息是正确的')
+      })
+    })
+  }
+
+  componentDidMount () {
+    this.getCityTree()
+    this.mapInit()
+  }
+
+  updateStatus = async () => {
+    // const { data: { desc, code } } = await updateUser({
+    //   userId: this.props.user.userId,
+    //   checkStatus: 1,
+    // })
+    // if (code !== 200) {
+    //   message.error(desc)
+    // }
+    await updateUser({
+      userId: this.props.user.userId,
+      checkStatus: 1,
+    })
   }
 
   render () {
@@ -534,17 +626,17 @@ class SkillPage extends Component {
     } = this.state
     return (
       <div className="skill-container">
-        <main style={ { width: '700px', margin: '0 auto' } }>
-          <h2 style={ { margin: '50px 0' } }>
+        <main style={ {width: '700px', margin: '0 auto'} }>
+          <h2 style={ {margin: '50px 0'} }>
             <i
               className="iconfont icon-logo"
-              style={ { fontSize: '30px', lineHeight: '40px' } }
+              style={ {fontSize: '30px', lineHeight: '40px'} }
             />
           </h2>
           <Progress
             percent={ progressPercent }
             showInfo={ false }
-            style={ { height: '5px' } }
+            style={ {height: '5px'} }
           />
           {
             this.StepView()
@@ -553,7 +645,7 @@ class SkillPage extends Component {
         <footer>
           <p
             onClick={ this.handleGoBack }
-            style={ step === 0 || step === 9 ? { visibility: 'hidden' } : {} }
+            style={ step === 0 || step === 9 ? {visibility: 'hidden'} : {} }
           >
             <i className="iconfont icon-return"/>
             返回
@@ -564,7 +656,7 @@ class SkillPage extends Component {
               : step === 1
                 ? (!selectedType || (selectedType === '其他' && !inputType))
                 : step === 2
-                  ? (selectedType !== '其他' && ((secondaryTypeList.length === 1 && secondaryTypeList[ 0 ] === -1 && !secondaryInputType) || !secondaryTypeList.length)) || (selectedType === '其他' && !secondaryInputType)
+                  ? (selectedType !== '其他' && ((secondaryTypeList.length === 1 && secondaryTypeList[0] === -1 && !secondaryInputType) || !secondaryTypeList.length)) || (selectedType === '其他' && !secondaryInputType)
                   : step === 3
                     ? serviceTimeList.length === 0
                     : step === 4
@@ -587,100 +679,6 @@ class SkillPage extends Component {
         </footer>
       </div>
     )
-  }
-
-  // getCityIdByName = (cityName) => this.state.tree[ this.state.selectedCountry ]
-  //   && Array.isArray(this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ])
-  //   && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName)
-  //   && this.state.tree[ this.state.selectedCountry ][ this.state.selectedProvince ].find(item => item.chinese === cityName).districtId
-
-  handleUpload = (type) => (url) => {
-    this.setState({
-      [ type ]: url,
-    })
-  }
-
-  getServiceList = async () => {
-    try {
-      // const { data: { code, data, desc } } = await getServiceList({
-      //   dist: this.state.selectedCity,
-      // })
-      // if (code !== 200) {
-      //   message.error(desc)
-      //   return
-      // }
-      const { data: { data } } = await getServiceList({
-        dist: this.state.selectedCity,
-      })
-      this.setState({
-        serviceList: data,
-        firstServiceList: [ ...data.filter(item => item.level === 'f'), {
-          serviceTypeName: '其他',
-          level: 'f',
-          serviceTypeId: -1,
-        } ],
-        secondServiceList: data.filter(item => item.level === 's'),
-      })
-    } catch (e) {
-      console.log(e)
-      message.error(e)
-    }
-  }
-
-  // handleLocationSelect = (value) => {
-  //   console.log('select')
-  //   const name = value.split(' ')[ 2 ]
-  //   const { location } = this.state.locationOptions.find(item => item.name === name)
-  //   this.setState({
-  //     latitude: location.lat,
-  //     longitude: location.lng,
-  //   })
-  // }
-
-  updateImageSrc = (src, type) =>
-    updateUser({
-      userId: this.props.user.userId,
-      [ type ]: src,
-    })
-
-  componentDidMount () {
-    this.getCityTree()
-    this.mapInit()
-  }
-
-  updateStatus = async () => {
-    // const { data: { desc, code } } = await updateUser({
-    //   userId: this.props.user.userId,
-    //   checkStatus: 1,
-    // })
-    // if (code !== 200) {
-    //   message.error(desc)
-    // }
-    await updateUser({
-      userId: this.props.user.userId,
-      checkStatus: 1,
-    })
-  }
-
-  geoCoder = (cbArr) => {
-    this.mapApi.then(() => {
-      /* eslint-disable no-undef */
-      const geocoder = new AMap.Geocoder({
-        city: this.state.selectedCity,
-      })
-      //地理编码,返回地理编码结果
-      geocoder.getLocation(`${this.state.location} ${this.state.specAddr}`, (status, result) => {
-        if (status === 'complete' && result.info === 'OK' && result.geocodes.length === 1) {
-          this.setState({
-            latitude: result.geocodes[ 0 ].location.lat,
-            longitude: result.geocodes[ 0 ].location.lng,
-          })
-          cbArr.forEach(item => item())
-          return
-        }
-        message.error('地址位置不够精确，请确保你所添加的信息是正确的')
-      })
-    })
   }
 }
 

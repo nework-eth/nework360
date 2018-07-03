@@ -2,6 +2,7 @@ import { Button, Rate } from 'antd'
 import React from 'react'
 
 function NeedOrderDetailLIstItem ({
+                                    pay,
                                     score,
                                     amount,
                                     nickname,
@@ -53,7 +54,7 @@ function NeedOrderDetailLIstItem ({
           buttonStatus === 'cancelOrder' && <Button onClick={ cancelOrder }>取消订单</Button>
         }
         {
-          buttonStatus === 'pay' && <Button>立即支付</Button>
+          buttonStatus === 'pay' && <Button onClick={ pay }>立即支付</Button>
         }
         {
           buttonStatus === 'evaluate' && <Button type="primary" onClick={ handleEvaluate }>立即评价</Button>
