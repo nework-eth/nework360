@@ -1,6 +1,5 @@
-import axios from 'axios'
-import { baseUrl } from '../config'
+import axios from '../config'
 
-export const getUserAccount = () => axios(`${baseUrl}/user/account`)
+export const getUserAccount = () => axios('/user/account')
 
-export const getUserTransactionRecord = () => axios(`${baseUrl}/user/orderRecord`)
+export const getUserTransactionRecord = () => axios('/user/orderRecord')

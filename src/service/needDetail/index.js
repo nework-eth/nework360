@@ -1,6 +1,6 @@
-import axios from 'axios'
-import { baseUrl } from '../config'
+import qs from 'qs'
+import axios from '../config'
 
-export const getNeedDetail = params => axios(`${baseUrl}/postDemand/getNeedsItemInfo`, {params})
+export const getNeedDetail = params => axios('/postDemand/getNeedsItemInfo', {params})
 
-export const createQuote = params => axios.post(`${baseUrl}/tenderDemand/createQuote`)
+export const createQuote = data => axios.post('/tenderDemand/createQuote', qs.stringify(data))

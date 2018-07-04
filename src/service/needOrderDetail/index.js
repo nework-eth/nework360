@@ -1,10 +1,9 @@
-import axios from 'axios'
-import { baseUrl } from '../config'
+import axios from '../config'
 
-export const getNeedOrderDetail = params => axios(`${baseUrl}/postDemand/getOrderNeedsInfo`, {params})
+export const getNeedOrderDetail = params => axios('/postDemand/getOrderNeedsInfo', {params})
 
-export const selectPartyB = params => axios(`${baseUrl}/postDemand/choose`, {params})
+export const selectPartyB = params => axios('/postDemand/choose', {params})
 
-export const cancelOrder = params => axios(`${baseUrl}/postDemand/cancel`, {params})
+export const cancelOrder = params => axios('postDemand/cancel', {params})
 
-export const getPayInfo = params => axios(`${baseUrl}/pay/orderNeed`, {params})
+export const getPayInfo = params => axios('pay/orderNeed', {params})

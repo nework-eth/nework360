@@ -493,7 +493,8 @@
       // either a string attribute to count by, or a function that returns the
       // criterion.
       _.countBy = group(function (result, value, key) {
-        if (_.has(result, key)) result[key]++ else result[key] = 1
+        if (_.has(result, key)) result[key]++
+        else result[key] = 1
       })
 
       // Safely create a real, live array from anything iterable.
@@ -709,7 +710,8 @@
         var low = 0, high = getLength(array)
         while (low < high) {
           var mid = Math.floor((low + high) / 2)
-          if (iteratee(array[mid]) < value) low = mid + 1 else high = mid
+          if (iteratee(array[mid]) < value) low = mid + 1
+          else high = mid
         }
         return low
       }
@@ -1913,7 +1915,8 @@
               var pos1 = u.lastIndexOf('/')
               var pos2 = u.lastIndexOf('\\')
               var pos = Math.max(pos1, pos2)
-              if (pos < 0) uri.filename = u else uri.filename = u.substring(pos + 1)
+              if (pos < 0) uri.filename = u
+              else uri.filename = u.substring(pos + 1)
             }
             var index = uri.filename.lastIndexOf('.')
             if (index != -1) {
@@ -10756,7 +10759,8 @@
           } else if (info.code == 307 || info.code == 321) {
             // Dismissed by group.
             var nick = msginfo.getAttribute('nick')
-            if (!nick) info.type = 'leaveGroup' else info.type = 'removedFromGroup'
+            if (!nick) info.type = 'leaveGroup'
+            else info.type = 'removedFromGroup'
           }
         }
       }
@@ -11082,7 +11086,8 @@
       var id = message.id
       var body = message.getElementsByTagName('body')
       var mid = 0
-      if (isNaN(body[0].innerHTML)) mid = body[1].innerHTML else mid = body[0].innerHTML
+      if (isNaN(body[0].innerHTML)) mid = body[1].innerHTML
+      else mid = body[0].innerHTML
       var msg = {
         mid: mid,
       }
@@ -11096,7 +11101,8 @@
       var id = message.id
       var body = message.getElementsByTagName('body')
       var mid = 0
-      if (isNaN(body[0].innerHTML)) mid = body[1].innerHTML else mid = body[0].innerHTML
+      if (isNaN(body[0].innerHTML)) mid = body[1].innerHTML
+      else mid = body[0].innerHTML
       var msg = {
         mid: mid,
       }

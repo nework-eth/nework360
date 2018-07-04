@@ -1,6 +1,8 @@
 import { message } from 'antd'
 import axios from 'axios'
 
+axios.defaults.baseURL = 'http://nework-web.rdc.waibaodashi.com'
+
 axios.defaults.withCredentials = true
 
 axios.interceptors.response.use(res => {
@@ -15,3 +17,5 @@ axios.interceptors.response.use(res => {
 })
 
 export const baseUrl = 'http://nework-web.rdc.waibaodashi.com'
+
+export default axios

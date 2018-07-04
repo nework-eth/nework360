@@ -152,7 +152,7 @@ class Page extends Component {
         errorMsg: '请输入正确格式手机号',
       }
     }
-    if (!/^1[\d]{10}$/.test(phoneNumber)) {
+    if (!/^1[3578]\d{9}$/.test(phoneNumber)) {
       return {
         validateStatus: 'error',
         errorMsg: '手机号格式不正确',
@@ -385,12 +385,15 @@ class Page extends Component {
 
   componentDidMount () {
     if (this.props.location.state && this.props.location.state.phoneNumber) {
-      // this.props.form.setFieldsValue({ phoneNumber: this.props.location.state.phoneNumber })
       this.setState({
-        phoneNumber: {
-          value: this.props.location.state.phoneNumber,
+          phoneNumber: {
+            value: this.props.location.state.phoneNumber,
+          },
         },
-      })
+        () => {
+          const e = {target: {value: this.props.location.state.phoneNumber}}
+          this.handlePhoneNumberChange(e)
+        })
     }
   }
 

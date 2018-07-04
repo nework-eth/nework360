@@ -26,12 +26,28 @@
     flex-wrap: wrap;
     .logo-item-container {
       margin-right: 20px;
+      text-align: center;
       &:nth-of-type(6n+6) {
         margin-right: 0;
       }
     }
   }
-
+  .search-input-container {
+    position: relative;
+    .search-input-tip-wrapper {
+      position: absolute;
+      top: 80px;
+      width: 1060px;
+      border: 1px solid #edf1f4;
+      border-radius: 2px;
+      background: #fff;
+      .search-input-tip-item {
+        padding-left: 20px;
+        height: 70px;
+        line-height: 70px;
+      }
+    }
+  }
   .introduce-container {
     display: flex;
     padding-bottom: 50px;

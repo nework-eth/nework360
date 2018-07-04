@@ -109,8 +109,8 @@ class SelectCity extends Component {
       searchOptions: [],
       fetching: false,
     })
-    console.log(value)
     this.props.setCityName(value)
+    browserHistory.push('/')
   }
   getHotCity = async () => {
     try {
@@ -290,7 +290,7 @@ class SelectCity extends Component {
                 }
               </Select>
               <Select
-                placeholder="请选择省份/洲"
+                placeholder="请选择省份/州"
                 value={ selectedProvince }
                 onChange={ this.handleProvinceChange }
                 disabled={ !selectedCountry }

@@ -1,4 +1,5 @@
-import { Icon, Input, message } from 'antd'
+import { Icon, Input } from 'antd'
+import debounce from 'lodash/debounce'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
@@ -12,12 +13,72 @@ import './static/style/search.less'
 const Search = Input.Search
 
 const mapState = (state) => ({
-  cityId: state[ stateKey ].cityId,
-  cityName: state[ stateKey ].cityName,
+  cityId: state[stateKey].cityId,
+  cityName: state[stateKey].cityName,
 })
 
 @connect(mapState)
 class SearchPage extends Component {
+  handleSearchValueChange = (e) => {
+    this.setState({
+      searchValue: e.target.value,
+    })
+    if (e.target.value) {
+      this.getSearchResult(e.target.value)
+    } else {
+      this.setState({
+        searchResult: [],
+      })
+    }
+  }
+  getSearchResult = async (serviceName) => {
+    const {data: {data, code}} = await getListServiceByParam({level: 's', serviceName, limit: 5})
+    if (code === 200) {
+      this.setState({
+        searchResult: data,
+        searchTipVisible: true,
+      })
+    }
+  }
+  getServiceTree = async () => {
+    const {data: {data, code}} = await getServiceTree({cityId: this.props.cityId})
+    if (code === 200) {
+      const firstLevelServiceList = data.map(item => item.serviceTypeName)
+      this.setState({
+        serviceTree: data,
+        firstLevelServiceList,
+      })
+    }
+  }
+  handleFirstServiceChange = (firstService) => {
+    browserHistory.push({pathname: '/service-list', state: {selectedFirstService: firstService}})
+  }
+  getNearServiceList = async () => {
+    const {data: {data}} = await getListServiceByDist({
+      dist: this.props.cityName,
+      level: 's',
+    })
+    this.setState({
+      nearServiceList: data,
+    })
+  }
+
+  getFirstServiceList = async () => {
+    getListServiceByParam({
+      dist: this.props.cityName,
+      level: 'f',
+    })
+  }
+  handleSearchTipClick = (serviceName, serviceTypeId) => () => {
+    this.setState({
+      searchValue: serviceName,
+      selectedServiceTypeId: serviceTypeId,
+    })
+  }
+  handleSearchButtonClick = () => {
+
+  }
+
   constructor (props) {
     super(props)
     this.state = {
@@ -53,74 +114,12 @@ class SearchPage extends Component {
       pageState: 'default',
       selectedFirstService: '',
       nearServiceList: [],
+      searchValue: '',
+      searchResult: [],
+      searchTipVisible: false,
+      selectedServiceTypeId: '',
     }
-  }
-
-  getServiceTree = async () => {
-    try {
-      // const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.cityId })
-      // if (code !== 200) {
-      //   message.error(desc)
-      //   return
-      // }
-      // console.log('serviceTree', data)
-      // const firstLevelServiceList = data.map(item => item.serviceTypeName)
-      // console.log('firstLevelServiceList', firstLevelServiceList)
-      // console.log('serviceTree', data)
-      // this.setState({
-      //   serviceTree: data,
-      //   firstLevelServiceList,
-      // })
-      const { data: { data } } = await getServiceTree({ cityId: this.props.cityId })
-      const firstLevelServiceList = data.map(item => item.serviceTypeName)
-      this.setState({
-        serviceTree: data,
-        firstLevelServiceList,
-      })
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
-    }
-  }
-  handleFirstServiceChange = (firstService) => {
-    browserHistory.push({ pathname: '/service-list', state: { selectedFirstService: firstService } })
-  }
-
-  getFirstServiceList = async () => {
-    // const { data: { code, data, desc } } = await getListServiceByParam({
-    //   dist: this.props.cityName,
-    //   level: 'f',
-    // })
-    // console.log(code, data, desc)
-    getListServiceByParam({
-      dist: this.props.cityName,
-      level: 'f',
-    })
-  }
-
-  getNearServiceList = async () => {
-    // try {
-    // const { data: { code, data, desc } } = await getListServiceByDist({
-    //   dist: this.props.cityName,
-    //   level: 's',
-    // })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
-    // console.log('nearServiceList', data)
-    // this.setState({
-    //   nearServiceList: data,
-    // })
-    const { data: { data } } = await getListServiceByDist({
-      dist: this.props.cityName,
-      level: 's',
-    })
-    this.setState({
-      nearServiceList: data,
-    })
-    // } catch (e) {
-    //   message.error('网络连接失败，请检查网络后重试')
-    // }
+    this.getSearchResult = debounce(this.getSearchResult, 800)
   }
 
   componentDidMount () {
@@ -147,27 +146,48 @@ class SearchPage extends Component {
 
   render () {
     const {
-      firstLevelServiceList,
+      searchValue,
       serviceTree,
+      searchResult,
       nearServiceList,
       serviceImageList,
+      searchTipVisible,
+      firstLevelServiceList,
     } = this.state
     return (
       <div className="search-service-container">
         <div>
           <i
             className="iconfont icon-logo"
-            style={ { fontSize: '40px', lineHeight: '50px' } }
+            style={ {fontSize: '40px', lineHeight: '50px'} }
           />
         </div>
-        <h1 style={ { marginBottom: '30px' } }>找到所有本地专业服务</h1>
-        <Search
-          prefix={ <Icon type="search" style={ { fontSize: '18px', color: '#9ca6ae', paddingLeft: '10px' } }/> }
-          className="search-input"
-          placeholder="试试「小程序开发」"
-          enterButton="搜索"
-          size="large"
-        />
+        <h1 style={ {marginBottom: '30px'} }>找到所有本地专业服务</h1>
+        <div className="search-input-container">
+          <Search
+            prefix={ <Icon type="search" style={ {fontSize: '18px', color: '#9ca6ae', paddingLeft: '10px'} }/> }
+            className="search-input"
+            placeholder="试试「小程序开发」"
+            enterButton="搜索"
+            size="large"
+            value={ searchValue }
+            onChange={ this.handleSearchValueChange }
+            onSearch={ this.handleSearchButtonClick }
+          />
+          { searchTipVisible && searchValue && <div className="search-input-tip-wrapper">
+            { searchResult.length
+              ? searchResult.map(({serviceTypeName, serviceTypeId}) =>
+                <div
+                  className="search-input-tip-item"
+                  onClick={ this.handleSearchTipClick(serviceTypeName, serviceTypeId) }
+                >
+                  { serviceTypeName }
+                </div>,
+              )
+              : <div className="search-input-tip-item">没有找到相关的搜索结果，请重新输入</div>
+            }
+          </div> }
+        </div>
         <div
           className="icon-list-container"
         >
@@ -189,7 +209,7 @@ class SearchPage extends Component {
           serviceImageList={ serviceImageList }
           handleFirstServiceChange={ this.handleFirstServiceChange }
         />
-        <h2 style={ { marginTop: '50px', marginBottom: '20px' } }>如何发布需求</h2>
+        <h2 style={ {marginTop: '50px', marginBottom: '20px'} }>如何发布需求</h2>
         <div className="introduce-container">
           <div className="introduce-card">
             <img

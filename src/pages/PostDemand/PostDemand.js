@@ -1,7 +1,8 @@
 import { message, Progress } from 'antd'
 import React, { Component } from 'react'
-import { createDemand, getTemplate } from '../../service/demand'
+import { createDemand, getMatchResult, getTemplate } from '../../service/demand'
 import { view as Footer } from './Footer'
+import { MatchResultCardItem } from './MatchResultCardItem'
 import './static/style/index.less'
 import { view as Template } from './Template'
 
@@ -27,7 +28,7 @@ const filterData = (pageData) => {
         type: templateItemType,
         isNecessary: isNessary,
         isMultiChoice: isMultChoice,
-        title: textArray[ index ].content,
+        title: textArray[index].content,
       }
     } else {
       return {
@@ -37,7 +38,7 @@ const filterData = (pageData) => {
         type: templateItemType,
         isNecessary: isNessary,
         isMultiChoice: isMultChoice,
-        title: textArray[ index ].content,
+        title: textArray[index].content,
       }
     }
   })
@@ -53,7 +54,7 @@ const generateInitValue = (type) => {
     case 'select':
       return []
     case 'time':
-      return null
+      return [null]
     default:
       return ''
   }
@@ -62,7 +63,7 @@ const generateInitValue = (type) => {
 class PostDemand extends Component {
 
   state = {
-    data: [ [] ],
+    data: [[]],
     pages: [],
     pageIndex: 0,
     originData: [],
@@ -70,17 +71,13 @@ class PostDemand extends Component {
     progressStep: 0,
     progressPercent: 0,
     locationOptions: [],
+    showMatchResult: false,
+    matchResultList: [],
   }
 
   getTemplate = async () => {
-    // const { data: { data, code, desc } } = await getTemplate({ serviceId: 22 })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
-    const data = await getTemplate({ serviceId: 22 })
-    if (data) {
-      // console.log('data', data)
+    const {data: {data, code}} = await getTemplate({serviceId: 22})
+    if (code === 200) {
       this.setState({
         data: generateResult(data.pages),
         pages: data.pages.map(page => filterData(page)),
@@ -91,14 +88,14 @@ class PostDemand extends Component {
   }
 
   goLastPage = () => {
-    this.setState(({ pageIndex, progressPercent, progressStep }) => ({
+    this.setState(({pageIndex, progressPercent, progressStep}) => ({
       pageIndex: pageIndex - 1,
       progressPercent: progressPercent - progressStep,
     }))
   }
 
   goNextPage = () => {
-    this.setState(({ pageIndex, progressPercent, progressStep }) => ({
+    this.setState(({pageIndex, progressPercent, progressStep}) => ({
       pageIndex: pageIndex + 1,
       progressPercent: progressPercent + progressStep,
     }))
@@ -115,6 +112,15 @@ class PostDemand extends Component {
         reject(e)
       }
     })
+  }
+
+  getMatchResult = async () => {
+    const {data: {code, data}} = await getMatchResult({userId: 20, serviceId: 10})
+    if (code === 200) {
+      this.setState({
+        matchResultList: data,
+      })
+    }
   }
 
   getLocationOptions = keyword => {
@@ -137,8 +143,7 @@ class PostDemand extends Component {
   }
 
   createDemand = async () => {
-    // try {
-    const success = await createDemand(
+    const {data: {code}} = await createDemand(
       {
         pages: this.state.data,
       },
@@ -149,17 +154,16 @@ class PostDemand extends Component {
         templateId: this.state.templateId,
       },
     )
-    if (success) {
+    if (code === 200) {
       message.success('发布需求成功')
+      this.getMatchResult()
+      this.setState({
+        showMatchResult: true,
+        progressPercent: 100,
+      })
     }
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
-    // } catch (e) {
-    //   message.error('网络连接失败，请检查网络后重试')
-    // }
   }
+
   handleGoNextButtonClick = () => {
     if (this.state.pageIndex < this.state.data.length - 1) {
       this.goNextPage()
@@ -168,31 +172,42 @@ class PostDemand extends Component {
     this.createDemand()
   }
 
-  handleChange = ({ pageNum, index }) => (value) => {
-    // console.log(value)
-    this.setState(({ data }) => {
-      const temp = JSON.parse(JSON.stringify(data))
-      temp[ pageNum ][ index ].resultValue = value
-      return { data: temp }
-    })
-  }
-  handleLocationChange = ({ pageNum, index }) => (value) => {
-    // console.log(value)
-    // console.log(pageNum, index)
-    this.getLocationOptions(value)
-    this.setState(({ data }) => {
-      const temp = JSON.parse(JSON.stringify(data))
-      temp[ pageNum ][ index ].resultValue = value
-      return { data: temp }
+  handleChange = ({pageNum, index}) => (value) => {
+    this.setState(({data}) => {
+      data[pageNum][index].resultValue = value
+      return {data}
     })
   }
 
-  handleSpecAddressChange = ({ pageNum, index }) => (value) => {
+  handleDateChange = ({pageNum, index}) => (value, valueIndex) => {
+    this.setState(({data}) => {
+      data[pageNum][index].resultValue[valueIndex] = value
+      return {data}
+    })
+  }
+
+  handleLocationChange = ({pageNum, index}) => (value) => {
     // console.log(value)
-    this.setState(({ data }) => {
+    // console.log(pageNum, index)
+    this.getLocationOptions(value)
+    this.setState(({data}) => {
       const temp = JSON.parse(JSON.stringify(data))
-      temp[ pageNum ][ index ].resultValue = [ temp[ pageNum ][ index ].resultValue.split(',')[ 0 ], value ].join(',')
-      return { data: temp }
+      temp[pageNum][index].resultValue = value
+      return {data: temp}
+    })
+  }
+
+  handleSpecAddressChange = ({pageNum, index}) => value => {
+    this.setState(({data}) => {
+      data[pageNum][index].resultValue = [data[pageNum][index].resultValue.split(',')[0], value].join(',')
+      return {data}
+    })
+  }
+
+  addMoreDay = ({pageNum, index}) => () => {
+    this.setState(({data}) => {
+      data[pageNum][index].resultValue.push(null)
+      return {data}
     })
   }
 
@@ -203,37 +218,57 @@ class PostDemand extends Component {
       pageIndex,
       locationOptions,
       progressPercent,
+      showMatchResult,
+      matchResultList,
     } = this.state
     return (<div className="post-demand-container">
       <main>
-        <h2 style={ { margin: '50px 0' } }>
+        <h2 style={ {margin: '50px 0'} }>
           <i
             className="iconfont icon-logo"
-            style={ { fontSize: '30px', lineHeight: '40px' } }
+            style={ {fontSize: '30px', lineHeight: '40px'} }
           />
         </h2>
         <Progress
           percent={ progressPercent }
           showInfo={ false }
-          style={ { height: '5px' } }
+          style={ {height: '5px'} }
         />
-        <div className="template-wrapper">
-          {
-            pages[ pageIndex ] && pages[ pageIndex ].map(item =>
-              <Template
-                { ...item }
-                key={ item.id }
-                value={ data[ pageIndex ][ item.index ].resultValue }
-                handleChange={ this.handleChange({ pageNum: pageIndex, index: item.index }) }
-                locationOptions={ locationOptions }
-                handleLocationChange={ this.handleLocationChange({ pageNum: pageIndex, index: item.index }) }
-                handleSpecAddressChange={ this.handleSpecAddressChange({ pageNum: pageIndex, index: item.index }) }
-              />)
-          }
-        </div>
+        { !showMatchResult ?
+          <div className="template-wrapper">
+            {
+              pages[pageIndex] && pages[pageIndex].map(item =>
+                <Template
+                  { ...item }
+                  key={ item.id }
+                  value={ data[pageIndex][item.index].resultValue }
+                  addMoreDay={ this.addMoreDay({pageNum: pageIndex, index: item.index}) }
+                  handleChange={ this.handleChange({pageNum: pageIndex, index: item.index}) }
+                  locationOptions={ locationOptions }
+                  handleDateChange={ this.handleDateChange({pageNum: pageIndex, index: item.index}) }
+                  handleLocationChange={ this.handleLocationChange({pageNum: pageIndex, index: item.index}) }
+                  handleSpecAddressChange={ this.handleSpecAddressChange({pageNum: pageIndex, index: item.index}) }
+                />)
+            }
+          </div>
+          : <div className="match-result-container">
+            <h2>已为您匹配到{ matchResultList.length }位{ }服务人员请耐心等待报价...</h2>
+            <div className="match-result-card-item-wrapper">
+              {
+                matchResultList.map(({userBasicInfoVO}) =>
+                  <MatchResultCardItem
+                    avatarSrc={ userBasicInfoVO.avatar }
+                    nickname={ userBasicInfoVO.nickname }
+                  />,
+                )
+              }
+            </div>
+          </div>
+        }
       </main>
       <Footer
-        pageData={ data[ pageIndex ] }
+        complete={ showMatchResult }
+        pageData={ data[pageIndex] }
         pageIndex={ pageIndex }
         goLastPage={ this.goLastPage }
         handleGoNextButtonClick={ this.handleGoNextButtonClick }

@@ -1,6 +1,5 @@
-import axios from 'axios'
-import { baseUrl } from '../config'
+import axios from '../config'
 
-export const getMessage = params => axios(`${baseUrl}/msg/listMsgByParam`, {params})
+export const getMessage = params => axios('/msg/listMsgByParam', {params})
 
-export const updateMessageStatus = params => axios(`${baseUrl}/msg/updateMsg`, {params})
+export const updateMessageStatus = params => axios('/msg/updateMsg', {params})

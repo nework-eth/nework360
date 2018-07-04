@@ -10,9 +10,11 @@ function Template ({
                      title,
                      value,
                      options,
+                     addMoreDay,
                      handleChange,
                      isMultiChoice,
                      locationOptions,
+                     handleDateChange,
                      handleLocationChange,
                      handleSpecAddressChange,
                    }) {
@@ -50,7 +52,8 @@ function Template ({
         <DateTemplate
           title={ title }
           value={ value }
-          handleChange={ handleChange }
+          addMoreDay={ addMoreDay }
+          handleDateChange={ handleDateChange }
         />
       )
     default:

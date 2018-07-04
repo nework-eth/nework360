@@ -79,7 +79,8 @@ class Page extends Component {
 
     if (success) {
       message.success('注册成功')
-      browserHistory.push('/login')
+      browserHistory.push('/')
+      // todo:加上用户状态
     }
     // this.props.form.validateFields(async (err, { messageCode, password, phoneNumber, nickName }) => {
     //   if (!err) {
@@ -148,7 +149,7 @@ class Page extends Component {
       },
     }), () => {
       if (this.state.messageButton.value === '获取验证码') {
-        const { validateStatus, errorMsg } = this.validatePhoneNumber(this.state.phoneNumber.value)
+        const {validateStatus, errorMsg} = this.validatePhoneNumber(this.state.phoneNumber.value)
         console.log(validateStatus, errorMsg)
         if (validateStatus === 'success') {
           this.setState((preState) => ({
@@ -206,7 +207,7 @@ class Page extends Component {
         errorMsg: '请输入正确格式手机号',
       }
     }
-    if (!/^1[\d]{10}$/.test(phoneNumber)) {
+    if (!/^1[3578]\d{9}$/.test(phoneNumber)) {
       return {
         validateStatus: 'error',
         errorMsg: '手机号格式不正确',
@@ -345,21 +346,10 @@ class Page extends Component {
   }))
 
   handleMessageButtonClick = async () => {
-    // try {
-    // const { data: { code, desc } } = await sendCode({ phoneNumber: this.state.phoneNumber.value })
-    // if (code === 200) {
-    //   message.success('已发送短信验证码')
-    //   this.startTimer()
-    //   return
-    // }
-    const success = await sendCode({ phoneNumber: this.state.phoneNumber.value })
-    if (success) {
+    const {data: {code}} = await sendCode({phoneNumber: this.state.phoneNumber.value})
+    if (code === 200) {
       this.startTimer()
     }
-    // message.error(desc)
-    // } catch (e) {
-    //   message.error('网络连接失败，请检查网络后重试')
-    // }
   }
 
   startTimer = () => {
@@ -385,7 +375,6 @@ class Page extends Component {
   }
 
   render () {
-    // const { getFieldDecorator } = this.props.form
     const {
       pwd,
       nickName,
@@ -449,7 +438,7 @@ class Page extends Component {
             <Input
               placeholder="输入手机号"
               className="form-input"
-              style={ { width: '69.2%' } }
+              style={ {width: '69.2%'} }
               value={ phoneNumber.value }
               onChange={ this.handlePhoneNumberChange }
               onBlur={ this.handlePhoneNumberBlur }
@@ -499,7 +488,7 @@ class Page extends Component {
         </FormItem>
         <span className="captions">已经有账号了？<Link to={ {
           pathname: '/login',
-          state: { phoneNumber: phoneNumber.value },
+          state: {phoneNumber: phoneNumber.value},
         } }>去登录</Link></span>
       </Form>
     )
@@ -508,10 +497,14 @@ class Page extends Component {
   componentDidMount () {
     if (this.props.location.state && this.props.location.state.phoneNumber) {
       this.setState({
-        phoneNumber: {
-          value: this.props.location.state.phoneNumber,
+          phoneNumber: {
+            value: this.props.location.state.phoneNumber,
+          },
         },
-      })
+        () => {
+          const e = {target: {value: this.props.location.state.phoneNumber}}
+          this.handlePhoneNumberChange(e)
+        })
     }
   }
 }

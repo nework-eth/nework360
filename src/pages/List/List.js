@@ -40,23 +40,25 @@ class List extends Component {
 
   getNeedOrderList = async () => {
     try {
-      const {data: {data}} = await getNeedOrderList({
+      const {data: {data, code}} = await getNeedOrderList({
         start: this.state.start,
         limit: this.state.limit,
       })
-      console.log('need-list-data', data)
-      this.setState((preState) => ({
-        start: preState.start + preState.limit,
-        needOrderList: data.orders,
-      }))
+      if (code === 200) {
+        this.setState({
+          needOrderList: data.orders,
+        })
+      }
     } catch (e) {
       message.error('网络连接失败，请检查网络后重试')
     }
   }
   getServiceOrderList = async () => {
-    const {data: {data}} = await getServiceOrderList()
+    const {data: {data, code}} = await getServiceOrderList()
     console.log('service-order-list', data)
-    this.setState({serviceOrderList: data.quotes})
+    if (code === 200) {
+      this.setState({serviceOrderList: data.quotes})
+    }
   }
   changeListType = (listType) => () => this.setState({
     listType: listType,

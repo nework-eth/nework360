@@ -1,4 +1,5 @@
 import moment from 'moment'
+import QRCode from 'qrcode.react'
 import React, { Component } from 'react'
 import { view as Footer } from '../../components/Footer/index.js'
 import { IMModal } from '../../components/IMModal/IMModal'
@@ -37,7 +38,7 @@ class NeedOrderDetail extends Component {
   state = {
     data: '',
     quotes: [],
-    needsId: this.props.location.state ? this.props.location.state.needsId : '22222222',
+    needsId: this.props.location.state ? this.props.location.state.needsId : '201806251010289473493322',
     orderStatus: '',
     selectedQuoteId: '',
   }
@@ -52,7 +53,9 @@ class NeedOrderDetail extends Component {
       })
     }
   }
-  selectPartyB = (needsId, quoteId) => () => selectPartyB({needsId, quoteId})
+  selectPartyB = (needsId, quoteId) => async () => {
+    const {data: {code}} = await selectPartyB({needsId, quoteId})
+  }
   cancelOrder = () => cancelOrder({needsId: '201805261855396846258489'})
   IMInit = () => {
     /* eslint-disable no-undef */
@@ -195,6 +198,7 @@ class NeedOrderDetail extends Component {
             )
           }
         </main>
+        <QRCode value="http://sissi.pingxx.com/mock.php?ch_id=ch_1a1qvD0WnXv1aDqvL8yP0mjL&channel=alipay_qr"/>
         <IMModal
           visible={ false }
         />

@@ -90,11 +90,11 @@ class NeedDetail extends Component {
                 <Rate
                   allowHalf
                   disabled
-                  value={ score }
+                  value={ +score }
                   character={ <i className="iconfont icon-rate-star-full"/> }
                 />
-                <p className="rate">{ score }</p>
-                <p className="evaluation">（{ scoreCount }条评价）</p>
+                <p className="rate">{ +score }</p>
+                <p className="evaluation">（{ +scoreCount }条评价）</p>
               </div>
             </div>
           </div>
