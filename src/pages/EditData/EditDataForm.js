@@ -89,6 +89,15 @@ function EditDataForm ({
                          locationOptions,
                          handleLocationChange,
                          handleDescriptionInput,
+                         isPwdError,
+                         isNewPwdError,
+                         isNewPwdRepeatError,
+                         pwdErrorMsg,
+                         newPwdErrorMsg,
+                         newPwdRepeatErrorMsg,
+                         handlePwdBlur,
+                         handleNewPwdBlur,
+                         handleNewPwdRepeatBlur,
                        }) {
   switch (selectedItem) {
     case 'basic':
@@ -413,7 +422,17 @@ function EditDataForm ({
           <div className="form-item">
             <div className="label">当前密码</div>
             <div className="content">
-              <Input value={ pwd } onChange={ handlePwdChange }/>
+              <Input
+                value={ pwd }
+                onBlur={ handlePwdBlur }
+                onChange={ handlePwdChange }
+              />
+            </div>
+          </div>
+          <div className="form-item">
+            <div className="label"/>
+            <div className="content">
+              { isPwdError && <p className="error-tip">{ pwdErrorMsg }</p> }
             </div>
           </div>
         </div>
@@ -421,7 +440,17 @@ function EditDataForm ({
           <div className="form-item">
             <div className="label">新密码</div>
             <div className="content">
-              <Input value={ newPwd } onChange={ handleNewPwdChange }/>
+              <Input
+                value={ newPwd }
+                onBlur={ handleNewPwdBlur }
+                onChange={ handleNewPwdChange }
+              />
+            </div>
+          </div>
+          <div className="form-item">
+            <div className="label"/>
+            <div className="content">
+              { isNewPwdError && <p className="error-tip">{ newPwdErrorMsg }</p> }
             </div>
           </div>
         </div>
@@ -429,7 +458,17 @@ function EditDataForm ({
           <div className="form-item">
             <div className="label">确认密码</div>
             <div className="content">
-              <Input value={ newPwdRepeat } onChange={ handleNewPwdRepeatChange }/>
+              <Input
+                value={ newPwdRepeat }
+                onBlur={ handleNewPwdRepeatBlur }
+                onChange={ handleNewPwdRepeatChange }
+              />
+            </div>
+          </div>
+          <div className="form-item">
+            <div className="label"/>
+            <div className="content">
+              { isNewPwdRepeatError && <p className="error-tip">{ newPwdRepeatErrorMsg }</p> }
             </div>
           </div>
         </div>

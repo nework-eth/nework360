@@ -1,4 +1,3 @@
-import cookie from 'cookie'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { browserHistory, IndexRoute, Route, Router } from 'react-router'
@@ -6,12 +5,9 @@ import { browserHistory, IndexRoute, Route, Router } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { combineReducers } from 'redux'
 
-import { setUser } from './components/NavMenu/actions'
-
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Container } from './pages/Container/Container'
 import { page as Homepage } from './pages/Homepage/Homepage'
-import { getUserById } from './service/editData'
 
 import store from './Store'
 
@@ -145,22 +141,23 @@ history.listen((location, action) => {
 //   console.log(replaceState)
 // }
 
-const requireAuth = async (nextState, replaceState, callback) => {
-  console.log(store.getState())
-  if ((store.getState()).user) {
-    callback()
-    return
-  }
-  const userId = (cookie.parse(document.cookie)).userId
-  if (userId) {
-    const {data: {data, code}} = await getUserById({userId})
-    if (code === 200) {
-      setUser(data)
-      return
-    }
-  }
-  replaceState('/login')
-}
+// const requireAuth = async (nextState, replaceState, callback) => {
+//   console.log(store.getState())
+//   if ((store.getState()).user) {
+//     callback()
+//     return
+//   }
+//   const userId = (cookie.parse(document.cookie)).userId
+//   if (true) {
+//     const {data: {data, code}} = await getUserById({userId: 21})
+//     if (code === 200) {
+//       setUser({userId: 11})
+//       callback()
+//       return
+//     }
+//   }
+//   replaceState('/login')
+// }
 
 const Routes = () => (
   <Router history={ history } createElement={ createElement }>
@@ -176,7 +173,7 @@ const Routes = () => (
       <Route path="search" getComponent={ getSearchPage }/>
       <Route path="service-list" getComponent={ getServiceList }/>
     </Route>
-    <Route component={ Container } onEnter={ requireAuth }>
+    <Route component={ Container }>
       <Route path="/skill" getComponent={ getSkillPage }/>
       <Route path="/profile" getComponent={ getProfilePage }/>
       <Route path="/editData" getComponent={ getEditDataPage }/>

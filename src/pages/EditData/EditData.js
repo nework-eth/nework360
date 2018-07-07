@@ -32,6 +32,138 @@ const mapDispatch = (dispatch) => bindActionCreators({
   setUser,
 }, dispatch)
 
+const validatePwd = (pwd) => {
+  if (!pwd) {
+    return {
+      isPwdError: true,
+      pwdErrorMsg: '请输入密码',
+    }
+  }
+  if (pwd.length > 16) {
+    return {
+      isPwdError: true,
+      pwdErrorMsg: '字数不能多于16位',
+      pwd: pwd.slice(0, 16),
+    }
+  }
+  if (pwd.length < 6) {
+    return {
+      isPwdError: true,
+      pwdErrorMsg: '字数不能少于6位',
+    }
+  }
+  if (/^\d+$/.test(pwd)) {
+    return {
+      isPwdError: true,
+      pwdErrorMsg: '不能为纯数字',
+    }
+  }
+  if (pwd.includes(' ')) {
+    return {
+      isPwdError: true,
+      pwdErrorMsg: '密码不能包含空格',
+    }
+  }
+  if (!/^[A-Za-z0-9&/()._|]+$/.test(pwd)) {
+    return {
+      isPwdError: true,
+      pwdErrorMsg: '密码只能输入大小写英文、数字、特殊字符（除空格）',
+    }
+  }
+  return {
+    isPwdError: false,
+    pwdErrorMsg: '',
+  }
+}
+
+const validateNewPwd = (pwd) => {
+  if (!pwd) {
+    return {
+      isNewPwdError: true,
+      newPwdErrorMsg: '请输入密码',
+    }
+  }
+  if (pwd.length > 16) {
+    return {
+      isNewPwdError: true,
+      newPwdErrorMsg: '字数不能多于16位',
+      newPwd: pwd.slice(0, 16),
+    }
+  }
+  if (pwd.length < 6) {
+    return {
+      isNewPwdError: true,
+      newPwdErrorMsg: '字数不能少于6位',
+    }
+  }
+  if (/^\d+$/.test(pwd)) {
+    return {
+      isNewPwdError: true,
+      newPwdErrorMsg: '不能为纯数字',
+    }
+  }
+  if (pwd.includes(' ')) {
+    return {
+      isNewPwdError: true,
+      newPwdErrorMsg: '密码不能包含空格',
+    }
+  }
+  if (!/^[A-Za-z0-9&/()._|]+$/.test(pwd)) {
+    return {
+      isNewPwdError: true,
+      newPwdErrorMsg: '密码只能输入大小写英文、数字、特殊字符（除空格）',
+    }
+  }
+  return {
+    isNewPwdError: false,
+    newPwdErrorMsg: '',
+  }
+}
+
+const validateNewPwdRepeat = (pwd) => {
+  if (!pwd) {
+    return {
+      isNewPwdRepeatError: true,
+      newPwdRepeatErrorMsg: '请输入密码',
+    }
+  }
+  if (pwd.length > 16) {
+    return {
+      isNewPwdRepeatError: true,
+      newPwdRepeatErrorMsg: '字数不能多于16位',
+      newPwdRepeat: pwd.slice(0, 16),
+    }
+  }
+  if (pwd.length < 6) {
+    return {
+      isNewPwdRepeatError: true,
+      newPwdRepeatErrorMsg: '字数不能少于6位',
+    }
+  }
+  if (/^\d+$/.test(pwd)) {
+    return {
+      isNewPwdRepeatError: true,
+      newPwdRepeatErrorMsg: '不能为纯数字',
+    }
+  }
+  if (pwd.includes(' ')) {
+    return {
+      isNewPwdRepeatError: true,
+      newPwdRepeatErrorMsg: '密码不能包含空格',
+    }
+  }
+  if (!/^[A-Za-z0-9&/()._|]+$/.test(pwd)) {
+    return {
+      isNewPwdRepeatError: true,
+      newPwdRepeatErrorMsg: '密码只能输入大小写英文、数字、特殊字符（除空格）',
+    }
+  }
+  return {
+    isNewPwdRepeatError: false,
+    newPwdRepeatErrorMsg: '',
+  }
+}
+
 function CardItem ({imgSrc, title, isSelected, handleClick}) {
   return (
     <div
@@ -122,6 +254,12 @@ class EditData extends Component {
     lastCity: '',
     selectedCity: '',
     locationOptions: [],
+    isPwdError: false,
+    isNewPwdError: false,
+    isNewPwdRepeatError: false,
+    pwdErrorMsg: '',
+    newPwdErrorMsg: '',
+    nwePwdRepeatErrorMsg: '',
   }
 
   getCityTree = async () => {
@@ -142,7 +280,7 @@ class EditData extends Component {
 
   getUserById = async () => {
     const {data: {data, code}} = await getUserById({
-      userId: this.props.user.userId,
+      userId: 21,
     })
     if (code === 200) {
       this.setState({
@@ -163,17 +301,11 @@ class EditData extends Component {
   }
 
   getSkillByUserId = async () => {
-    // const { data: { code, data, desc } } = await getSkillByUserId({ userId: this.props.user.userId })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
-    const {data: {data, code}} = await getSkillByUserId({userId: this.props.user.userId})
+    const {data: {data, code}} = await getSkillByUserId({userId: 21})
     if (code === 200) {
       const secondarySkillList = Object
-        .values(data.skill)
-        .reduce((pre, cur) => [...pre, ...cur])
-
+      .values(data.skill)
+      .reduce((pre, cur) => [...pre, ...cur])
       this.setState({
         skillList: [...secondarySkillList, ...data.skillTemp],
       })
@@ -198,6 +330,12 @@ class EditData extends Component {
     pwd: e.target.value,
   })
 
+  handlePwdBlur = () => this.setState({...validatePwd(this.state.pwd)})
+
+  handleNewPwdBlur = () => this.setState({...validateNewPwd(this.state.newPwd)})
+
+  handleNewPwdRepeatBlur = () => this.setState({...validateNewPwdRepeat(this.state.newPwdRepeat)})
+
   handleNewPwdChange = e => this.setState({
     newPwd: e.target.value,
   })
@@ -207,7 +345,6 @@ class EditData extends Component {
   })
 
   handleCountryChange = (value) => {
-    // console.log('handleCountryChange', this.state.tree[ value ])
     const provinceOptions = Object.keys(this.state.tree[value])
     const cityData = this.state.tree[value][provinceOptions[0]]
     const cityOptions = cityData.map(item => item.chinese)
@@ -245,19 +382,6 @@ class EditData extends Component {
   }
 
   handleSaveBasic = async () => {
-    // console.log('handleSaveBasic')
-    // console.log('cityData+++++', this.state.cityData)
-    // const success = await updateUser({
-    //   userId: this.props.user.userId,
-    //   nickname: this.state.data.nickname,
-    //   district: (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId),
-    //   serviceTime: this.state.data.serviceTime.join(','),
-    //   description: this.state.data.description,
-    //   location: this.state.data.location,
-    //   specAddr: this.state.data.specAddr,
-    // })
-    // const { data: { desc, code } } =
-    console.log('cityData', this.state.cityData, this.state.data.city)
     if (!this.state.data.nickname) {
       message.error('姓名不能为空')
       return
@@ -284,15 +408,26 @@ class EditData extends Component {
   }
 
   handleChangePwdSubmit = async () => {
-    // try {
-    // const { data: { code, desc } } = await changePwd({
-    //   pwd: this.state.pwd,
-    //   newPwd: this.state.newPwd,
-    // })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
+    if (!this.state.pwd) {
+      message.error('请输入旧密码')
+      return
+    }
+    if (!this.state.newPwd) {
+      message.error('请输入新密码')
+      return
+    }
+    if (!this.state.newPwdRepeat) {
+      message.error('请再次输入新密码')
+      return
+    }
+    if (this.state.pwd === this.state.newPwd) {
+      message.error('新旧密码不能相同')
+      return
+    }
+    if (this.state.newPwd !== this.state.newPwdRepeat) {
+      message.error('密码不一致，请重新确认')
+      return
+    }
     const {data: {code}} = await changePwd({
       pwd: this.state.pwd,
       newPwd: this.state.newPwd,
@@ -300,33 +435,16 @@ class EditData extends Component {
     if (code === 200) {
       message.success('修改密码成功')
     }
-    // } catch (e) {
-    //   message.error('网络连接失败，请检查网络后重试')
-    // }
   }
 
   handleSave = (type) => async () => {
-    try {
-      // const { data: { code, desc } } = await updateUser({
-      //   userId: this.props.user.userId,
-      //   [ type ]: this.state.data[ type ],
-      // })
-      // if (code !== 200) {
-      //   message.error(desc)
-      // } else {
-      //   message.success('更新资料成功')
-      //   this.afterUpdate()
-      // }
-      const {data: {code}} = await updateUser({
-        userId: this.props.user.userId,
-        [type]: this.state.data[type],
-      })
-      if (code === 200) {
-        message.success('更新资料成功')
-        this.afterUpdate()
-      }
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+    const {data: {code}} = await updateUser({
+      userId: this.props.user.userId,
+      [type]: this.state.data[type],
+    })
+    if (code === 200) {
+      message.success('更新资料成功')
+      this.afterUpdate()
     }
   }
 
@@ -381,6 +499,7 @@ class EditData extends Component {
     message.success('验证手机号成功')
     this.handleModalCancel()
   }
+
   verifyEmail = async () => {
     const {data: {code}} = await verifyEmail({
       email: this.state.data.email,
@@ -535,20 +654,6 @@ class EditData extends Component {
 
   getLocationOptions = (keyword) => {
     this.mapApi.then(() => {
-      // if (this.state.lastCity && this.state.lastCity === this.state.selectedCity) {
-      //   keyword && this.placeSearch.search(keyword, (status, result) => {
-      //     if (status === 'complete' && result.info === 'OK') {
-      //       console.log(result)
-      //       this.setState({
-      //         locationOptions: result.tips,
-      //       })
-      //     }
-      //   })
-      //   return
-      // }
-      // this.setState({
-      //   lastCity: this.state.selectedCity,
-      // })
       /* eslint-disable no-undef */
       this.placeSearch = new AMap.Autocomplete({city: this.state.data.city, cityLimit: true})
       keyword && this.placeSearch.search(keyword, (status, result) => {
@@ -584,20 +689,11 @@ class EditData extends Component {
   })
 
   afterUpdate = async () => {
-    // try {
-    // const { data: { data, code, desc } } = await getUserById({ userId: this.props.user.userId })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
-    const {data: {data, code}} = await getUserById({userId: this.props.user.userId})
+    const {data: {data, code}} = await getUserById({userId: 21})
     if (code === 200) {
       this.props.setUser(data)
       this.getUserById()
     }
-    // } catch (e) {
-    //   message.error('网络连接失败，请检查网络后重试')
-    // }
   }
 
   render () {
@@ -626,6 +722,12 @@ class EditData extends Component {
       inputSecondService,
       inputFirstService,
       locationOptions,
+      isPwdError,
+      isNewPwdError,
+      isNewPwdRepeatError,
+      pwdErrorMsg,
+      newPwdErrorMsg,
+      newPwdRepeatErrorMsg,
     } = this.state
     return (
       <div className="edit-data-container">
@@ -667,6 +769,15 @@ class EditData extends Component {
             handleShowAddSkillModal={ this.handleShowAddSkillModal }
             locationOptions={ locationOptions }
             handleDescriptionInput={ this.handleDescriptionInput }
+            isPwdError={ isPwdError }
+            isNewPwdError={ isNewPwdError }
+            isNewPwdRepeatError={ isNewPwdRepeatError }
+            pwdErrorMsg={ pwdErrorMsg }
+            newPwdErrorMsg={ newPwdErrorMsg }
+            newPwdRepeatErrorMsg={ newPwdRepeatErrorMsg }
+            handlePwdBlur={ this.handlePwdBlur }
+            handleNewPwdBlur={ this.handleNewPwdBlur }
+            handleNewPwdRepeatBlur={ this.handleNewPwdRepeatBlur }
           />
         </div>
         <Modal
