@@ -1,5 +1,6 @@
 import { Menu, Table } from 'antd'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { getUserAccount, getUserTransactionRecord } from '../../service/wallet'
 import './static/style/index.less'
 
@@ -9,6 +10,7 @@ function Content ({
                     nkc,
                     clue,
                     money,
+                    isPartyB,
                     selectedItem,
                     transactionRecordList,
                   }) {
@@ -33,23 +35,23 @@ function Content ({
               <a href="/">提现</a>
             </div>
           </div>
-          <div className="balance-item">
-            <p className="item-title">数字货币</p>
-            <div className="balance-item-card balance-item-card-2">
-              <img
-                src="./images/balance-nkc.png"
-                alt="nkc"
-                width="40"
-                height="40"
-              />
-              <p className="title">
-                { nkc }
-              </p>
-              <p className="balance-type">NKC</p>
-              <a href="/">提现</a>
-            </div>
-          </div>
-          <div className="balance-item">
+          { /*<div className="balance-item">*/ }
+          { /*<p className="item-title">数字货币</p>*/ }
+          { /*<div className="balance-item-card balance-item-card-2">*/ }
+          { /*<img*/ }
+          { /*src="./images/balance-nkc.png"*/ }
+          { /*alt="nkc"*/ }
+          { /*width="40"*/ }
+          { /*height="40"*/ }
+          { /*/>*/ }
+          { /*<p className="title">*/ }
+          { /*{ nkc }*/ }
+          { /*</p>*/ }
+          { /*<p className="balance-type">NKC</p>*/ }
+          { /*<a href="/">提现</a>*/ }
+          { /*</div>*/ }
+          { /*</div>*/ }
+          { isPartyB && <div className="balance-item">
             <p className="item-title">卡包</p>
             <div className="balance-item-card balance-item-card-3">
               <img
@@ -64,7 +66,7 @@ function Content ({
               <p className="balance-type">线索卡（张）</p>
               <a href="/">购买</a>
             </div>
-          </div>
+          </div> }
         </div>
       </div>
     )
@@ -135,8 +137,76 @@ function Content ({
       </div>
     )
   }
+  if (selectedItem === 'clueRecords') {
+    const columns = [
+      {
+        title: '订单号',
+        dataIndex: 'recordOrderId',
+        key: 'recordOrderId',
+        width: 120,
+      },
+      {
+        title: '张数',
+        dataIndex: 'amount',
+        key: 'amount',
+        width: 130,
+      },
+      {
+        title: '交易类型',
+        dataIndex: 'type',
+        key: 'type',
+        width: 100,
+      },
+      {
+        title: '账户',
+        dataIndex: 'userAName',
+        key: 'userAName',
+        width: 100,
+      },
+      {
+        title: '交易状态',
+        dataIndex: 'status',
+        key: 'status',
+        width: 100,
+        render (value) {
+          switch (value) {
+            case 'pay_success':
+              return '支付成功'
+            case 'receipt_success':
+              return '收款成功'
+            default:
+              return ''
+          }
+        },
+      },
+      {
+        title: '交易时间',
+        dataIndex: 'updateTime',
+        key: 'updateTime',
+        width: 130,
+      },
+    ]
+
+    return (
+      <div>
+        <h2>线索卡记录</h2>
+        <Table
+          rowKey="id"
+          columns={ columns }
+          dataSource={ transactionRecordList }
+          bordered={ false }
+          rowClassName="table-row"
+        />
+      </div>
+    )
+  }
 }
 
+const mapState = (state) => ({
+  user: state.user,
+})
+
+@connect(mapState)
 class Wallet extends Component {
   state = {
     money: '',
@@ -188,12 +258,14 @@ class Wallet extends Component {
         >
           <MenuItem key="balance">账户余额</MenuItem>
           <MenuItem key="records">交易记录</MenuItem>
+          <MenuItem key="clueRecords">线索卡记录</MenuItem>
         </Menu>
         <div className="content">
           <Content
             nkc={ nkc }
             clue={ clue }
             money={ money }
+            isPartyB={ this.props.user && this.props.user.isPartyB }
             selectedItem={ selectedItem }
             transactionRecordList={ transactionRecordList }
           />
