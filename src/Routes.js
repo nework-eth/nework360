@@ -1,3 +1,4 @@
+import cookie from 'cookie'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { browserHistory, IndexRoute, Route, Router } from 'react-router'
@@ -5,11 +6,14 @@ import { browserHistory, IndexRoute, Route, Router } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { combineReducers } from 'redux'
 
+import { setUser } from './components/NavMenu/actions'
+
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Container } from './pages/Container/Container'
 import { page as Homepage } from './pages/Homepage/Homepage'
+import { getUserById } from './service/editData'
 
-import store from './Store.js'
+import store from './Store'
 
 const createElement = (Component, props) => {
   return (
@@ -20,14 +24,14 @@ const createElement = (Component, props) => {
 }
 
 const getCounterPage = async (nextState, callback) => {
-  const { page, reducer, stateKey, initialState } = await import(/* webpackChunkName: "CounterPage" */'./pages/CounterPage.js')
+  const {page, reducer, stateKey, initialState} = await import(/* webpackChunkName: "CounterPage" */'./pages/CounterPage.js')
   const state = store.getState()
   store.reset(combineReducers({
     ...store._reducers,
     counter: reducer,
   }), {
     ...state,
-    [ stateKey ]: initialState,
+    [stateKey]: initialState,
   })
   callback(null, page)
 }
@@ -46,25 +50,17 @@ const getRegisterPage = async (nextState, callback) => {
   )
 }
 
-const getForgetPassword = async (nextState, callback) => {
+const getForgetPassword = async (nextState, callback) =>
   callback(
     null,
     (await import(/* webpackChunkName: "Register" */'./pages/Auth/ForgetPassword.js')).page,
   )
-}
 
 const getSearchPage = async (nextState, callback) =>
   callback(null, (await import(/* webpackChunkName: "Search" */'./pages/Homepage/SearchPage.js')).page)
 
 const getServiceList = async (nextState, callback) =>
   callback(null, (await import(/* webpackChunkName: "Search" */'./pages/Homepage/ServiceList.js')).page)
-
-// const getFirstClassPage = async (nextState, callback) => {
-//   callback(
-//     null,
-//     (await import(/* webpackChunkName: "FirstClass" */'./pages/Homepage/FirstClass.js')).view,
-//   )
-// }
 
 const getSelectCityPage = async (nextState, callback) => {
   callback(
@@ -87,7 +83,8 @@ const getSelectCityPage = async (nextState, callback) => {
 //   )
 // }
 
-// const getSkillPage = async (nextState, callback) => callback(null, (await import(/* webpackChunkName: "Skill" */'./pages/Skill/Skill.js')).page)
+// const getSkillPage = async (nextState, callback) => callback(null, (await import(/* webpackChunkName: "Skill"
+// */'./pages/Skill/Skill.js')).page)
 
 const getSkillPage = async (nextState, callback) =>
   callback(null, (await import(/* webpackChunkName: "Skill" */'./pages/Skill/Skill.js')).page)
@@ -139,6 +136,32 @@ const getClueCard = async (nextState, callback) => callback(
 
 const history = syncHistoryWithStore(browserHistory, store)
 
+history.listen((location, action) => {
+  // console.log('state', store.getState())
+})
+
+// function requireAuth (nextState, replaceState) {
+//   console.log(nextState)
+//   console.log(replaceState)
+// }
+
+const requireAuth = async (nextState, replaceState, callback) => {
+  console.log(store.getState())
+  if ((store.getState()).user) {
+    callback()
+    return
+  }
+  const userId = (cookie.parse(document.cookie)).userId
+  if (userId) {
+    const {data: {data, code}} = await getUserById({userId})
+    if (code === 200) {
+      setUser(data)
+      return
+    }
+  }
+  replaceState('/login')
+}
+
 const Routes = () => (
   <Router history={ history } createElement={ createElement }>
     <Route component={ AuthPage }>
@@ -153,7 +176,7 @@ const Routes = () => (
       <Route path="search" getComponent={ getSearchPage }/>
       <Route path="service-list" getComponent={ getServiceList }/>
     </Route>
-    <Route component={ Container }>
+    <Route component={ Container } onEnter={ requireAuth }>
       <Route path="/skill" getComponent={ getSkillPage }/>
       <Route path="/profile" getComponent={ getProfilePage }/>
       <Route path="/editData" getComponent={ getEditDataPage }/>

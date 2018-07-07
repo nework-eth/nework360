@@ -1,21 +1,22 @@
-import React from 'react'
-
 import { Select } from 'antd'
+import React from 'react'
 import './static/style/index.less'
 
 const Option = Select.Option
 
 function SelectCertificate ({
+                              countryOptions,
                               selectedCertification,
                               handleSelectedCertification,
                             }) {
   return (
     <div className="select-certificate-container">
-      <h2 style={ { marginTop: '50px' } }>您希望使用哪种身份证件进行认证？</h2>
-      <p style={ { marginTop: '10px', marginBottom: '50px' } }>只能添加由政府颁发的有效身份证件</p>
+      <h2 style={ {marginTop: '50px'} }>您希望使用哪种身份证件进行认证？</h2>
+      <p style={ {marginTop: '10px', marginBottom: '50px'} }>只能添加由政府颁发的有效身份证件</p>
       <p className="title">签发国家/地区</p>
       <Select value="中国" className="country-select">
         <Option value="中国">中国</Option>
+        { countryOptions.map(item => <Option key={ item }>item</Option>) }
       </Select>
       <p className="title">身份证件类型</p>
       <div className="icon-container">

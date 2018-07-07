@@ -125,50 +125,34 @@ class EditData extends Component {
   }
 
   getCityTree = async () => {
-    try {
-      // const { data: { code, data } } = await getCityTree()
-      // if (code !== 200) {
-      //   return message.error('网络连接失败，请检查网络后重试')
-      // }
-      const {data: {data}} = await getCityTree()
-      if (data) {
-        const tree = data
-        const countryList = Object.keys(tree)
-        const provinceList = Object.keys(tree['中国'])
-        const letterCityList = tree['中国']['北京'].map(item => item.chinese)
-        this.setState({
-          tree,
-          countryOptions: countryList,
-          provinceOptions: provinceList,
-          cityOptions: letterCityList,
-          cityData: tree[this.state.data.country][this.state.data.province],
-        })
-      }
-    } catch (e) {
-      console.log(e)
-      // message.error('网络连接失败，请检查网络后重试')
+    const {data: {data, code}} = await getCityTree()
+    if (code === 200) {
+      const tree = data
+      const countryList = Object.keys(tree)
+      const provinceList = Object.keys(tree['中国'])
+      const letterCityList = tree['中国']['北京'].map(item => item.chinese)
+      this.setState({
+        tree,
+        countryOptions: countryList,
+        provinceOptions: provinceList,
+        cityOptions: letterCityList,
+      })
     }
   }
 
   getUserById = async () => {
-    try {
-      // const { data: { data, code, desc } } = await getUserById({ userId: this.props.user.userId })
-      // if (code !== 200) {
-      //   return message.error(desc)
-      // }
-      const {data: {data}} = await getUserById({
-        userId: this.props.user.userId,
+    const {data: {data, code}} = await getUserById({
+      userId: this.props.user.userId,
+    })
+    if (code === 200) {
+      this.setState({
+        data: {...data, serviceTime: data.serviceTime.split(',')},
       })
-      if (data) {
-        this.setState({data: {...data, serviceTime: data.serviceTime.split(',')}})
-        if (!data.isPartyB) {
-          this.setState({
-            menuItemList: this.state.menuItemList.filter(item => item.key !== 'skill'),
-          })
-        }
+      if (!data.isPartyB) {
+        this.setState({
+          menuItemList: this.state.menuItemList.filter(item => item.key !== 'skill'),
+        })
       }
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
   }
 
@@ -184,8 +168,8 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const {data: {data}} = await getSkillByUserId({userId: this.props.user.userId})
-    if (data) {
+    const {data: {data, code}} = await getSkillByUserId({userId: this.props.user.userId})
+    if (code === 200) {
       const secondarySkillList = Object
         .values(data.skill)
         .reduce((pre, cur) => [...pre, ...cur])
@@ -273,10 +257,15 @@ class EditData extends Component {
     //   specAddr: this.state.data.specAddr,
     // })
     // const { data: { desc, code } } =
+    console.log('cityData', this.state.cityData, this.state.data.city)
+    if (!this.state.data.nickname) {
+      message.error('姓名不能为空')
+      return
+    }
     const {data: {code}} = await updateUser({
       userId: this.props.user.userId,
       nickname: this.state.data.nickname,
-      district: (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId),
+      district: this.state.data.city ? (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId) : '',
       serviceTime: this.state.data.serviceTime.join(','),
       description: this.state.data.description,
       location: this.state.data.location,
@@ -332,7 +321,7 @@ class EditData extends Component {
         userId: this.props.user.userId,
         [type]: this.state.data[type],
       })
-      if (code) {
+      if (code === 200) {
         message.success('更新资料成功')
         this.afterUpdate()
       }
@@ -342,11 +331,6 @@ class EditData extends Component {
   }
 
   getPhoneCode = async () => {
-    // const { data: { code, desc } } = await getPhoneCode({ phoneNumber: this.state.data.phoneNumber })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
     const {data: {code}} = await getPhoneCode({
       phoneNumber: this.state.data.phoneNumber,
     })
@@ -363,11 +347,6 @@ class EditData extends Component {
     })
   }
   getMailCode = async () => {
-    // const { data: { code, desc } } = await getMailCode({ email: this.state.data.email })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
     const {data: {code}} = await getMailCode({email: this.state.data.email})
     if (code === 200) {
       message.success('已发送验证码')
@@ -385,93 +364,48 @@ class EditData extends Component {
   handleMailCodeChange = e => this.setState({mailCode: e.target.value})
 
   verifyPhoneNumber = async () => {
-    // const { data: { code, desc } } = await verifyPhoneNumber({
-    //   phoneNumber: this.state.data.phoneNumber,
-    //   code: this.state.phoneCode,
-    // })
     const {data: code} = await verifyPhoneNumber({
       phoneNumber: this.state.data.phoneNumber,
       code: this.state.phoneCode,
     })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // } else {
     if (code !== 200) {
       return
     }
-
     const res = await updateUser({
       userId: this.state.data.userId,
       phoneNumber: this.state.data.phoneNumber,
     })
-
     if (res.data.code !== 200) {
       return
     }
-    //   if (code !== 200) {
-    //     message.error(desc)
-    //     return
-    //   }
-    // }
     message.success('验证手机号成功')
     this.handleModalCancel()
   }
   verifyEmail = async () => {
-    // const { data: { code, desc } } = await verifyEmail({
-    //   email: this.state.data.email,
-    //   code: this.state.mailCode,
-    // })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // } else {
-    //   const { data: { code, desc } } = await updateUser({
-    //     userId: this.props.user.userId,
-    //     email: this.state.data.email,
-    //   })
-    //   if (code !== 200) {
-    //     message.error(desc)
-    //     return
-    //   }
-    //   message.success('验证邮箱成功')
-    // }
-    // this.handleModalCancel()
     const {data: {code}} = await verifyEmail({
       email: this.state.data.email,
       code: this.state.mailCode,
     })
-
     if (code !== 200) {
       return
     }
-
     const res = await updateUser({
       userId: this.props.user.userId,
       email: this.state.data.email,
     })
-
     if (res.data.code !== 200) {
       return
     }
-
     message.success('验证邮箱成功')
+    this.afterUpdate()
+    this.handleModalCancel()
   }
 
   deleteSkill = (skillId, isTemp, deleteIndex) => async () => {
-    // const { data: { code, desc } } = await deleteSkill({
-    //   isTemp,
-    //   skillId,
-    // })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
     const {data: {code}} = await deleteSkill({
       isTemp,
       skillId,
     })
-
     if (code === 200) {
       this.setState({
         skillList: this.state.skillList.filter((item, index) => index !== deleteIndex),
@@ -482,16 +416,9 @@ class EditData extends Component {
 
   getServiceTree = async () => {
     try {
-      // const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.user.district })
-      // if (code !== 200) {
-      //   message.error(desc)
-      //   return
-      // }
-      const {data: {data}} = await getServiceTree({cityId: this.props.user.district})
-      if (data) {
+      const {data: {data, code}} = await getServiceTree({cityId: this.props.user.district})
+      if (code === 200) {
         const firstServiceList = data.map(item => item.serviceTypeName)
-        // console.log('firstLevelServiceList', firstServiceList)
-        // console.log('serviceTree', data)
         this.setState({
           firstServiceList,
           serviceTree: data,
@@ -531,7 +458,6 @@ class EditData extends Component {
   }
 
   addSkill = async () => {
-    // console.log(this.state.selectedSecondService)
     let promiseArr = []
     if (this.state.selectedSecondService.some(item => item >= 0)) {
       promiseArr.push(this.postSkill())
@@ -541,10 +467,6 @@ class EditData extends Component {
     }
     if (promiseArr.length === 1) {
       const [{code}] = await Promise.all(promiseArr)
-      // if (result.data.code !== 200) {
-      //   message.error(result.data.desc)
-      //   return
-      // }
       if (code === 200) {
         message.success('新增技能成功')
         this.getSkillByUserId()
@@ -554,11 +476,6 @@ class EditData extends Component {
     }
     if (promiseArr.length === 2) {
       const [{code: code1}, {code: code2}] = await Promise.all(promiseArr)
-      // if (!result1 || !result2) {
-      //   message.error('网络连接失败，请检查网络后重试')
-      //   this.hideSkillModal()
-      //   return
-      // }
       if (code1 === 200 && code2 === 200) {
         message.success('新增技能成功')
         this.hideSkillModal()
@@ -602,6 +519,20 @@ class EditData extends Component {
       data: {...this.state.data, location: value},
     })
   }
+
+  handleDescriptionInput = (e) => {
+    const str = e.target.value
+    if (str.length > 500) {
+      this.setState({
+        data: {...this.state.data, description: str.slice(0, 500)},
+      })
+      return
+    }
+    this.setState({
+      data: {...this.state.data, description: str},
+    })
+  }
+
   getLocationOptions = (keyword) => {
     this.mapApi.then(() => {
       // if (this.state.lastCity && this.state.lastCity === this.state.selectedCity) {
@@ -659,8 +590,8 @@ class EditData extends Component {
     //   message.error(desc)
     //   return
     // }
-    const {data: {data}} = await getUserById({userId: this.props.user.userId})
-    if (data) {
+    const {data: {data, code}} = await getUserById({userId: this.props.user.userId})
+    if (code === 200) {
       this.props.setUser(data)
       this.getUserById()
     }
@@ -735,6 +666,7 @@ class EditData extends Component {
             handleLocationChange={ this.handleLocationChange }
             handleShowAddSkillModal={ this.handleShowAddSkillModal }
             locationOptions={ locationOptions }
+            handleDescriptionInput={ this.handleDescriptionInput }
           />
         </div>
         <Modal
@@ -843,12 +775,16 @@ class EditData extends Component {
   }
 
   componentDidMount () {
-    this.getCityTree()
-    this.getUserById()
     this.getSkillByUserId()
     this.getServiceTree()
     this.afterUpdate()
     this.mapInit()
+    Promise.all([this.getCityTree(), this.getUserById()])
+           .then(() =>
+             this.setState({
+               cityData: this.state.tree[this.state.data.country][this.state.data.province],
+             }),
+           )
   }
 
 }

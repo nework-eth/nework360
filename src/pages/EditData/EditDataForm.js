@@ -5,6 +5,8 @@ import './static/style/index.less'
 
 const CheckboxGroup = Checkbox.Group
 
+const {TextArea} = Input
+
 const logoSrcList = [
   './images/宠物-icon.png',
   './images/健康-icon.png',
@@ -21,14 +23,14 @@ const logoSrcList = [
 ]
 
 const plainOptions = [
-  { label: '工作日（周一到周五）', value: 'w' },
-  { label: '周六', value: 'sat' },
-  { label: '周日', value: 'sun' },
+  {label: '工作日（周一到周五）', value: 'w'},
+  {label: '周六', value: 'sat'},
+  {label: '周日', value: 'sun'},
 ]
 
 const Option = Select.Option
 
-const SkillCardItem = ({ logoSrc, title, index, deleteSkill }) => (<div className="skill-card-item">
+const SkillCardItem = ({logoSrc, title, index, deleteSkill}) => (<div className="skill-card-item">
   <img
     src={ logoSrc }
     alt="icon"
@@ -86,6 +88,7 @@ function EditDataForm ({
                          handleShowAddSkillModal,
                          locationOptions,
                          handleLocationChange,
+                         handleDescriptionInput,
                        }) {
   switch (selectedItem) {
     case 'basic':
@@ -149,12 +152,13 @@ function EditDataForm ({
         </div>
         <div className="form-item-group">
           <div className="form-item">
-            <div className="label">省份/洲</div>
+            <div className="label">省份/州</div>
             <div className="content">
               <Select
                 className="select-item"
                 value={ province }
                 onChange={ handleProvinceChange }
+                disabled={ !country }
               >
                 {
                   provinceOptions.map(province =>
@@ -178,6 +182,7 @@ function EditDataForm ({
                 className="select-item"
                 value={ city }
                 onChange={ handleCityChange }
+                disabled={ !province }
               >
                 {
                   cityOptions.map(city =>
@@ -207,7 +212,7 @@ function EditDataForm ({
                   onChange={ handleLocationChange }
                   className="place-select"
                 >
-                  { locationOptions.map(({ name, address, district, adcode }) =>
+                  { locationOptions.map(({name, address, district, adcode}) =>
                     <Option
                       value={ `${district} ${address} ${name}` }
                       key={ `${adcode}${address}` }
@@ -251,7 +256,11 @@ function EditDataForm ({
           <div className="form-item">
             <div className="label">简介</div>
             <div className="content">
-              <Input type="textarea" value={ description } onChange={ handleInput('description') }/>
+              <TextArea
+                rows={ 8 }
+                value={ description }
+                onChange={ handleDescriptionInput }
+              />
             </div>
           </div>
           <div className="form-item">
@@ -280,7 +289,7 @@ function EditDataForm ({
           <img src="./images/headshot-mask.png" alt="头像遮罩" width={ 200 } height={ 200 } className="mask"/>
         </div>
         <div className="button-wrapper">
-          <div style={ { marginTop: '20px' } }>
+          <div style={ {marginTop: '20px'} }>
             <Upload
               action={ `${baseUrl}/qiniu/uploadUserFile` }
               onChange={ (info) => {
@@ -300,7 +309,7 @@ function EditDataForm ({
                 }
               } }
               showUploadList={ false }
-              data={ { userId, column: 'avatar' } }
+              data={ {userId, column: 'avatar'} }
             >
               <Button
                 style={ {
@@ -325,7 +334,7 @@ function EditDataForm ({
         <p className="skill-info">我们将根据你当前的技能，匹配合适你的工作。</p>
         <div className="skill-card-item-container">
           {
-            skillList.map(({ secondServiceTypeName, firstServiceTypeName, skillId }, index) => <SkillCardItem
+            skillList.map(({secondServiceTypeName, firstServiceTypeName, skillId}, index) => <SkillCardItem
               logoSrc={ logoSrcList.find(src => src.includes(firstServiceTypeName)) || './images/其他-icon.png' }
               title={ secondServiceTypeName }
               index={ index }
@@ -346,7 +355,7 @@ function EditDataForm ({
         <h2>信任与认证</h2>
         <img src="./images/identify-id.png" alt="身份认证" width="40" height="40" className="auth-icon"/>
         <p className="auth-title">身份证或护照</p>
-        <p>实名验证帮助用户之间建立信任，让每个人更安心地使用我们的服务；</p>
+        <p>实名验证帮助用户之间建立信任，让每个人更安心地使用我们的服务。</p>
         <p>请放心，其他顾客和服务商不会看到您的身份信息。</p>
         { user.checkStatus
           ? <div className="check-status">

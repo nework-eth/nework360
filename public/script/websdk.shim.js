@@ -5,7 +5,7 @@
     _c = _im.connection,
     _m = _im.message,
     _e = function () {},
-    https = window.location.protocol === 'https:'
+    https = location.protocol === 'https:'
 
   _im.Helper = _im.utils
   _im.Emoji = _im.EMOTIONS = {
@@ -47,7 +47,7 @@
       '[(W)]': 'ee_34.png',
       '[(D)]': 'ee_35.png',
     },
-  }
+  };
   _im.Helper.EmotionPicData = (function () {
     var ems = {}
 
@@ -251,7 +251,7 @@
     var isemotion = false
     for (var i = 0; i < emotions.length; i++) {
       var tmsg = receiveMsg.substring(0, receiveMsg.indexOf(emotions[i])),
-        existEmotion = window.Easemob.im.EMOTIONS.map[emotions[i]]
+        existEmotion = Easemob.im.EMOTIONS.map[emotions[i]]
 
       if (tmsg) {
         emessage.push({
@@ -266,7 +266,7 @@
         })
         continue
       }
-      var emotion = window.Easemob.im.EMOTIONS.map ? window.Easemob.im.EMOTIONS.path + existEmotion : null
+      var emotion = Easemob.im.EMOTIONS.map ? Easemob.im.EMOTIONS.path + existEmotion : null
 
       if (emotion) {
         isemotion = true
@@ -306,4 +306,4 @@
     }
   }
 
-}())
+}());

@@ -162,30 +162,26 @@ class SelectCity extends Component {
   }
 
   getCityTree = async () => {
-    try {
-      const {data: {code, data}} = await getCityTree()
-      if (code !== 200) {
-        return message.error('网络连接失败，请检查网络后重试')
-      }
-      const tree = data
-      console.log(tree)
-      const countryList = Object.keys(tree)
-      const provinceList = Object.keys(tree['中国'])
-      const letterCityList = tree['中国']['北京'].map(item => item.chinese)
-      this.setState({
-        tree,
-        countryOptions: countryList,
-        provinceOptions: provinceList,
-        cityOptions: letterCityList,
-        // cityOptions: letterCityList,
-        // selectedCity: letterCityList[0]
-      })
-      // this.props.setCityName('北京')
-      // this.props.setCityId(110)
-      // this.props.setCountryId(1)
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+    const {data: {code, data}} = await getCityTree()
+    if (code !== 200) {
+      return message.error('网络连接失败，请检查网络后重试')
     }
+    const tree = data
+    console.log(tree)
+    const countryList = Object.keys(tree)
+    const provinceList = Object.keys(tree['中国'])
+    const letterCityList = tree['中国']['北京'].map(item => item.chinese)
+    this.setState({
+      tree,
+      countryOptions: countryList,
+      provinceOptions: provinceList,
+      cityOptions: letterCityList,
+      // cityOptions: letterCityList,
+      // selectedCity: letterCityList[0]
+    })
+    // this.props.setCityName('北京')
+    // this.props.setCityId(110)
+    // this.props.setCountryId(1)
   }
   handleCountryChange = (value) => {
     const provinceOptions = Object.keys(this.state.tree[value])
@@ -246,9 +242,6 @@ class SelectCity extends Component {
     this.props.setCityName(cityName)
     this.props.setCityId(cityId)
     browserHistory.push('/')
-  }
-  scrollToLetter = (letter) => () => {
-    browserHistory.push(`/select-city#letter${letter.toUpperCase()}`)
   }
 
   render () {

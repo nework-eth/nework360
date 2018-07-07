@@ -123,21 +123,24 @@ class NeedOrderDetail extends Component {
     // })
     // conn.close()
     // conn.close()
-    var id = conn.getUniqueId()                 // 生成本地消息id
-    var msg = new WebIM.message('txt', id)      // 创建文本消息
-    msg.set({
-      msg: 'message content',                  // 消息内容
-      to: 'username',                          // 接收消息对象（用户id）
-      roomType: false,
-      success: function (id, serverMsgId) {
-        console.log('send private text Success')
-      },
-      fail: function (e) {
-        console.log('Send private text error')
-      },
-    })
-    msg.body.chatType = 'singleChat'
-    conn.send(msg.body)
+    // 生成本地消息id
+    // setTimeout(()=>{
+    //   var id = conn.getUniqueId()
+    //   var msg = new WebIM.message('txt', id)      // 创建文本消息
+    //   msg.set({
+    //     msg: 'this is a test',                  // 消息内容
+    //     to: '21',                          // 接收消息对象（用户id）
+    //     roomType: false,
+    //     success: function (id, serverMsgId) {
+    //       console.log('send private text Success')
+    //     },
+    //     fail: function (e) {
+    //       console.log('Send private text error')
+    //     },
+    //   })
+    //   msg.body.chatType = 'singleChat'
+    //   conn.send(msg.body)
+    // }, 1000)
   }
   pay = async () => {
     const {data: {data, code}} = await getPayInfo({channel: 'wx_pub_qr', amount: 200, needsId: '222222'})
@@ -209,6 +212,7 @@ class NeedOrderDetail extends Component {
 
   componentDidMount () {
     this.getNeedOrderDetail()
+    this.IMInit()
   }
 
 }

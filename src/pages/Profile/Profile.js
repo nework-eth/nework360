@@ -1,35 +1,13 @@
 import { Button, Carousel, Rate } from 'antd'
-import moment from 'moment'
 import 'moment/locale/zh-cn'
 import React, { Component } from 'react'
-import { DayPickerRangeController } from 'react-dates'
 import 'react-dates/initialize'
 import 'react-dates/lib/css/_datepicker.css'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { getSkillByUserId, getUserById } from '../../service/editData'
+import { getRelativeTime } from '../../utils'
 import './static/style/index.less'
-
-// const CompanyItem = ({
-//                        companyName,
-//                        blockChainNumber,
-//                        introduce,
-//                        logoSrc,
-//                      }) => (
-//   <div className="company-card">
-//     <img
-//       src="./images/company-logo-default.png"
-//       alt="公司头像"
-//       width="40"
-//       height="40"
-//     />
-//     <p className="company-name">{ companyName }</p>
-//     <p className="block-chain-number">区块链编号：{ blockChainNumber }</p>
-//     <p className="company-introduce">
-//       { introduce }
-//     </p>
-//   </div>
-// )
 
 const logoSrcList = [
   './images/宠物-icon.png',
@@ -46,7 +24,7 @@ const logoSrcList = [
   './images/运动健身-icon.png',
 ]
 
-const SkillItem = ({ logoSrc, title, index }) => (<div className="skill-card">
+const SkillItem = ({logoSrc, title, index}) => (<div className="skill-card">
   <img
     src={ logoSrc }
     alt="icon"
@@ -72,46 +50,39 @@ class Profile extends Component {
     skillList: [],
   }
   getUserById = async () => {
-    // try {
-    const { data: { data } } = await getUserById({ userId: this.props.user.userId })
-    this.setState({ data })
-    // } catch (e) {
-    //   message.error('网络连接失败，请检查网络后重试')
-    // }
+    const {data: {data, code}} = await getUserById({userId: this.props.user.userId})
+    if (code === 200) {
+      this.setState({data})
+    }
   }
   getSkillByUserId = async () => {
-    // try {
-    // const { data: { code, data, desc } } = await getSkillByUserId({ userId: this.props.user.userId })
-    // if (code !== 200) {
-    //   message.error(desc)
-    //   return
-    // }
-    const { data: { data } } = await getSkillByUserId({ userId: this.props.user.userId })
-    const secondarySkillList = Object.values(data).reduce((previousValue, currentValue) => [ ...previousValue, ...currentValue ])
-    this.setState({
-      skillList: secondarySkillList,
-    })
-    // } catch (e) {
-    //   message.error('网络连接失败，请检查网络后重试')
-    // }
-  }
-
-  constructor (props) {
-    super(props)
-    moment.locale('fr')
-    setTimeout(() => {
-      console.log(moment.locale())
-    })
-    moment.weekdays()
+    const {data: {data, code}} = await getSkillByUserId({userId: this.props.user.userId})
+    if (code === 200) {
+      const secondarySkillList = Object.values(data)
+                                       .reduce((previousValue, currentValue) => [...previousValue, ...currentValue])
+      this.setState({
+        skillList: secondarySkillList,
+      })
+    }
   }
 
   render () {
-    const { data: { avatar, nickname, isPartyB } } = this.state
+    const {
+      data: {
+        email,
+        avatar,
+        nickname,
+        isPartyB,
+        checkStatus,
+        phoneNumber,
+        createTime,
+      },
+    } = this.state
     return (
       <div className="profile-container">
         <main>
-          <img src={ avatar } alt="头像" width="100" height="100" className="avatar"/>
-          <h2>您好，我是{ this.props.user.nickname }</h2>
+          <img src={ avatar || './images/headshot-default.png' } alt="头像" width="100" height="100" className="avatar"/>
+          <h2>您好，我是{ nickname }</h2>
           <div className="info">
             <p className="position">北京 · 中国</p>
             <Rate
@@ -130,8 +101,8 @@ class Profile extends Component {
           <a href="">查看更多介绍</a>
           <div className="information-container">
             <div><i className="iconfont icon-hire"/>被雇佣128次</div>
-            <div><i className="iconfont icon-identified"/>实名认证</div>
-            <div><i className="iconfont icon-joined-time"/>已加入</div>
+            { checkStatus === 2 && <div><i className="iconfont icon-identified"/>实名认证</div> }
+            <div><i className="iconfont icon-joined-time"/>已加入{ getRelativeTime(createTime) }</div>
             { this.props.user.phoneNumber && <div><i className="iconfont icon-identified-phone"/>手机认证</div> }
             { this.props.user.email && <div><i className="iconfont icon-nav-message"/>邮箱认证</div> }
           </div>
@@ -144,7 +115,7 @@ class Profile extends Component {
               arrows={ true }
             >
               {
-                this.state.skillList.map(({ secondServiceTypeName, firstServiceTypeName }, index) => <SkillItem
+                this.state.skillList.map(({secondServiceTypeName, firstServiceTypeName}, index) => <SkillItem
                   logoSrc={ logoSrcList.find(src => src.includes(firstServiceTypeName)) || './images/其他-icon.png' }
                   title={ secondServiceTypeName }
                   index={ index }
@@ -158,21 +129,27 @@ class Profile extends Component {
             <div>
               <h3 className="location">营业时间与地点</h3>
               <div className="time-location-container">
-                <DayPickerRangeController
-                  numberOfMonths={ 1 }
-                  hideKeyboardShortcutsPanel
-                  monthFormat="YYYY[年]M[月]"
-                  date={ moment() }
-                />
+                { /*<DayPickerRangeController*/ }
+                { /*numberOfMonths={ 1 }*/ }
+                { /*hideKeyboardShortcutsPanel*/ }
+                { /*monthFormat="YYYY[年]M[月]"*/ }
+                { /*date={ moment() }*/ }
+                { /*/>*/ }
                 <div id="mapContainer"/>
               </div>
             </div>
           }
         </main>
         <footer>
-          <Button type="primary">
-            <Link to="/editData" style={ { textDecoration: 'none' } }>编辑</Link>
-          </Button>
+          {
+            this.state.data.isPartyB
+              ? this.props.user.userId === this.state.data.userId
+              ? <Button type="primary"><Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link></Button>
+              : <Button type="primary"><Link to="/" style={ {textDecoration: 'none'} }>联系</Link></Button>
+              : this.props.user.userId === this.state.data.userId
+              ? <Button type="primary"><Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link></Button>
+              : ''
+          }
         </footer>
       </div>
     )

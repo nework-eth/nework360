@@ -23,21 +23,6 @@ function SecondaryCardItem ({
   )
 }
 
-const secondaryList = [
-  '保洁',
-  '草坪维护及保养',
-  '室内设计',
-  '勤杂工',
-  '屋顶维修及保养',
-  '电视安装',
-  '总承包服务',
-  '景观美化',
-  '室内粉刷',
-  '地毯清洁',
-  '压力清洗',
-  '其他',
-]
-
 function SelectType ({
                        selectedType,
                        secondaryTypeList,
@@ -45,15 +30,16 @@ function SelectType ({
                        secondServiceList,
                        secondaryInputType,
                        handleSecondaryInputType,
+                       secondaryInputTypeTooLong,
                      }) {
   return (
     <div>
-      <h2 style={ { marginTop: '50px', marginBottom: '50px' } }>让我们缩小一下范围？</h2>
+      <h2 style={ {marginTop: '50px', marginBottom: '50px'} }>让我们缩小一下范围？</h2>
       <div className="secondary-type-container">
         <h3>{ selectedType }</h3>
         <div className="secondary-type-select-container">
           {
-            secondServiceList.map(({ serviceTypeName, serviceTypeId }) =>
+            secondServiceList.map(({serviceTypeName, serviceTypeId}) =>
               <SecondaryCardItem
                 content={ serviceTypeName }
                 key={ serviceTypeId }
@@ -63,7 +49,7 @@ function SelectType ({
             )
           }
         </div>
-        <div style={ selectedType === '其他' || secondaryTypeList.includes(-1) ? {} : { display: 'none' } }>
+        <div style={ selectedType === '其他' || secondaryTypeList.includes(-1) ? {} : {display: 'none'} }>
           <p>
             请填写具体的工作技能
           </p>
@@ -72,6 +58,7 @@ function SelectType ({
             placeholder="工作技能"
             onChange={ handleSecondaryInputType }
           />
+          { secondaryInputTypeTooLong && <div className="error-tip">无法继续输入</div> }
         </div>
       </div>
     </div>

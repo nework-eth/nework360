@@ -37,7 +37,7 @@ const mapDispatch = (dispatch) => bindActionCreators({
 class SkillPage extends Component {
   state = {
     step: 0,
-    selectedCountry: undefined,
+    selectedCountry: '中国',
     countryOptions: [],
     selectedProvince: undefined,
     provinceOptions: [],
@@ -70,6 +70,7 @@ class SkillPage extends Component {
     longitude: '',
     specAddrTooLong: false,
     inputTypeTooLong: false,
+    secondInputTypeTooLong: false,
     description: '',
   }
 
@@ -91,7 +92,6 @@ class SkillPage extends Component {
           specAddr={ this.state.specAddr }
           handleSpecAddrChange={ this.handleSpecAddrChange }
           locationOptions={ this.state.locationOptions }
-          handleLocationSelect={ this.handleLocationSelect }
           specAddrTooLong={ this.state.specAddrTooLong }
         />
       case 1:
@@ -111,6 +111,7 @@ class SkillPage extends Component {
           handleSecondaryTypeClick={ this.handleSecondaryTypeClick }
           secondaryInputType={ this.state.secondaryInputType }
           handleSecondaryInputType={ this.handleSecondaryInputType }
+          secondaryInputTypeTooLong={ this.secondaryInputTypeTooLong }
         />
       case 3:
         return <InputWorkTime
@@ -136,6 +137,7 @@ class SkillPage extends Component {
         return <PartlyComplete/>
       case 7:
         return <SelectCertificate
+          countryOptions={ this.state.countryOptions }
           selectedCertification={ this.state.selectedCertification }
           handleSelectedCertification={ this.handleSelectedCertification }
         />
@@ -162,18 +164,8 @@ class SkillPage extends Component {
   handleButtonClick = async () => {
     switch (this.state.step) {
       case 0:
-        // if (this.state.location && this.state.specAddr) {
-        // if (!this.state.latitude) {
-        //   /* eslint-disable no-undef */
-        // }
-        // if (!this.state.latitude) {
         this.geoCoder([this.goNextStep, this.getServiceList])
         return
-      // }
-      // this.geoCoder()
-      // this.goNextStep()
-      // this.getServiceList()
-      // return
       case 1:
         if (this.state.selectedType) {
           this.goNextStep()
@@ -446,8 +438,19 @@ class SkillPage extends Component {
   }
 
   handleSecondaryInputType = (e) => {
+    let str = e.target.value
+    if (str.length > 10) {
+      str = str.slice(0, 10)
+      this.setState({
+        secondaryInputTypeTooLong: true,
+      })
+    } else if (this.state.secondaryInputTypeTooLong) {
+      this.setState({
+        secondaryInputTypeTooLong: false,
+      })
+    }
     this.setState({
-      secondaryInputType: e.target.value,
+      secondaryInputType: str,
     })
   }
 
@@ -562,6 +565,7 @@ class SkillPage extends Component {
   //     longitude: location.lng,
   //   })
   // }
+
   geoCoder = (cbArr) => {
     this.mapApi.then(() => {
       /* eslint-disable no-undef */
@@ -601,6 +605,7 @@ class SkillPage extends Component {
       checkStatus: 1,
     })
   }
+
 
   render () {
     const {
@@ -645,14 +650,14 @@ class SkillPage extends Component {
         <footer>
           <p
             onClick={ this.handleGoBack }
-            style={ step === 0 || step === 9 ? {visibility: 'hidden'} : {} }
+            style={ step === 0 || step === 5 || step === 9 ? {visibility: 'hidden'} : {} }
           >
             <i className="iconfont icon-return"/>
             返回
           </p>
           <Button type="primary" onClick={ this.handleButtonClick }
             disabled={ step === 0
-              ? !selectedCountry || !selectedProvince || !selectedCity || !location || !specAddr
+              ? !selectedCountry || !selectedProvince || !selectedCity || !location
               : step === 1
                 ? (!selectedType || (selectedType === '其他' && !inputType))
                 : step === 2
