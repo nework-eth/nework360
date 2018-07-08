@@ -1,5 +1,6 @@
 import { Button, Rate } from 'antd'
 import React from 'react'
+import { getRate } from '../../utils'
 
 const classNameSpace = 'service-list-item'
 
@@ -53,7 +54,7 @@ function ServiceListItem ({
             { score && <Rate
               allowHalf
               disabled
-              defaultValue={ score }
+              defaultValue={ getRate(score) }
               character={ <i className="iconfont icon-rate-star-full"/> }
             /> }
             { score && <p className="rate">{ score }</p> }

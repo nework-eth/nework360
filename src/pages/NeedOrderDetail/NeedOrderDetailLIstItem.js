@@ -1,5 +1,6 @@
 import { Button, Rate } from 'antd'
 import React from 'react'
+import { getRate } from '../../utils'
 
 function NeedOrderDetailLIstItem ({
                                     pay,
@@ -33,7 +34,7 @@ function NeedOrderDetailLIstItem ({
         <Rate
           allowHalf
           disabled
-          defaultValue={ score }
+          defaultValue={ getRate(score) }
           character={ <i className="iconfont icon-rate-star-full"/> }
         />
         <p className="rate">{ score }</p>

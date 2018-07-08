@@ -1,6 +1,6 @@
 import { Rate } from 'antd'
 import React from 'react'
-import { getRelativeTime } from '../../utils'
+import { getRate, getRelativeTime } from '../../utils'
 import './static/style/homepage.less'
 
 // class ServicePersonCard extends Component {
@@ -65,7 +65,7 @@ function ServicePersonCard ({
           <Rate
             allowHalf
             disabled
-            defaultValue={ evaluateScore }
+            defaultValue={ getRate(evaluateScore) }
             character={ <i className="iconfont icon-rate-star-full"/> }
           />
           <p className="rate">{ evaluateScore }</p>

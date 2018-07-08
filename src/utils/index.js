@@ -19,3 +19,5 @@ export const getRelativeTime = (createTime) => {
   }
 }
 
+export const getRate = (originRate) => (Math.floor(originRate * 10 / 5)) * 0.5
+

@@ -2,6 +2,7 @@ import { Button, message, Rate } from 'antd'
 import React, { Component } from 'react'
 import { QuoteModal } from '../../components/QuoteModal/QuoteModal'
 import { createQuote, getNeedDetail } from '../../service/needDetail/index'
+import { getRate } from '../../utils'
 import { view as NeedDetailItem } from './NeedDetailItem'
 import './static/style/index.less'
 
@@ -90,10 +91,10 @@ class NeedDetail extends Component {
                 <Rate
                   allowHalf
                   disabled
-                  value={ +score }
+                  defaultValue={ getRate(score) }
                   character={ <i className="iconfont icon-rate-star-full"/> }
                 />
-                <p className="rate">{ +score }</p>
+                <p className="rate">{ score }</p>
                 <p className="evaluation">（{ +scoreCount }条评价）</p>
               </div>
             </div>

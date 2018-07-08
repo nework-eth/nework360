@@ -6,7 +6,7 @@ import 'react-dates/lib/css/_datepicker.css'
 import { connect } from 'react-redux'
 import { Link } from 'react-router'
 import { getSkillByUserId, getUserById } from '../../service/editData'
-import { getRelativeTime } from '../../utils'
+import { getRate, getRelativeTime } from '../../utils'
 import './static/style/index.less'
 
 const logoSrcList = [
@@ -72,8 +72,6 @@ class Profile extends Component {
   render () {
     const {
       data: {
-        email,
-        score,
         avatar,
         evaluate: {
           ave,
@@ -84,7 +82,6 @@ class Profile extends Component {
         hireTimes,
         createTime,
         checkStatus,
-        phoneNumber,
       },
     } = this.state
     return (
@@ -100,7 +97,7 @@ class Profile extends Component {
               value={ ave }
               character={ <i className="iconfont icon-rate-star-full"/> }
             />
-            <p className="rate">{ ave }</p>
+            <p className="rate">{ getRate(ave) }</p>
             <p className="evaluation">({ count }条评价)</p>
           </div>
           <p className="introduce">
@@ -181,11 +178,6 @@ class Profile extends Component {
     }
 
   }
-
-  // getJoinTime = () => {
-  //   const currentTime = Date.now()
-  //   console.log(currentTime - new Date(this.props.user.createTime))
-  // }
 }
 
 export { Profile as page }

@@ -4,6 +4,7 @@ import React, { Component } from 'react'
 import { view as Footer } from '../../components/Footer/index.js'
 import { IMModal } from '../../components/IMModal/IMModal'
 import { cancelOrder, getNeedOrderDetail, getPayInfo, selectPartyB } from '../../service/needOrderDetail/index'
+import { getRate } from '../../utils'
 import { view as NeedOrderDetailListItem } from './NeedOrderDetailLIstItem'
 import './static/style/index.less'
 
@@ -187,7 +188,7 @@ class NeedOrderDetail extends Component {
               <NeedOrderDetailListItem
                 pay={ this.pay }
                 key={ quoteId }
-                score={ ave }
+                score={ getRate(ave) }
                 amount={ amount / 100 }
                 nickname={ nickName }
                 avatarSrc={ photo }

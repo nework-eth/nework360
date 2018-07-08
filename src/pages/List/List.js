@@ -75,16 +75,25 @@ class List extends Component {
     }
   }
   deleteServiceOrder = (quoteId) => async () => {
-    const {data: {data, code}} = await deleteServiceOrder({quoteId})
-    console.log(code)
+    const {data: {code}} = await deleteServiceOrder({quoteId})
+    if (code === 200) {
+      message.success('删除服务订单成功')
+      this.getServiceOrderList()
+    }
   }
   withdrawServiceOrder = (quoteId) => async () => {
-    const {data: {data, code}} = await withdrawServiceOrder({quoteId})
-    console.log(code)
+    const {data: {code}} = await withdrawServiceOrder({quoteId})
+    if (code === 200) {
+      message.success('撤销服务订单成功')
+      this.getServiceOrderList()
+    }
   }
   initiatePayment = (quoteId, amount) => async () => {
-    const {data: {data, code}} = await initiatePayment({quoteId, amount})
-    console.log(code)
+    const {data: {code}} = await initiatePayment({quoteId, amount})
+    if (code === 200) {
+      message.success('发起收款成功')
+      this.getServiceOrderList()
+    }
   }
   jumpToNeedDetail = (needsId) => () => browserHistory.push({pathname: '/need-detail', state: {needsId}})
   showComplaintModal = () => this.setState({complaintModalVisible: true})
