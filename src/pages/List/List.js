@@ -130,6 +130,7 @@ class List extends Component {
     }
     this.handleInitiatePaymentModalCancel()
   }
+  handleChangeDemand = (needsId) => () => browserHistory.push({pathname: '/post-demand', state: {needsId}})
 
   render () {
     const {
@@ -180,6 +181,7 @@ class List extends Component {
                   selectedQuote={ quotes.find(item => item.quoteId === quoteId) }
                   goNeedOrderDetail={ this.goNeedOrderDetail }
                   showComplaintModal={ this.showComplaintModal }
+                  handleChangeDemand={ this.handleChangeDemand(needsId) }
                 />)
               : serviceOrderList.map(({
                                         user: {
@@ -252,6 +254,11 @@ class List extends Component {
   componentDidMount () {
     this.getNeedOrderList()
     this.getServiceOrderList()
+    if (this.props.location.state && this.props.location.state.listType) {
+      this.setState({
+        listType: this.props.location.state.listType,
+      })
+    }
   }
 
 }

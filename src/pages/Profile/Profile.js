@@ -47,16 +47,17 @@ const mapState = (state) => ({
 class Profile extends Component {
   state = {
     data: {},
+    userId: {},
     skillList: [],
   }
   getUserById = async () => {
-    const {data: {data, code}} = await getUserById({userId: this.props.user.userId})
+    const {data: {data, code}} = await getUserById({userId: this.state.userId})
     if (code === 200) {
       this.setState({data})
     }
   }
   getSkillByUserId = async () => {
-    const {data: {data, code}} = await getSkillByUserId({userId: this.props.user.userId})
+    const {data: {data, code}} = await getSkillByUserId({userId: this.state.userId})
     if (code === 200) {
       const secondarySkillList = Object.values(data)
                                        .reduce((previousValue, currentValue) => [...previousValue, ...currentValue])
@@ -73,9 +74,10 @@ class Profile extends Component {
         avatar,
         nickname,
         isPartyB,
+        hireTimes,
+        createTime,
         checkStatus,
         phoneNumber,
-        createTime,
       },
     } = this.state
     return (
@@ -95,12 +97,11 @@ class Profile extends Component {
             <p className="evaluation">(12条评价)</p>
           </div>
           <p className="introduce">
-            { /*“ONE”#一宿设计#的团队主要来自上海。我们认同这座城市所赋予的精神及社会价值,公平、活力、创造、包容。虽然可能在不同地区的人们对这座城市有不同的解读,但我们希望您通过这样一个浓缩的空间,亲身体验一下这座城市的魅力,而不是别人口中的上海。上海不是一座围城,她是海,纳百川。这座城市的生命力从浦西一直延伸到浦东但我们希望您通过这样一个浓缩的空间,亲身体验一下这座城市的魅力,而不是别人口中的上海。上海不是一座围城,她是海,纳百川。这座城市的生命力从浦西一直延伸到浦东*/ }
             { this.props.user.description }
           </p>
           <a href="">查看更多介绍</a>
           <div className="information-container">
-            <div><i className="iconfont icon-hire"/>被雇佣128次</div>
+            <div><i className="iconfont icon-hire"/>被雇佣 { hireTimes } 次</div>
             { checkStatus === 2 && <div><i className="iconfont icon-identified"/>实名认证</div> }
             <div><i className="iconfont icon-joined-time"/>已加入{ getRelativeTime(createTime) }</div>
             { this.props.user.phoneNumber && <div><i className="iconfont icon-identified-phone"/>手机认证</div> }
@@ -145,7 +146,7 @@ class Profile extends Component {
             this.state.data.isPartyB
               ? this.props.user.userId === this.state.data.userId
               ? <Button type="primary"><Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link></Button>
-              : <Button type="primary"><Link to="/" style={ {textDecoration: 'none'} }>联系</Link></Button>
+              : <Button type="primary"><Link to="/postDemand" style={ {textDecoration: 'none'} }>联系</Link></Button>
               : this.props.user.userId === this.state.data.userId
               ? <Button type="primary"><Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link></Button>
               : ''
@@ -160,8 +161,18 @@ class Profile extends Component {
     // const map = new AMap.Map('mapContainer')
     /* eslint-disable no-undef */
     // console.log('AMap++++', AMap)
-    this.getUserById()
-    this.getSkillByUserId()
+    if (this.props.location.state && this.props.location.state.userId) {
+      this.setState({
+        userId: this.props.location.state.userId,
+      }, () => {
+        this.getUserById()
+        this.getSkillByUserId()
+      })
+    } else {
+      this.getUserById()
+      this.getSkillByUserId()
+    }
+
   }
 
   // getJoinTime = () => {

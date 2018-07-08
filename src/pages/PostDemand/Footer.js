@@ -7,6 +7,7 @@ function Footer ({
                    pageIndex,
                    goLastPage,
                    handleGoNextButtonClick,
+                   handleCompleteButtonClick,
                  }) {
   return (<div className="post-demand-footer-container">
     <p onClick={ goLastPage }>
@@ -18,7 +19,7 @@ function Footer ({
       }
     </p>
     { complete
-      ? <Button type="primary">
+      ? <Button type="primary" onClick={ handleCompleteButtonClick }>
         完成
       </Button>
       : <Button

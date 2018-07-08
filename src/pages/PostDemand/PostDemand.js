@@ -1,6 +1,8 @@
 import { message, Progress } from 'antd'
 import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
 import { createDemand, getMatchResult, getTemplate } from '../../service/demand'
+import { getNeedDetail } from '../../service/needDetail'
 import { view as Footer } from './Footer'
 import { MatchResultCardItem } from './MatchResultCardItem'
 import './static/style/index.less'
@@ -65,9 +67,11 @@ class PostDemand extends Component {
   state = {
     data: [[]],
     pages: [],
+    serviceId: '',
     pageIndex: 0,
     originData: [],
     templateId: '',
+    serviceName: '',
     progressStep: 0,
     progressPercent: 0,
     locationOptions: [],
@@ -76,7 +80,7 @@ class PostDemand extends Component {
   }
 
   getTemplate = async () => {
-    const {data: {data, code}} = await getTemplate({serviceId: 22})
+    const {data: {data, code}} = await getTemplate({serviceId: this.state.serviceId})
     if (code === 200) {
       this.setState({
         data: generateResult(data.pages),
@@ -187,8 +191,6 @@ class PostDemand extends Component {
   }
 
   handleLocationChange = ({pageNum, index}) => (value) => {
-    // console.log(value)
-    // console.log(pageNum, index)
     this.getLocationOptions(value)
     this.setState(({data}) => {
       const temp = JSON.parse(JSON.stringify(data))
@@ -196,6 +198,8 @@ class PostDemand extends Component {
       return {data: temp}
     })
   }
+
+  jumpToProfile = (userId) => () => browserHistory.push({pathname: '/profile', state: {userId}})
 
   handleSpecAddressChange = ({pageNum, index}) => value => {
     this.setState(({data}) => {
@@ -211,11 +215,23 @@ class PostDemand extends Component {
     })
   }
 
+  handleCompleteButtonClick = () => {
+    browserHistory.push({pathname: '/list', state: {listType: 'need'}})
+  }
+
+  getNeedDetail = async () => {
+    const {data: {data, code}} = await getNeedDetail
+    if (code === 200) {
+      console.log(data)
+    }
+  }
+
   render () {
     const {
       data,
       pages,
       pageIndex,
+      serviceName,
       locationOptions,
       progressPercent,
       showMatchResult,
@@ -252,13 +268,15 @@ class PostDemand extends Component {
             }
           </div>
           : <div className="match-result-container">
-            <h2>已为您匹配到{ matchResultList.length }位{ }服务人员请耐心等待报价...</h2>
+            <h2>已为您匹配到{ matchResultList.length }位{ serviceName }服务人员请耐心等待报价...</h2>
             <div className="match-result-card-item-wrapper">
               {
                 matchResultList.map(({userBasicInfoVO}) =>
                   <MatchResultCardItem
+                    key={ userBasicInfoVO.userId }
                     avatarSrc={ userBasicInfoVO.avatar }
                     nickname={ userBasicInfoVO.nickname }
+                    handleClick={ this.jumpToProfile(userBasicInfoVO.userId) }
                   />,
                 )
               }
@@ -272,13 +290,22 @@ class PostDemand extends Component {
         pageIndex={ pageIndex }
         goLastPage={ this.goLastPage }
         handleGoNextButtonClick={ this.handleGoNextButtonClick }
+        handleCompleteButtonClick={ this.handleCompleteButtonClick }
       />
     </div>)
   }
 
   componentDidMount () {
-    this.getTemplate()
-    this.mapInit()
+    this.setState({
+      serviceId: this.props.location.state.serviceId,
+      serviceName: this.props.location.state.serviceName,
+    }, () => {
+      this.getTemplate()
+      this.mapInit()
+      if (this.props.location.state.needsId) {
+        this.getNeedDetail()
+      }
+    })
   }
 
 }

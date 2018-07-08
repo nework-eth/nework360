@@ -16,6 +16,7 @@ function NeedListItem ({
                          goNeedDetail,
                          selectedQuote,
                          goNeedOrderDetail,
+                         handleChangeDemand,
                          showComplaintModal,
                        }) {
   return (
@@ -92,7 +93,7 @@ function NeedListItem ({
         </div>
         <div className="need-list-item-operate">
           {
-            statusMap[status] === '等待报价' && <div><span>修改需求</span></div>
+            statusMap[status] === '等待报价' && <div><span onClick={ handleChangeDemand }>修改需求</span></div>
           }
           {
             statusMap[status] === '等待选择' && <div><span onClick={ goNeedDetail }>查看详情</span></div>

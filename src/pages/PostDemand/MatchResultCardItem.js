@@ -1,7 +1,7 @@
 import React from 'react'
 
-function MatchResultCardItem ({nickname, avatarSrc}) {
-  return <div className="match-result-card-item">
+function MatchResultCardItem ({nickname, avatarSrc, handleClick}) {
+  return <div className="match-result-card-item" onClick={ handleClick }>
     <img
       src={ avatarSrc }
       alt="头像"

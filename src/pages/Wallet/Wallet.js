@@ -1,7 +1,7 @@
 import { Menu, Table } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { getUserAccount, getUserTransactionRecord } from '../../service/wallet'
+import { getUserAccount, getUserClueCardRecord, getUserTransactionRecord } from '../../service/wallet'
 import './static/style/index.less'
 
 const MenuItem = Menu.Item
@@ -12,6 +12,7 @@ function Content ({
                     money,
                     isPartyB,
                     selectedItem,
+                    clueCardRecordList,
                     transactionRecordList,
                   }) {
   if (selectedItem === 'balance') {
@@ -141,26 +142,51 @@ function Content ({
     const columns = [
       {
         title: '订单号',
-        dataIndex: 'recordOrderId',
-        key: 'recordOrderId',
+        dataIndex: 'clueOrderId',
+        key: 'clueOrderId',
         width: 120,
       },
       {
         title: '张数',
-        dataIndex: 'amount',
-        key: 'amount',
+        dataIndex: 'count',
+        key: 'count',
         width: 130,
+        render (value, record) {
+          switch (record.type) {
+            case 'recharge':
+              return `+ ${value} 张`
+            case 'pay':
+              return `- ${value} 张`
+            case 'back':
+              return `+ ${value} 张`
+            default:
+              return ''
+          }
+
+        },
       },
       {
         title: '交易类型',
         dataIndex: 'type',
         key: 'type',
         width: 100,
+        render (value) {
+          switch (value) {
+            case 'recharge':
+              return '购买'
+            case 'pay':
+              return '支付'
+            case 'back':
+              return '退回'
+            default:
+              return ''
+          }
+        },
       },
       {
         title: '账户',
-        dataIndex: 'userAName',
-        key: 'userAName',
+        dataIndex: 'accountName',
+        key: 'accountName',
         width: 100,
       },
       {
@@ -170,10 +196,10 @@ function Content ({
         width: 100,
         render (value) {
           switch (value) {
-            case 'pay_success':
-              return '支付成功'
-            case 'receipt_success':
-              return '收款成功'
+            case 'succ':
+              return '成功'
+            case 'fail':
+              return '失败'
             default:
               return ''
           }
@@ -193,7 +219,7 @@ function Content ({
         <Table
           rowKey="id"
           columns={ columns }
-          dataSource={ transactionRecordList }
+          dataSource={ clueCardRecordList }
           bordered={ false }
           rowClassName="table-row"
         />
@@ -213,6 +239,7 @@ class Wallet extends Component {
     nkc: '',
     clue: '',
     selectedItem: 'balance',
+    clueCardRecordList: [],
     transactionRecordList: [],
   }
 
@@ -239,6 +266,14 @@ class Wallet extends Component {
       })
     }
   }
+  getUserClueCardRecord = async () => {
+    const {data: {data, code}} = await getUserClueCardRecord()
+    if (code === 200) {
+      this.setState({
+        clueCardRecordList: data,
+      })
+    }
+  }
 
   render () {
     const {
@@ -246,6 +281,7 @@ class Wallet extends Component {
       clue,
       money,
       selectedItem,
+      clueCardRecordList,
       transactionRecordList,
     } = this.state
     return (
@@ -258,7 +294,7 @@ class Wallet extends Component {
         >
           <MenuItem key="balance">账户余额</MenuItem>
           <MenuItem key="records">交易记录</MenuItem>
-          <MenuItem key="clueRecords">线索卡记录</MenuItem>
+          { this.props.user.isPartyB && <MenuItem key="clueRecords">线索卡记录</MenuItem> }
         </Menu>
         <div className="content">
           <Content
@@ -267,6 +303,7 @@ class Wallet extends Component {
             money={ money }
             isPartyB={ this.props.user && this.props.user.isPartyB }
             selectedItem={ selectedItem }
+            clueCardRecordList={ clueCardRecordList }
             transactionRecordList={ transactionRecordList }
           />
         </div>
@@ -277,6 +314,7 @@ class Wallet extends Component {
   componentDidMount () {
     this.getUserAccount()
     this.getUserTransactionRecord()
+    this.getUserClueCardRecord()
   }
 }
 

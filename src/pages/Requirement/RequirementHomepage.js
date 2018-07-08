@@ -1,5 +1,6 @@
 import { Button } from 'antd'
 import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
 import { view as Footer } from '../../components/Footer'
 import { getNearbySKill } from '../../service/requirement'
 import { view as ServicePersonCard } from './ServicePersonCard'
@@ -8,21 +9,49 @@ import './static/style/homepage.less'
 class RequirementHomePage extends Component {
 
   state = {
-    servicePersonList: [],
+    limit: 10,
     totalCount: '',
+    serviceName: '深度清洁',
+    servicePersonList: [],
   }
+
   getNearBySkill = async () => {
-    const { data: { data, pageinfo } } = await getNearbySKill({
+    const {data: {data, pageinfo}} = await getNearbySKill({
       serviceId: 10,
       userId: 22,
+      limit: this.state.limit,
     })
     if (data) {
-      console.log(data)
       this.setState({
         servicePersonList: data,
         totalCount: pageinfo.totalCount,
       })
     }
+  }
+
+  loadMore = () => this.setState((preState) => ({
+      limit: preState.limit + 10,
+    }),
+    () => {
+      this.getNearBySkill()
+    })
+
+  jumpToPostDemand = () => {
+    browserHistory.push({
+      pathname: '/post-demand', state: {
+        serviceId: 22,
+        serviceName: this.state.serviceName,
+      },
+    })
+  }
+
+  jumpToProfile = (userId) => () => {
+    browserHistory.push({
+      pathname: '/profile',
+      state: {
+        userId,
+      },
+    })
   }
 
   render () {
@@ -50,7 +79,7 @@ class RequirementHomePage extends Component {
                   height="9.3"
                 />
               </div>
-              <Button type="primary">开始</Button>
+              <Button type="primary" onClick={ this.jumpToPostDemand }>开始</Button>
               <div className="qa">
                 <h3>如何解决您的问题？</h3>
                 <div className="tip">
@@ -97,9 +126,14 @@ class RequirementHomePage extends Component {
                     joinedTime={ userBasicInfoVO.createTime }
                     avatarUrl={ userBasicInfoVO.avatar }
                     evaluation={ userEvaluate ? userEvaluate.content : '' }
+                    jumpToProfile={ this.jumpToProfile(userBasicInfoVO.userId) }
                   />)
               }
             </div>
+            { this.state.totalCount > this.state.servicePersonList.length && <div className="service-person-load-more">
+              <i className="iconfont icon-load-more" onClick={ this.loadMore }/>
+              <span onClick={ this.loadMore }>加载更多</span>
+            </div> }
           </div>
         </main>
         <Footer/>

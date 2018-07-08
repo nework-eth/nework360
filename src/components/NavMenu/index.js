@@ -211,7 +211,7 @@ class NavMenu extends Component {
                     <Dropdown overlay={
                       <Menu>
                         <Menu.Item className="nav-ant-menu-item">
-                          <Link to="/profile">我的主页</Link>
+                          <Link to={ {pathname: '/profile', state: {userId: this.props.userId}} }>我的主页</Link>
                         </Menu.Item>
                         <Menu.Item className="nav-ant-menu-item">
                           <Link to="/wallet">钱包</Link>

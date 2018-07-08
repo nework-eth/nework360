@@ -42,9 +42,10 @@ function ServicePersonCard ({
                               hireTimes,
                               avatarUrl,
                               joinedTime,
+                              evaluation,
                               evaluateScore,
                               evaluateCount,
-                              evaluation,
+                              jumpToProfile,
                             }) {
   return (
     <div className="service-person-card">
@@ -54,6 +55,7 @@ function ServicePersonCard ({
           alt="头像"
           width="50"
           height="50"
+          onClick={ jumpToProfile }
         />
         <div className="operate">立即预约</div>
       </div>
@@ -82,7 +84,7 @@ function ServicePersonCard ({
       <p className="virtual-title">
         { evaluation }
       </p>
-      <div>查看更多</div>
+      <div onClick={ jumpToProfile } className="profile-entry">查看更多</div>
     </div>
   )
 }

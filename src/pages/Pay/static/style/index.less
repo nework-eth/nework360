@@ -1,0 +1,59 @@
+.pay-container {
+  padding: 30px calc(50vw - 350px) 0;
+  .virtual-title {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .pay-content-container {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    .list-container {
+      flex: 1;
+      &:last-of-type {
+        border-left: 1px solid #edf1f4;
+        padding-left: 30px;
+      }
+      .list-row {
+        margin-bottom: 10px;
+        display: flex;
+        span:first-of-type {
+          width: 80px;
+        }
+      }
+    }
+  }
+  h3 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+  }
+  .virtual-button-wrapper {
+    margin-bottom: 30px;
+    display: flex;
+    .virtual-button {
+      position: relative;
+      flex: 1;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 120px;
+      border: 2px solid #f2f6f6;
+      font-size: 20px;
+      .icon-selected {
+        position: absolute;
+        color: #fff;
+        font-size: 18px;
+        line-height: 18px;
+        font-weight: normal;
+        top: 2px;
+        right: 3px;
+      }
+    }
+  }
+  .ant-btn {
+    width: 160px;
+    height: 50px;
+  }
+}

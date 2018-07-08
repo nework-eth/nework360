@@ -130,6 +130,16 @@ const getClueCard = async (nextState, callback) => callback(
   (await import(/* webpackChunkName: "ClueCard" */'./pages/ClueCard/ClueCard.js')).page,
 )
 
+const getPay = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "Pay" */'./pages/Pay/Pay.js')).page,
+)
+
+const getWithdraw = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "Withdraw" */'./pages/Withdraw/Withdraw.js')).page,
+)
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 history.listen((location, action) => {
@@ -184,6 +194,8 @@ const Routes = () => (
       <Route path="/need-order-detail" getComponent={ getNeedOrderDetail }/>
       <Route path="/need-detail" getComponent={ getNeedDetail }/>
       <Route path="/clue-card" getComponent={ getClueCard }/>
+      <Route path="/pay" getComponent={ getPay }/>
+      <Route path="/withdraw" getComponent={ getWithdraw }/>
     </Route>
   </Router>
 )
