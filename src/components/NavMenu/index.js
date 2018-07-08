@@ -202,7 +202,7 @@ class NavMenu extends Component {
                   </li>
                   }
                   <li className="li-item user-li-item">
-                    <Link to="/" style={ userLinkStyle }>我的订单</Link>
+                    <Link to="/list" style={ userLinkStyle }>我的订单</Link>
                   </li>
                   <li className="li-item user-li-item">
                     <span onClick={ this.toggleMessagePanelVisible }>消息中心</span>

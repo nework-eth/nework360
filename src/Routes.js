@@ -165,7 +165,6 @@ const requireAuth = async (nextState, replaceState, callback) => {
 }
 
 const autoLogin = async (nextState, replaceState, callback) => {
-  console.log(store.getState())
   if ((store.getState()).user.userId) {
     callback()
     return

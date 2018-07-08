@@ -731,15 +731,17 @@ class EditData extends Component {
     } = this.state
     return (
       <div className="edit-data-container">
-        <Menu
-          onClick={ this.handleClick }
-          style={ {width: 188, minHeight: 800, height: '100%'} }
-          defaultSelectedKeys={ [selectedItem] }
-          mode="inline"
-        >
-          { menuItemList.map(({key, content}) => <MenuItem key={ key }>{ content }</MenuItem>) }
-        </Menu>
-        <div className="content">
+        <div className="left-menu-wrapper">
+          <Menu
+            onClick={ this.handleClick }
+            style={ {width: 249, minHeight: 800, height: '100%'} }
+            defaultSelectedKeys={ [selectedItem] }
+            mode="inline"
+          >
+            { menuItemList.map(({key, content}) => <MenuItem key={ key }>{ content }</MenuItem>) }
+          </Menu>
+        </div>
+        <div className="edit-data-content-wrapper">
           <EditDataForm
             selectedItem={ selectedItem }
             data={ data }

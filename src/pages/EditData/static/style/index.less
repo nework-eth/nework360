@@ -4,6 +4,12 @@
   h2 {
     margin-bottom: 30px;
   }
+  .edit-data-content-wrapper {
+    border-left: 1px solid #dde6ec;
+  }
+  .left-menu-wrapper {
+    width: 249px !important;
+  }
   .edit-data-form-container {
     padding-left: 110px;
     .form-item-group {
@@ -127,13 +133,15 @@
           font-size: 14px;
           color: #f8513c;
         }
+        .icon-delete1 {
+          cursor: pointer;
+        }
       }
     }
   }
   .ant-menu-item-selected {
     background: #fff !important;
     color: #008bf7 !important;
-    border-right: 1px solid #dde6ec;
     transition: none !important;
     &::after {
       height: 0;
@@ -144,14 +152,19 @@
     &:hover, &:active {
       transition: none;
       background-color: #fff;
-      border-right: 1px solid #dde6ec;
     }
   }
-  .ant-menu.ant-menu-light.ant-menu-root.ant-menu-inline {
+  .ant-menu-vertical .ant-menu-item:after, .ant-menu-vertical-left .ant-menu-item:after, .ant-menu-vertical-right .ant-menu-item:after, .ant-menu-inline .ant-menu-item:after {
+    border-right: none !important;
+  }
+  .ant-menu-inline, .ant-menu-vertical, .ant-menu-vertical-left {
+    border-right: none;
+  }
+  .ant-menu-item-selected {
     border-right: 1px solid #dde6ec;
   }
-  .ant-menu-vertical .ant-menu-item:after, .ant-menu-vertical-left .ant-menu-item:after, .ant-menu-vertical-right .ant-menu-item:after, .ant-menu-inline .ant-menu-item:after {
-    border-right: none;
+  .ant-menu-item-active {
+    border-right: 1px solid #dde6ec;
   }
 }
 

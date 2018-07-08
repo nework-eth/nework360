@@ -24,7 +24,6 @@ const formatDate = dateStr => dateStr.replace('-', '年').replace('-', '月').re
 class List extends Component {
 
   state = {
-    start: 0,
     limit: 10,
     listType: 'service',
     needOrderList: [],
@@ -41,8 +40,7 @@ class List extends Component {
   getNeedOrderList = async () => {
     try {
       const {data: {data, code}} = await getNeedOrderList({
-        start: this.state.start,
-        limit: 20,
+        limit: this.state.limit,
       })
       if (code === 200) {
         this.setState({
@@ -55,7 +53,6 @@ class List extends Component {
   }
   getServiceOrderList = async () => {
     const {data: {data, code}} = await getServiceOrderList()
-    console.log('service-order-list', data)
     if (code === 200) {
       this.setState({serviceOrderList: data.quotes})
     }
