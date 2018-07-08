@@ -46,7 +46,9 @@ const mapState = (state) => ({
 @connect(mapState)
 class Profile extends Component {
   state = {
-    data: {},
+    data: {
+      evaluate: {},
+    },
     userId: {},
     skillList: [],
   }
@@ -71,7 +73,12 @@ class Profile extends Component {
     const {
       data: {
         email,
+        score,
         avatar,
+        evaluate: {
+          ave,
+          count,
+        },
         nickname,
         isPartyB,
         hireTimes,
@@ -90,11 +97,11 @@ class Profile extends Component {
             <Rate
               allowHalf
               disabled
-              defaultValue={ 4.5 }
+              value={ ave }
               character={ <i className="iconfont icon-rate-star-full"/> }
             />
-            <p className="rate">{ 4.5 }</p>
-            <p className="evaluation">(12条评价)</p>
+            <p className="rate">{ ave }</p>
+            <p className="evaluation">({ count }条评价)</p>
           </div>
           <p className="introduce">
             { this.props.user.description }

@@ -51,6 +51,10 @@ class IMModal extends Component {
       </Modal>
     )
   }
+
+  componentDidMount () {
+
+  }
 }
 
 export { IMModal }

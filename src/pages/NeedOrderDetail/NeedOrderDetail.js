@@ -108,8 +108,8 @@ class NeedOrderDetail extends Component {
     })
     conn.open({
       apiUrl: WebIM.config.apiURL,
-      user: '21',
-      pwd: '21',
+      user: this.props.user.userId,
+      pwd: this.props.user.userId,
       appKey: WebIM.config.appkey,
     })
     // conn.registerUser({
@@ -201,7 +201,7 @@ class NeedOrderDetail extends Component {
             )
           }
         </main>
-        <QRCode value="http://sissi.pingxx.com/mock.php?ch_id=ch_1a1qvD0WnXv1aDqvL8yP0mjL&channel=alipay_qr"/>
+        <QRCode value="http://sissi.pingxx.com/mock.php?ch_id=ch_9OeLWT90Gy9KOurfjHa9iznL&channel=wx_pub_qr"/>
         <IMModal
           visible={ false }
         />

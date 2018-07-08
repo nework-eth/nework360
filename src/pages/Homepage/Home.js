@@ -21,7 +21,7 @@ class Home extends Component {
       cursor: 'pointer',
     }
 
-    const { handleFirstServiceChange, nearServiceList, serviceImageList } = this.props
+    const {handleFirstServiceChange, nearServiceList, serviceImageList} = this.props
     return (
       <div className="home-container">
         { /*{ <h2 style={ h2Style }>附近的服务</h2> }*/ }
@@ -36,11 +36,12 @@ class Home extends Component {
         <h2 style={ h2Style }>附近的服务</h2>
         <Carousel { ...settings }>
           {
-            nearServiceList.map(({ serviceTypeName, count }) => <CardItem
+            nearServiceList.map(({serviceTypeName, serviceTypeId, count}) => <CardItem
               imgSrc={ serviceImageList.find(serviceImage => serviceImage.includes(serviceTypeName)) }
               title={ serviceTypeName }
               count={ count }
               key={ serviceTypeName }
+              jumpToRequirement={ this.props.jumpToRequirement({serviceTypeId, serviceTypeName}) }
             />)
           }
         </Carousel>
@@ -55,11 +56,11 @@ class Home extends Component {
               </h2>
               <Carousel { ...{
                 ...settings,
-                slidesToShow: this.props.serviceTree[ index ].child.length > 4
+                slidesToShow: this.props.serviceTree[index].child.length > 4
                   ? 4
-                  : this.props.serviceTree[ index ].child.length,
+                  : this.props.serviceTree[index].child.length,
               } }>
-                { this.props.serviceTree[ index ].child.map(({ serviceTypeName, count }, index) => <CardItem
+                { this.props.serviceTree[index].child.map(({serviceTypeName, count}, index) => <CardItem
                   imgSrc={ this.props.serviceImageList.find(serviceImage => serviceImage.includes(serviceTypeName)) }
                   title={ serviceTypeName }
                   count={ count }

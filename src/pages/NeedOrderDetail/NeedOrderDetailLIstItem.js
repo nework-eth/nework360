@@ -51,7 +51,7 @@ function NeedOrderDetailLIstItem ({
           buttonStatus === 'disabled' && <Button disabled={ true }>选择Ta</Button>
         }
         {
-          buttonStatus === 'cancelOrder' && <Button onClick={ cancelOrder }>取消订单</Button>
+          buttonStatus === 'cancel' && <Button onClick={ cancelOrder }>取消订单</Button>
         }
         {
           buttonStatus === 'pay' && <Button onClick={ pay }>立即支付</Button>

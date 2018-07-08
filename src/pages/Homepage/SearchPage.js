@@ -50,9 +50,10 @@ class SearchPage extends Component {
       })
     }
   }
-  handleFirstServiceChange = (firstService) => {
-    browserHistory.push({pathname: '/service-list', state: {selectedFirstService: firstService}})
-  }
+  handleFirstServiceChange = (firstService) => browserHistory.push({
+    pathname: '/service-list',
+    state: {selectedFirstService: firstService},
+  })
   getNearServiceList = async () => {
     const {data: {data}} = await getListServiceByDist({
       dist: this.props.cityName,
@@ -62,7 +63,6 @@ class SearchPage extends Component {
       nearServiceList: data,
     })
   }
-
   getFirstServiceList = async () => {
     getListServiceByParam({
       dist: this.props.cityName,
@@ -72,11 +72,14 @@ class SearchPage extends Component {
   handleSearchTipClick = (serviceName, serviceTypeId) => () => {
     this.setState({
       searchValue: serviceName,
+      searchTipVisible: false,
       selectedServiceTypeId: serviceTypeId,
     })
   }
   handleSearchButtonClick = () => {
-
+    if (this.state.searchResult.includes(this.state.searchValue)) {
+      browserHistory.push({pathname: '/requirement-homepage', state: {}})
+    }
   }
 
   constructor (props) {
@@ -143,6 +146,13 @@ class SearchPage extends Component {
       secondServiceList={ (serviceTree.find(item => item.serviceTypeName === selectedFirstService)).child }
     />
   }
+  jumpToRequirement = ({serviceTypeId, serviceTypeName}) => () => browserHistory.push({
+    pathname: '/requirement-homepage',
+    state: {
+      serviceTypeId,
+      serviceTypeName,
+    },
+  })
 
   render () {
     const {
@@ -208,6 +218,7 @@ class SearchPage extends Component {
           nearServiceList={ nearServiceList }
           serviceImageList={ serviceImageList }
           handleFirstServiceChange={ this.handleFirstServiceChange }
+          jumpToRequirement={ this.jumpToRequirement }
         />
         <h2 style={ {marginTop: '50px', marginBottom: '20px'} }>如何发布需求</h2>
         <div className="introduce-container">

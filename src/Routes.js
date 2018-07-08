@@ -1,3 +1,4 @@
+import cookie from 'cookie'
 import React from 'react'
 import { Provider } from 'react-redux'
 import { browserHistory, IndexRoute, Route, Router } from 'react-router'
@@ -5,9 +6,13 @@ import { browserHistory, IndexRoute, Route, Router } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { combineReducers } from 'redux'
 
+import { setUser, setUserId } from './components/NavMenu/actions'
+
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Container } from './pages/Container/Container'
 import { page as Homepage } from './pages/Homepage/Homepage'
+
+import { getUserById } from './service/editData'
 
 import store from './Store'
 
@@ -151,23 +156,41 @@ history.listen((location, action) => {
 //   console.log(replaceState)
 // }
 
-// const requireAuth = async (nextState, replaceState, callback) => {
-//   console.log(store.getState())
-//   if ((store.getState()).user) {
-//     callback()
-//     return
-//   }
-//   const userId = (cookie.parse(document.cookie)).userId
-//   if (true) {
-//     const {data: {data, code}} = await getUserById({userId: 21})
-//     if (code === 200) {
-//       setUser({userId: 11})
-//       callback()
-//       return
-//     }
-//   }
-//   replaceState('/login')
-// }
+const requireAuth = async (nextState, replaceState, callback) => {
+  console.log('require auth')
+  if ((store.getState()).user) {
+    callback()
+    return
+  }
+  const userId = (cookie.parse(document.cookie)).userId
+  if (userId) {
+    const {data: {data, code}} = await getUserById({userId})
+    if (code === 200) {
+      setUser(data)
+      setUserId(userId)
+      callback()
+      return
+    }
+  }
+  replaceState('/login')
+}
+
+const autoLogin = async (nextState, replaceState, callback) => {
+  console.log('auto login')
+  if ((store.getState()).user) {
+    callback()
+    return
+  }
+  const userId = (cookie.parse(document.cookie)).userId
+  if (userId) {
+    const {data: {data, code}} = await getUserById({userId})
+    if (code === 200) {
+      setUser(data)
+      setUserId(userId)
+    }
+  }
+  callback()
+}
 
 const Routes = () => (
   <Router history={ history } createElement={ createElement }>
@@ -177,13 +200,13 @@ const Routes = () => (
       <Route path="/register" getComponent={ getRegisterPage }/>
       <Route path="/forget-password" getComponent={ getForgetPassword }/>
     </Route>
-    <Route path="/" component={ Homepage }>
+    <Route path="/" component={ Homepage } onEnter={ autoLogin }>
       <IndexRoute getComponent={ getSearchPage }/>
       <Route path="select-city" getComponent={ getSelectCityPage }/>
       <Route path="search" getComponent={ getSearchPage }/>
       <Route path="service-list" getComponent={ getServiceList }/>
     </Route>
-    <Route component={ Container }>
+    <Route component={ Container } onEnter={ requireAuth }>
       <Route path="/skill" getComponent={ getSkillPage }/>
       <Route path="/profile" getComponent={ getProfilePage }/>
       <Route path="/editData" getComponent={ getEditDataPage }/>

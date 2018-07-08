@@ -10,9 +10,7 @@ import { view as Template } from './Template'
 
 const filterData = (pageData) => {
   const textArray = pageData.filter((item, index) => index % 2 === 0)
-  console.log('textArray', textArray)
   const formItemArray = pageData.filter((item, index) => index % 2 !== 0)
-  console.log('formItemArray', formItemArray)
   return formItemArray.map(({
                               id,
                               pageNum,
@@ -119,7 +117,7 @@ class PostDemand extends Component {
   }
 
   getMatchResult = async () => {
-    const {data: {code, data}} = await getMatchResult({userId: 20, serviceId: 10})
+    const {data: {code, data}} = await getMatchResult({userId: this.props.user.userId, serviceId: this.state.serviceId})
     if (code === 200) {
       this.setState({
         matchResultList: data,
@@ -154,7 +152,7 @@ class PostDemand extends Component {
       {
         // todo: 换成真实数据
         districtId: 110,
-        serviceId: 22,
+        serviceId: this.state.userId,
         templateId: this.state.templateId,
       },
     )
@@ -222,7 +220,7 @@ class PostDemand extends Component {
   getNeedDetail = async () => {
     const {data: {data, code}} = await getNeedDetail
     if (code === 200) {
-      console.log(data)
+      this.setState({data})
     }
   }
 
@@ -231,6 +229,7 @@ class PostDemand extends Component {
       data,
       pages,
       pageIndex,
+      serviceId,
       serviceName,
       locationOptions,
       progressPercent,

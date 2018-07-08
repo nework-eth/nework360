@@ -42,7 +42,7 @@ class List extends Component {
     try {
       const {data: {data, code}} = await getNeedOrderList({
         start: this.state.start,
-        limit: this.state.limit,
+        limit: 20,
       })
       if (code === 200) {
         this.setState({
@@ -71,9 +71,11 @@ class List extends Component {
     browserHistory.push({pathname: '/need-detail', state: {needsId: needsId}})
   }
   cancelServiceOrder = (quoteId) => async () => {
-    const {data: {data, code}} = await cancelServiceOrder({quoteId})
-    //刷新页面
-    console.log(code)
+    const {data: {code}} = await cancelServiceOrder({quoteId})
+    if (code === 200) {
+      message.success('取消服务订单成功')
+      this.getServiceOrderList()
+    }
   }
   deleteServiceOrder = (quoteId) => async () => {
     const {data: {data, code}} = await deleteServiceOrder({quoteId})
@@ -131,6 +133,7 @@ class List extends Component {
     this.handleInitiatePaymentModalCancel()
   }
   handleChangeDemand = (needsId) => () => browserHistory.push({pathname: '/post-demand', state: {needsId}})
+  jumpToPay = ({amount, needsId}) => () => browserHistory.push({pathname: '/pay', state: {amount, needsId}})
 
   render () {
     const {
@@ -170,6 +173,7 @@ class List extends Component {
                                      quoteId,
                                      upateTime,
                                      serviceName,
+                                     amountFinal,
                                    }) =>
                 <NeedListItem
                   key={ needsId }
@@ -177,6 +181,7 @@ class List extends Component {
                   title={ serviceName }
                   quotes={ quotes }
                   status={ status }
+                  jumpToPay={ this.jumpToPay({amount: amountFinal, needsId}) }
                   goNeedDetail={ this.goNeedDetail(needsId) }
                   selectedQuote={ quotes.find(item => item.quoteId === quoteId) }
                   goNeedOrderDetail={ this.goNeedOrderDetail }

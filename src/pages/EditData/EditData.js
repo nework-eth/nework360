@@ -280,7 +280,7 @@ class EditData extends Component {
 
   getUserById = async () => {
     const {data: {data, code}} = await getUserById({
-      userId: 21,
+      userId: this.state.userId,
     })
     if (code === 200) {
       this.setState({
@@ -301,7 +301,7 @@ class EditData extends Component {
   }
 
   getSkillByUserId = async () => {
-    const {data: {data, code}} = await getSkillByUserId({userId: 21})
+    const {data: {data, code}} = await getSkillByUserId({userId: this.state.data.userId})
     if (code === 200) {
       const secondarySkillList = Object
       .values(data.skill)
@@ -689,7 +689,7 @@ class EditData extends Component {
   })
 
   afterUpdate = async () => {
-    const {data: {data, code}} = await getUserById({userId: 21})
+    const {data: {data, code}} = await getUserById({userId: this.state.data.userId})
     if (code === 200) {
       this.props.setUser(data)
       this.getUserById()

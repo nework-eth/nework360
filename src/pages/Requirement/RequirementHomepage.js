@@ -10,15 +10,16 @@ class RequirementHomePage extends Component {
 
   state = {
     limit: 10,
+    serviceId: '',
     totalCount: '',
-    serviceName: '深度清洁',
+    serviceName: '',
     servicePersonList: [],
   }
 
   getNearBySkill = async () => {
     const {data: {data, pageinfo}} = await getNearbySKill({
-      serviceId: 10,
-      userId: 22,
+      serviceId: this.state.serviceId,
+      userId: this.props.user.userId,
       limit: this.state.limit,
     })
     if (data) {
@@ -55,6 +56,9 @@ class RequirementHomePage extends Component {
   }
 
   render () {
+    const {
+      serviceName,
+    } = this.state
     return (
       <div className="requirement-homepage-container">
         <main>
@@ -62,7 +66,7 @@ class RequirementHomePage extends Component {
             <div className="top-content">
               <h1>仅需一分钟</h1>
               <h1>即可为您匹配专业的</h1>
-              <h1>深度保洁 服务人员</h1>
+              <h1>{ serviceName } 服务人员</h1>
               <div className="stroke-1">
                 <img
                   src="./images/stroke-1.png"
@@ -142,7 +146,12 @@ class RequirementHomePage extends Component {
   }
 
   componentDidMount () {
-    this.getNearBySkill()
+    this.setState({
+      serviceId: this.props.location.state.serviceId,
+      serviceName: this.props.location.state.serviceName,
+    }, () => {
+      this.getNearBySkill()
+    })
   }
 
 }
