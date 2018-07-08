@@ -301,7 +301,7 @@ class EditData extends Component {
   }
 
   getSkillByUserId = async () => {
-    const {data: {data, code}} = await getSkillByUserId({userId: this.state.data.userId})
+    const {data: {data, code}} = await getSkillByUserId({userId: this.state.userId})
     if (code === 200) {
       const secondarySkillList = Object
       .values(data.skill)
@@ -689,7 +689,7 @@ class EditData extends Component {
   })
 
   afterUpdate = async () => {
-    const {data: {data, code}} = await getUserById({userId: this.state.data.userId})
+    const {data: {data, code}} = await getUserById({userId: this.state.userId})
     if (code === 200) {
       this.props.setUser(data)
       this.getUserById()
@@ -886,16 +886,20 @@ class EditData extends Component {
   }
 
   componentDidMount () {
-    this.getSkillByUserId()
-    this.getServiceTree()
-    this.afterUpdate()
-    this.mapInit()
-    Promise.all([this.getCityTree(), this.getUserById()])
-           .then(() =>
-             this.setState({
-               cityData: this.state.tree[this.state.data.country][this.state.data.province],
-             }),
-           )
+    this.setState({
+      userId: this.props.user.userId,
+    }, () => {
+      this.getSkillByUserId()
+      this.getServiceTree()
+      this.afterUpdate()
+      this.mapInit()
+      Promise.all([this.getCityTree(), this.getUserById()])
+             .then(() =>
+               this.setState({
+                 cityData: this.state.tree[this.state.data.country][this.state.data.province],
+               }),
+             )
+    })
   }
 
 }

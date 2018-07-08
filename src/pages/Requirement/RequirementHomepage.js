@@ -1,11 +1,17 @@
 import { Button } from 'antd'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { view as Footer } from '../../components/Footer'
 import { getNearbySKill } from '../../service/requirement'
 import { view as ServicePersonCard } from './ServicePersonCard'
 import './static/style/homepage.less'
 
+const mapState = (state) => ({
+  user: state.user,
+})
+
+@connect(mapState)
 class RequirementHomePage extends Component {
 
   state = {
@@ -40,7 +46,7 @@ class RequirementHomePage extends Component {
   jumpToPostDemand = () => {
     browserHistory.push({
       pathname: '/post-demand', state: {
-        serviceId: 22,
+        serviceId: this.state.serviceId,
         serviceName: this.state.serviceName,
       },
     })

@@ -77,8 +77,17 @@ class SearchPage extends Component {
     })
   }
   handleSearchButtonClick = () => {
-    if (this.state.searchResult.includes(this.state.searchValue)) {
-      browserHistory.push({pathname: '/requirement-homepage', state: {}})
+    console.log('handle search button click')
+    console.log(this.state.searchResult, this.state.searchValue)
+    const searchItem = this.state.searchResult.find(({serviceTypeName}) => serviceTypeName === this.state.searchValue)
+    console.log(searchItem)
+    if (searchItem) {
+      browserHistory.push({
+        pathname: '/requirement-homepage', state: {
+          serviceName: this.state.searchValue,
+          serviceId: searchItem.serviceTypeId,
+        },
+      })
     }
   }
 
@@ -188,6 +197,7 @@ class SearchPage extends Component {
             { searchResult.length
               ? searchResult.map(({serviceTypeName, serviceTypeId}) =>
                 <div
+                  key={ serviceTypeId }
                   className="search-input-tip-item"
                   onClick={ this.handleSearchTipClick(serviceTypeName, serviceTypeId) }
                 >

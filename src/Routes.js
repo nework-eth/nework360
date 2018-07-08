@@ -5,8 +5,7 @@ import { browserHistory, IndexRoute, Route, Router } from 'react-router'
 
 import { syncHistoryWithStore } from 'react-router-redux'
 import { combineReducers } from 'redux'
-
-import { setUser, setUserId } from './components/NavMenu/actions'
+import * as ActionTypes from './components/NavMenu/actionTypes'
 
 import { page as AuthPage } from './pages/Auth/Auth'
 import { page as Container } from './pages/Container/Container'
@@ -147,18 +146,8 @@ const getWithdraw = async (nextState, callback) => callback(
 
 const history = syncHistoryWithStore(browserHistory, store)
 
-history.listen((location, action) => {
-  // console.log('state', store.getState())
-})
-
-// function requireAuth (nextState, replaceState) {
-//   console.log(nextState)
-//   console.log(replaceState)
-// }
-
 const requireAuth = async (nextState, replaceState, callback) => {
-  console.log('require auth')
-  if ((store.getState()).user) {
+  if ((store.getState()).user.userId) {
     callback()
     return
   }
@@ -166,8 +155,8 @@ const requireAuth = async (nextState, replaceState, callback) => {
   if (userId) {
     const {data: {data, code}} = await getUserById({userId})
     if (code === 200) {
-      setUser(data)
-      setUserId(userId)
+      store.dispatch({type: ActionTypes.SETUSER, user: data})
+      store.dispatch({type: ActionTypes.SETUSERID, userId: data.userId})
       callback()
       return
     }
@@ -176,8 +165,8 @@ const requireAuth = async (nextState, replaceState, callback) => {
 }
 
 const autoLogin = async (nextState, replaceState, callback) => {
-  console.log('auto login')
-  if ((store.getState()).user) {
+  console.log(store.getState())
+  if ((store.getState()).user.userId) {
     callback()
     return
   }
@@ -185,8 +174,8 @@ const autoLogin = async (nextState, replaceState, callback) => {
   if (userId) {
     const {data: {data, code}} = await getUserById({userId})
     if (code === 200) {
-      setUser(data)
-      setUserId(userId)
+      store.dispatch({type: ActionTypes.SETUSER, user: data})
+      store.dispatch({type: ActionTypes.SETUSERID, userId: data.userId})
     }
   }
   callback()
