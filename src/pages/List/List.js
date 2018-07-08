@@ -86,6 +86,7 @@ class List extends Component {
     const {data: {data, code}} = await initiatePayment({quoteId, amount})
     console.log(code)
   }
+  jumpToNeedDetail = (needsId) => () => browserHistory.push({pathname: '/need-detail', state: {needsId}})
   showComplaintModal = () => this.setState({complaintModalVisible: true})
   handleComplaintModalCancel = () => this.setState({complaintModalVisible: false})
   showEvaluateModal = (userId, needsId, nickname) => () => this.setState({
@@ -222,7 +223,8 @@ class List extends Component {
                   description={ instruction }
                   serviceName={ serviceName }
                   selectedUser={ selectedUser }
-                  hasEvaluated={ hasEvaluated }
+                  hasEvaluated={ hasEvaluated === 'yes' }
+                  jumpToNeedDetail={ this.jumpToNeedDetail(needsId) }
                   initiatePayment={ this.initiatePayment(quoteId, amount) }
                   showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickname) }
                   cancelServiceOrder={ this.cancelServiceOrder(quoteId) }

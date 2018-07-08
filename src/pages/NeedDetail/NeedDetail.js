@@ -35,7 +35,7 @@ class NeedDetail extends Component {
     quoteModalVisible: false,
   }
   getNeedDetail = async () => {
-    const {data: {data, code}} = await getNeedDetail({needsId: '201806251010289473493322'})
+    const {data: {data, code}} = await getNeedDetail({needsId: this.state.needsId})
     if (code === 200) {
       this.setState({
         score: data.user.score.ave,

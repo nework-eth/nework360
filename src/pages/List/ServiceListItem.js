@@ -17,6 +17,7 @@ function ServiceListItem ({
                             serviceName,
                             hasEvaluated,
                             initiatePayment,
+                            jumpToNeedDetail,
                             showEvaluateModal,
                             cancelServiceOrder,
                             deleteServiceOrder,
@@ -30,7 +31,7 @@ function ServiceListItem ({
           <span className={ `${classNameSpace}-title` }>{ serviceName }</span><span
           className={ `${classNameSpace}-date` }> { updateTime }</span>
         </div>
-        <div className={ `${classNameSpace}-operate` }>
+        <div className={ `${classNameSpace}-operate` } onClick={ jumpToNeedDetail }>
           查看需求
         </div>
       </div>
