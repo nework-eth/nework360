@@ -21,3 +21,7 @@ export const getRelativeTime = (createTime) => {
 
 export const getRate = (originRate) => (Math.floor(originRate * 10 / 5)) * 0.5
 
+export const deleteCookie = (name) => {
+  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`
+}
+

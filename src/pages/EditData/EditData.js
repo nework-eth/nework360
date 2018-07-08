@@ -120,7 +120,7 @@ const validateNewPwd = (pwd) => {
   }
 }
 
-const validateNewPwdRepeat = (pwd) => {
+const validateNewPwdRepeat = (pwd, newPwd) => {
   if (!pwd) {
     return {
       isNewPwdRepeatError: true,
@@ -156,6 +156,12 @@ const validateNewPwdRepeat = (pwd) => {
     return {
       isNewPwdRepeatError: true,
       newPwdRepeatErrorMsg: '密码只能输入大小写英文、数字、特殊字符（除空格）',
+    }
+  }
+  if (pwd !== newPwd) {
+    return {
+      isNewPwdRepeatError: true,
+      newPwdRepeatErrorMsg: '密码不一致，请重新确认',
     }
   }
   return {
@@ -334,7 +340,7 @@ class EditData extends Component {
 
   handleNewPwdBlur = () => this.setState({...validateNewPwd(this.state.newPwd)})
 
-  handleNewPwdRepeatBlur = () => this.setState({...validateNewPwdRepeat(this.state.newPwdRepeat)})
+  handleNewPwdRepeatBlur = () => this.setState({...validateNewPwdRepeat(this.state.newPwdRepeat, this.state.newPwd)})
 
   handleNewPwdChange = e => this.setState({
     newPwd: e.target.value,

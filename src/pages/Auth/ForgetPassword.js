@@ -58,12 +58,12 @@ class Page extends Component {
       return
     }
     try {
-      const success = await changePassword({
+      const {data: {code}} = await changePassword({
         code: messageCode.value,
         phoneNumber: phoneNumber.value,
         pwd: pwd.value,
       })
-      if (success) {
+      if (code === 200) {
         message.success('修改密码成功')
         browserHistory.push('/login')
       }
@@ -95,8 +95,8 @@ class Page extends Component {
   }
 
   handleMessageButtonClick = async () => {
-    const success = await forgetPasswordSendCode({ phoneNumber: this.state.phoneNumber.value })
-    if (success) {
+    const {data: {code}} = await forgetPasswordSendCode({phoneNumber: this.state.phoneNumber.value})
+    if (code === 200) {
       message.success('已发送短信验证码')
       this.startTimer()
     }
@@ -111,7 +111,7 @@ class Page extends Component {
       },
     }), () => {
       if (this.state.messageButton.value === '获取验证码') {
-        const { validateStatus, errorMsg } = this.validatePhoneNumber(this.state.phoneNumber.value)
+        const {validateStatus, errorMsg} = this.validatePhoneNumber(this.state.phoneNumber.value)
         console.log(validateStatus, errorMsg)
         if (validateStatus === 'success') {
           this.setState((preState) => ({
@@ -370,12 +370,12 @@ class Page extends Component {
           className="footer-link"
           to={ {
             pathname: '/login',
-            state: { phoneNumber: phoneNumber.value },
+            state: {phoneNumber: phoneNumber.value},
           } }
         >
           <Icon
             type="left-circle-o"
-            style={ { fontSize: 20, color: '#092235' } }
+            style={ {fontSize: 20, color: '#092235'} }
           />
           <span>&nbsp;&nbsp;返回</span>
         </Link>

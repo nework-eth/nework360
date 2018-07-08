@@ -79,20 +79,20 @@ class SelectCity extends Component {
     this.setState({data: [], fetching: true})
     if (/^[a-zA-Z]+/.test(value)) {
       return getCityBySearch({name: value})
-        .then(({data: {data}}) => {
-          if (fetchId !== this.lastFetchId) {
-            return
-          }
-          this.setState({searchOptions: data.filter(item => item.level === 'c'), fetching: false})
-        })
-    }
-    getCityBySearch({chinese: value})
       .then(({data: {data}}) => {
         if (fetchId !== this.lastFetchId) {
           return
         }
         this.setState({searchOptions: data.filter(item => item.level === 'c'), fetching: false})
       })
+    }
+    getCityBySearch({chinese: value})
+    .then(({data: {data}}) => {
+      if (fetchId !== this.lastFetchId) {
+        return
+      }
+      this.setState({searchOptions: data.filter(item => item.level === 'c'), fetching: false})
+    })
   }
 
   handleChange = (value) => {
@@ -217,8 +217,6 @@ class SelectCity extends Component {
   }
 
   handleProvinceChange = (value) => {
-    console.log(value)
-    console.log(this.state.tree[this.state.selectedCountry][value])
     const cityData = this.state.tree[this.state.selectedCountry][value]
     const cityOptions = cityData.map(item => item.chinese)
     this.setState({
@@ -380,6 +378,10 @@ class SelectCity extends Component {
         }
       </div>
     )
+  }
+
+  componentDidMount () {
+
   }
 }
 

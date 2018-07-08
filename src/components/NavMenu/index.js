@@ -7,6 +7,7 @@ import { signOut } from '../../service/auth'
 import { getCityByIp } from '../../service/homepage'
 import { getMessage, updateMessageStatus } from '../../service/navMenu'
 import store from '../../Store'
+import { deleteCookie } from '../../utils'
 import { setCityId, setCityName, setCountryId, setUser } from './actions'
 import { positionReducer, userReducer } from './reducer'
 import './static/style/index.less'
@@ -73,6 +74,7 @@ class NavMenu extends Component {
     const {data: {code}} = await signOut()
     if (code === 200) {
       this.props.setUser({})
+      deleteCookie('userId')
       browserHistory.push('/')
     }
   }

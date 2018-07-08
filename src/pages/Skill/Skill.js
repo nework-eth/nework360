@@ -271,7 +271,7 @@ class SkillPage extends Component {
         this.updateStatus()
         return
       case 9:
-        browserHistory.push('/search')
+        browserHistory.push('/')
         return
       default:
         return
@@ -432,8 +432,12 @@ class SkillPage extends Component {
   }
 
   handleDescriptionChange = (e) => {
+    let str = e.target.value
+    if (str.length > 500) {
+      str = str.slice(0, 500)
+    }
     this.setState({
-      description: e.target.value,
+      description: str,
     })
   }
 
@@ -606,7 +610,6 @@ class SkillPage extends Component {
     })
   }
 
-
   render () {
     const {
       progressPercent,
@@ -650,7 +653,7 @@ class SkillPage extends Component {
         <footer>
           <p
             onClick={ this.handleGoBack }
-            style={ step === 0 || step === 5 || step === 9 ? {visibility: 'hidden'} : {} }
+            style={ step === 0 || step === 6 || step === 9 ? {visibility: 'hidden'} : {} }
           >
             <i className="iconfont icon-return"/>
             返回

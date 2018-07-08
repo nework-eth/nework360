@@ -15,8 +15,7 @@ function SelectCertificate ({
       <p style={ {marginTop: '10px', marginBottom: '50px'} }>只能添加由政府颁发的有效身份证件</p>
       <p className="title">签发国家/地区</p>
       <Select value="中国" className="country-select">
-        <Option value="中国">中国</Option>
-        { countryOptions.map(item => <Option key={ item }>item</Option>) }
+        { countryOptions.map(item => <Option key={ item }>{ item }</Option>) }
       </Select>
       <p className="title">身份证件类型</p>
       <div className="icon-container">

@@ -380,7 +380,7 @@ function EditDataForm ({
         <div className="horizontal-line"/>
         <img src="./images/identify-phone.png" alt="电话认证" width="40" height="40" className="auth-icon"/>
         <p className="auth-title">手机号认证</p>
-        <p>使用经过验证的手机号可以令沟通变得更容易；</p>
+        <p>使用经过验证的手机号可以令沟通变得更容易。</p>
         <p>我们将通过短信给您发送代码，或透过电话通话向您告知该代码。</p>
         { user.phoneNumber
           ? <div className="check-status">

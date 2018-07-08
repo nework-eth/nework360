@@ -1,69 +1,58 @@
-import { Icon, Input, message } from 'antd'
+import { Icon, Input } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
 import { view as IconItem } from '../../components/LogoItem'
 import { stateKey } from '../../components/NavMenu'
-import { getListServiceByDist, getListServiceByParam, getServiceTree } from '../../service/homepage'
+import { getListServiceByDist, getServiceTree } from '../../service/homepage'
 import { view as FirstClass } from './FirstClass'
 import './static/style/search.less'
 
 const Search = Input.Search
 
 const mapState = (state) => ({
-  cityId: state[ stateKey ].cityId,
-  cityName: state[ stateKey ].cityName,
+  cityId: state[stateKey].cityId,
+  cityName: state[stateKey].cityName,
 })
 
 @connect(mapState)
 class ServiceList extends Component {
   getServiceTree = async () => {
-    try {
-      const { data: { code, data, desc } } = await getServiceTree({ cityId: this.props.cityId })
-      if (code !== 200) {
-        message.error(desc)
-        return
-      }
-      console.log('serviceTree', data)
-      const firstLevelServiceList = data.map(item => item.serviceTypeName)
-      console.log('firstLevelServiceList', firstLevelServiceList)
-      console.log('serviceTree', data)
-      this.setState({
-        serviceTree: data,
-        firstLevelServiceList,
-      })
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
+    const {data: {code, data}} = await getServiceTree({cityId: this.props.cityId})
+    if (code !== 200) {
+      return
     }
-  }
-  getFirstServiceList = async () => {
-    try {
-      const { data: { code, data, desc } } = await getListServiceByParam({
-        dist: this.props.cityName,
-        level: 'f',
-      })
-      console.log(code, data, desc)
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
-    }
+    const firstLevelServiceList = data.map(item => item.serviceTypeName)
+    this.setState({
+      serviceTree: data,
+      firstLevelServiceList,
+    })
   }
   getNearServiceList = async () => {
-    try {
-      const { data: { data } } = await getListServiceByDist({
-        dist: this.props.cityName,
-        level: 's',
-      })
-      console.log('nearServiceList', data)
+    const {data: {data, code}} = await getListServiceByDist({
+      dist: this.props.cityName,
+      level: 's',
+    })
+    if (code === 200) {
       this.setState({
         nearServiceList: data,
       })
-    } catch (e) {
-      message.error('网络连接失败，请检查网络后重试')
     }
+
   }
   handleFirstServiceChange = (firstService) => {
     this.setState({
       selectedFirstService: firstService,
       pageState: 'selected',
+    })
+  }
+  jumpToRequirement = ({serviceTypeId, serviceTypeName}) => () => {
+    browserHistory.push({
+      pathname: '/requirement-homepage',
+      state: {
+        serviceId: serviceTypeId,
+        serviceName: serviceTypeName,
+      },
     })
   }
 
@@ -116,12 +105,12 @@ class ServiceList extends Component {
         <div>
           <i
             className="iconfont icon-logo"
-            style={ { fontSize: '40px', lineHeight: '50px' } }
+            style={ {fontSize: '40px', lineHeight: '50px'} }
           />
         </div>
-        <h1 style={ { marginBottom: '30px' } }>找到所有本地专业服务</h1>
+        <h1 style={ {marginBottom: '30px'} }>找到所有本地专业服务</h1>
         <Search
-          prefix={ <Icon type="search" style={ { fontSize: '18px', color: '#9ca6ae', paddingLeft: '10px' } }/> }
+          prefix={ <Icon type="search" style={ {fontSize: '18px', color: '#9ca6ae', paddingLeft: '10px'} }/> }
           className="search-input"
           placeholder="试试「小程序开发」"
           enterButton="搜索"
@@ -147,8 +136,9 @@ class ServiceList extends Component {
           secondServiceList={
             (serviceTree.find(item => item.serviceTypeName === selectedFirstService) && (serviceTree.find(item => item.serviceTypeName === selectedFirstService)).child) || []
           }
+          jumpToRequirement={ this.jumpToRequirement }
         />
-        <h2 style={ { marginTop: '50px', marginBottom: '20px' } }>如何发布需求</h2>
+        <h2 style={ {marginTop: '50px', marginBottom: '20px'} }>如何发布需求</h2>
         <div className="introduce-container">
           <div className="introduce-card">
             <img

@@ -1,6 +1,7 @@
 import { Menu, Table } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router'
 import { getUserAccount, getUserClueCardRecord, getUserTransactionRecord } from '../../service/wallet'
 import './static/style/index.less'
 
@@ -33,7 +34,7 @@ function Content ({
                 { money / 100 }
               </p>
               <p className="balance-type">人民币（CNY）</p>
-              <a href="/">提现</a>
+              <Link href="/withdraw">提现</Link>
             </div>
           </div>
           { /*<div className="balance-item">*/ }
@@ -65,7 +66,7 @@ function Content ({
                 { clue }
               </p>
               <p className="balance-type">线索卡（张）</p>
-              <a href="/">购买</a>
+              <Link href="/">购买</Link>
             </div>
           </div> }
         </div>

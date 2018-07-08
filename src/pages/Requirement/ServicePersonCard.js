@@ -46,6 +46,7 @@ function ServicePersonCard ({
                               evaluateScore,
                               evaluateCount,
                               jumpToProfile,
+                              jumpToPostDemand,
                             }) {
   return (
     <div className="service-person-card">
@@ -57,7 +58,7 @@ function ServicePersonCard ({
           height="50"
           onClick={ jumpToProfile }
         />
-        <div className="operate">立即预约</div>
+        <div className="operate" onClick={ jumpToPostDemand }>立即预约</div>
       </div>
       <div>
         <div className="name">{ nickname }</div>

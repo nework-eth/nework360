@@ -1,6 +1,9 @@
 import { Button, Form, Input, message, Select } from 'antd'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { browserHistory, Link } from 'react-router'
+import { bindActionCreators } from 'redux'
+import { setUser, setUserId } from '../../components/NavMenu/actions'
 import { register, sendCode } from '../../service/auth'
 import './static/style/index.less'
 
@@ -8,6 +11,12 @@ const FormItem = Form.Item
 const InputGroup = Input.Group
 const Option = Select.Option
 
+const mapDispatch = (dispatch) => bindActionCreators({
+  setUserId,
+  setUser,
+}, dispatch)
+
+@connect(null, mapDispatch)
 class Page extends Component {
 
   state = {
@@ -70,17 +79,18 @@ class Page extends Component {
       message.error('请输入正确格式的验证码')
       return
     }
-    const success = await register({
+    const {data: {code, data}} = await register({
       phoneNumber: phoneNumber.value,
       nickName: nickName.value,
       pwd: pwd.value,
       code: messageCode.value,
     })
 
-    if (success) {
+    if (code === 200) {
+      this.props.setUser(data)
+      this.props.setUserId(data.userId)
       message.success('注册成功')
       browserHistory.push('/')
-      // todo:加上用户状态
     }
     // this.props.form.validateFields(async (err, { messageCode, password, phoneNumber, nickName }) => {
     //   if (!err) {
@@ -106,22 +116,16 @@ class Page extends Component {
     // })
   }
 
-  sendCode = () => {
-    // this.props.form.validateFields([ 'phoneNumber' ], async (err, { phoneNumber }) => {
-    //   if (!err) {
-    //     try {
-    //       const { data: { code, desc } } = await sendCode({ phoneNumber: +phoneNumber })
-    //       if (code === 200) {
-    //         message.success('已发送短信验证码')
-    //         return
-    //       }
-    //       message.error(desc)
-    //     } catch (e) {
-    //       message.error('请输入正确格式的手机号')
-    //     }
-    //   }
-    // })
-  }
+  // sendCode = () => {
+  //   this.props.form.validateFields(['phoneNumber'], async (err, {phoneNumber}) => {
+  //     if (!err) {
+  //       const {data: {code}} = await sendCode({phoneNumber: +phoneNumber})
+  //       if (code === 200) {
+  //         message.success('已发送短信验证码')
+  //       }
+  //     }
+  //   })
+  // }
 
   handleNickNameChange = (e) => {
     let value = e.target.value
@@ -348,6 +352,7 @@ class Page extends Component {
   handleMessageButtonClick = async () => {
     const {data: {code}} = await sendCode({phoneNumber: this.state.phoneNumber.value})
     if (code === 200) {
+      message.success('已发送短信验证码')
       this.startTimer()
     }
   }

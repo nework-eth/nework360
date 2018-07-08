@@ -72,17 +72,23 @@ class Profile extends Component {
   render () {
     const {
       data: {
+        city,
+        email,
         avatar,
         evaluate: {
           ave,
           count,
         },
+        country,
         nickname,
         isPartyB,
         hireTimes,
         createTime,
         checkStatus,
+        phoneNumber,
+        description,
       },
+      skillList,
     } = this.state
     return (
       <div className="profile-container">
@@ -90,28 +96,28 @@ class Profile extends Component {
           <img src={ avatar || './images/headshot-default.png' } alt="头像" width="100" height="100" className="avatar"/>
           <h2>您好，我是{ nickname }</h2>
           <div className="info">
-            <p className="position">北京 · 中国</p>
+            <p className="position">{ isPartyB ? city : this.props.location.cityName } · { country }</p>
             <Rate
               allowHalf
               disabled
-              value={ ave }
+              value={ getRate(ave) }
               character={ <i className="iconfont icon-rate-star-full"/> }
             />
-            <p className="rate">{ getRate(ave) }</p>
+            <p className="rate">{ ave }</p>
             <p className="evaluation">({ count }条评价)</p>
           </div>
           <p className="introduce">
-            { this.props.user.description }
+            { description }
           </p>
           <a href="">查看更多介绍</a>
           <div className="information-container">
-            <div><i className="iconfont icon-hire"/>被雇佣 { hireTimes } 次</div>
+            <div><i className="iconfont icon-hire"/>{ isPartyB ? '被' : '已' }雇佣 { hireTimes } 次</div>
             { checkStatus === 2 && <div><i className="iconfont icon-identified"/>实名认证</div> }
             <div><i className="iconfont icon-joined-time"/>已加入{ getRelativeTime(createTime) }</div>
-            { this.props.user.phoneNumber && <div><i className="iconfont icon-identified-phone"/>手机认证</div> }
-            { this.props.user.email && <div><i className="iconfont icon-nav-message"/>邮箱认证</div> }
+            { phoneNumber && <div><i className="iconfont icon-identified-phone"/>手机认证</div> }
+            { email && <div><i className="iconfont icon-nav-message"/>邮箱认证</div> }
           </div>
-          { isPartyB && <div><h3 className="skill-title">技能<span>（{ this.state.skillList.length }）</span></h3>
+          { isPartyB && <div><h3 className="skill-title">技能<span>（{ skillList.length }）</span></h3>
             <Carousel
               dots={ false }
               infinite={ false }
@@ -120,7 +126,7 @@ class Profile extends Component {
               arrows={ true }
             >
               {
-                this.state.skillList.map(({secondServiceTypeName, firstServiceTypeName}, index) => <SkillItem
+                skillList.map(({secondServiceTypeName, firstServiceTypeName}, index) => <SkillItem
                   logoSrc={ logoSrcList.find(src => src.includes(firstServiceTypeName)) || './images/其他-icon.png' }
                   title={ secondServiceTypeName }
                   index={ index }
@@ -130,7 +136,7 @@ class Profile extends Component {
             </Carousel>
           </div> }
           {
-            isPartyB &&
+            false &&
             <div>
               <h3 className="location">营业时间与地点</h3>
               <div className="time-location-container">

@@ -77,10 +77,7 @@ class SearchPage extends Component {
     })
   }
   handleSearchButtonClick = () => {
-    console.log('handle search button click')
-    console.log(this.state.searchResult, this.state.searchValue)
     const searchItem = this.state.searchResult.find(({serviceTypeName}) => serviceTypeName === this.state.searchValue)
-    console.log(searchItem)
     if (searchItem) {
       browserHistory.push({
         pathname: '/requirement-homepage', state: {
