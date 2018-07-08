@@ -155,13 +155,15 @@ class SearchPage extends Component {
       secondServiceList={ (serviceTree.find(item => item.serviceTypeName === selectedFirstService)).child }
     />
   }
-  jumpToRequirement = ({serviceTypeId, serviceTypeName}) => () => browserHistory.push({
-    pathname: '/requirement-homepage',
-    state: {
-      serviceTypeId,
-      serviceTypeName,
-    },
-  })
+  jumpToRequirement = ({serviceTypeId, serviceTypeName}) => () => {
+    browserHistory.push({
+      pathname: '/requirement-homepage',
+      state: {
+        serviceId: serviceTypeId,
+        serviceName: serviceTypeName,
+      },
+    })
+  }
 
   render () {
     const {

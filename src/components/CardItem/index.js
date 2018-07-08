@@ -1,16 +1,17 @@
-import React from 'react'
 import { Card } from 'antd'
+import React from 'react'
 import './static/style/index.less'
 
-const { Meta } = Card
+const {Meta} = Card
 
-function CardItem ({ imgSrc, title, count }) {
+function CardItem ({imgSrc, title, count, jumpToRequirement}) {
   return (
     <Card
       hoverable
       cover={ <img alt="example" src={ imgSrc } width={ 250 } height={ 168 }/> }
-      bordered={false}
+      bordered={ false }
       className="reset-card"
+      onClick={ jumpToRequirement }
     >
       <Meta
         title={ <h3>{ title }</h3> }
