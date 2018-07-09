@@ -1,5 +1,6 @@
 import { Input, Modal } from 'antd'
 import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
 
 const {TextArea} = Input
 const classNameSpace = 'im'
@@ -10,12 +11,19 @@ class IMModal extends Component {
     textAreaValue: '',
   }
 
+  jumpToDemand = () => {
+    browserHistory.push({pathname: '/need-detail', state: {needsId: '201806251010289473493322'}})
+  }
+
   render () {
     const {
       visible,
+      needsId,
       nickname,
+      phoneNumber,
       handleCancel,
       handleSubmit,
+      jumpToDemand,
     } = this.props
     const {
       rateValue,
@@ -23,7 +31,7 @@ class IMModal extends Component {
     } = this.state
     return (
       <Modal
-        title={ <h2>Rennaiqian</h2> }
+        title={ <h2>{ nickname }</h2> }
         visible={ visible }
         style={ {
           top: '0',
@@ -42,10 +50,10 @@ class IMModal extends Component {
         footer={ null }
         onCancel={ handleCancel }
       >
-        <div>
-          <div>
-            <p>17756119429</p>
-            <p><span>查看需求</span><span>投诉</span></p>
+        <div className="im-container">
+          <div className="im-top-wrapper">
+            <p>{ phoneNumber }</p>
+            <p><span onClick={ this.jumpToDemand }>查看需求</span><span>投诉</span></p>
           </div>
         </div>
       </Modal>

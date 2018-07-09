@@ -1,3 +1,4 @@
+import { message } from 'antd'
 import moment from 'moment'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -44,9 +45,10 @@ class NeedOrderDetail extends Component {
   state = {
     data: '',
     quotes: [],
-    needsId: this.props.location.state ? this.props.location.state.needsId : '201806251010289473493322',
+    needsId: this.props.location.state.needsId,
     orderStatus: '',
     selectedQuoteId: '',
+    IMModalVisible: false,
   }
   getNeedOrderDetail = async () => {
     const {data: {data, code}} = await getNeedOrderDetail({needsId: this.state.needsId})
@@ -61,6 +63,10 @@ class NeedOrderDetail extends Component {
   }
   selectPartyB = (needsId, quoteId) => async () => {
     const {data: {code}} = await selectPartyB({needsId, quoteId})
+    if (code === 200) {
+      message.success('成功选择')
+      this.getNeedOrderDetail()
+    }
   }
   cancelOrder = () => cancelOrder({needsId: '201805261855396846258489'})
   IMInit = () => {
@@ -111,12 +117,6 @@ class NeedOrderDetail extends Component {
       onReadMessage: function (message) {},        //收到消息已读回执
       onCreateGroup: function (message) {},        //创建群组成功回执（需调用createGroupNew）
       onMutedMessage: function (message) {},        //如果用户在A群组被禁言，在A群发消息会走这个回调并且消息不会传递给群其它成员
-    })
-    conn.open({
-      apiUrl: WebIM.config.apiURL,
-      user: this.props.user.userId,
-      pwd: this.props.user.userId,
-      appKey: WebIM.config.appkey,
     })
     // conn.registerUser({
     //   username: '21',
@@ -209,6 +209,7 @@ class NeedOrderDetail extends Component {
         </main>
         { /*<QRCode value="http://sissi.pingxx.com/mock.php?ch_id=ch_9OeLWT90Gy9KOurfjHa9iznL&channel=wx_pub_qr"/>*/ }
         <IMModal
+          nickname='rennaiqian'
           visible={ false }
         />
         <Footer/>
