@@ -41,7 +41,6 @@ class EvaluateModal extends Component {
       >
         <div>
           <Rate
-            allowHalf
             defaultValue={ rateValue }
             character={ <i className="iconfont icon-rate-star-full" style={ {fontSize: '30px'} }/> }
             onChange={ (rateValue) => this.setState({rateValue}) }
