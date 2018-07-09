@@ -1,6 +1,6 @@
 import moment from 'moment'
-import QRCode from 'qrcode.react'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { view as Footer } from '../../components/Footer/index.js'
 import { IMModal } from '../../components/IMModal/IMModal'
 import { cancelOrder, getNeedOrderDetail, getPayInfo, selectPartyB } from '../../service/needOrderDetail/index'
@@ -34,6 +34,11 @@ const generateButtonStatus = (orderStatus, selectedQuoteId, quotedId) => {
   }
 }
 
+const mapState = (state) => ({
+  user: state.user,
+})
+
+@connect(mapState)
 class NeedOrderDetail extends Component {
 
   state = {
@@ -98,7 +103,7 @@ class NeedOrderDetail extends Component {
         console.log('error', message)
       },          //失败回调
       onBlacklistUpdate: function (list) {       //黑名单变动
-        // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
+                                                 // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
         console.log(list)
       },
       onReceivedMessage: function (message) {},    //收到消息送达服务器回执
@@ -202,7 +207,7 @@ class NeedOrderDetail extends Component {
             )
           }
         </main>
-        <QRCode value="http://sissi.pingxx.com/mock.php?ch_id=ch_9OeLWT90Gy9KOurfjHa9iznL&channel=wx_pub_qr"/>
+        { /*<QRCode value="http://sissi.pingxx.com/mock.php?ch_id=ch_9OeLWT90Gy9KOurfjHa9iznL&channel=wx_pub_qr"/>*/ }
         <IMModal
           visible={ false }
         />
