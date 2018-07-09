@@ -1,12 +1,17 @@
 import { message } from 'antd'
 import axios from 'axios'
+import { browserHistory } from 'react-router'
 
 axios.defaults.baseURL = 'http://nework-web.rdc.waibaodashi.com'
 
 axios.defaults.withCredentials = true
 
 axios.interceptors.response.use(res => {
-  const { data: { code, desc } } = res
+  const {data: {code, desc}} = res
+  if (code === 501) {
+    message.error(desc)
+    browserHistory.push('/login')
+  }
   if (code !== 200) {
     message.error(desc)
   }
