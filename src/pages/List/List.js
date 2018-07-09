@@ -126,6 +126,7 @@ class List extends Component {
     if (code === 200) {
       message.success('评价成功')
     }
+    this.getServiceOrderList()
     this.handleEvaluateModalCancel()
   }
   showInitiatePaymentModal = (quoteId) => () => {

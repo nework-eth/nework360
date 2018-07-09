@@ -77,6 +77,7 @@ function ServiceListItem ({
             amount,
             nickname,
             quoteNumber,
+            hasEvaluated,
             initiatePayment,
             showEvaluateModal,
             cancelServiceOrder,
