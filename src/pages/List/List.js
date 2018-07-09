@@ -1,5 +1,6 @@
 import { message } from 'antd'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { ComplaintModal } from '../../components/ComplaintModal/ComplaintModal'
 import { EvaluateModal } from '../../components/EvaluateModal/EvaluateModal'
@@ -21,6 +22,11 @@ import './static/style/index.less'
 
 const formatDate = dateStr => dateStr.replace('-', '年').replace('-', '月').replace(' ', '日 ')
 
+const mapState = (state) => ({
+  user: state.user,
+})
+
+@connect(mapState)
 class List extends Component {
 
   state = {
@@ -170,32 +176,8 @@ class List extends Component {
         </div>
         <div className="content-wrapper">
           {
-            listType === 'need'
-              ? needOrderList.map(({
-                                     tip,
-                                     quotes,
-                                     status,
-                                     userId,
-                                     needsId,
-                                     quoteId,
-                                     upateTime,
-                                     serviceName,
-                                     amountFinal,
-                                   }) =>
-                <NeedListItem
-                  key={ needsId }
-                  date={ formatDate(upateTime) }
-                  title={ serviceName }
-                  quotes={ quotes }
-                  status={ status }
-                  jumpToPay={ this.jumpToPay({amount: amountFinal, needsId}) }
-                  goNeedDetail={ this.goNeedDetail(needsId) }
-                  selectedQuote={ quotes.find(item => item.quoteId === quoteId) }
-                  goNeedOrderDetail={ this.goNeedOrderDetail }
-                  showComplaintModal={ this.showComplaintModal }
-                  handleChangeDemand={ this.handleChangeDemand(needsId) }
-                />)
-              : serviceOrderList.map(({
+            listType === 'service' && this.props.user.isPartyB
+              ? serviceOrderList.map(({
                                         user: {
                                           // 注意k的大小写
                                           nickName: nickname,
@@ -242,6 +224,30 @@ class List extends Component {
                   showInitiatePaymentModal={ this.showInitiatePaymentModal(quoteId) }
                 />,
               )
+              : needOrderList.map(({
+                                     tip,
+                                     quotes,
+                                     status,
+                                     userId,
+                                     needsId,
+                                     quoteId,
+                                     upateTime,
+                                     serviceName,
+                                     amountFinal,
+                                   }) =>
+                <NeedListItem
+                  key={ needsId }
+                  date={ formatDate(upateTime) }
+                  title={ serviceName }
+                  quotes={ quotes }
+                  status={ status }
+                  jumpToPay={ this.jumpToPay({amount: amountFinal, needsId}) }
+                  goNeedDetail={ this.goNeedDetail(needsId) }
+                  selectedQuote={ quotes.find(item => item.quoteId === quoteId) }
+                  goNeedOrderDetail={ this.goNeedOrderDetail }
+                  showComplaintModal={ this.showComplaintModal }
+                  handleChangeDemand={ this.handleChangeDemand(needsId) }
+                />)
           }
         </div>
         <ComplaintModal

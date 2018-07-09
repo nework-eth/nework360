@@ -162,6 +162,7 @@ const requireAuth = async (nextState, replaceState, callback) => {
     }
   }
   replaceState('/login')
+  callback()
 }
 
 const autoLogin = async (nextState, replaceState, callback) => {
