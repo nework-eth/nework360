@@ -45,12 +45,12 @@ class NeedDetail extends Component {
     if (code === 200) {
       message.success('报价成功')
       this.getNeedDetail()
+      this.hideQuoteModal()
     }
   }
 
   render () {
     const {
-      pages,
       score,
       needsId,
       nickName,

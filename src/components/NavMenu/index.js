@@ -1,4 +1,4 @@
-import { Dropdown, Menu } from 'antd'
+import { Dropdown, Menu, message } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory, Link } from 'react-router'
@@ -65,6 +65,8 @@ class NavMenu extends Component {
     messageList: [],
     messageLimit: 10,
     selectedType: 'unread',
+    messageCount: 0,
+    unreadMessageCount: 0,
     unreadMessageList: [],
     unreadMessageLimit: 10,
     messagePanelVisible: false,
@@ -87,18 +89,20 @@ class NavMenu extends Component {
     }
   }
   getMessage = async () => {
-    const {data: {data, code}} = await getMessage({userId: 21})
+    const {data: {data, code, pageinfo}} = await getMessage({userId: 21})
     if (code === 200) {
       this.setState({
         messageList: data,
+        messageCount: pageinfo.totalCount,
       })
     }
   }
   getUnreadMessage = async () => {
-    const {data: {data, code}} = await getMessage({userId: 21, status: 0})
+    const {data: {data, code, pageinfo}} = await getMessage({userId: 21, status: 0})
     if (code === 200) {
       this.setState({
         unreadMessageList: data,
+        unreadMessageCount: pageinfo.totalCount,
       })
     }
   }
@@ -128,10 +132,18 @@ class NavMenu extends Component {
       this.getMessage()
     }
   }
+  ignoreAll = async () => {
+    const resultArr = await Promise.all(this.selectedMessageList().map(({id}) => updateMessageStatus({id, status: -1})))
+    if (resultArr.every(({data: {code}}) => code === 200)) {
+      message.success('已忽略全部消息')
+      this.getMessage()
+      this.getUnreadMessage()
+    }
+  }
   seeDetails = (action) => () => {
     switch (action) {
       case 'needs':
-        browserHistory.push('/needs-detail')
+        browserHistory.push('/need-detail')
         return
       case 'trans':
         browserHistory.push('/wallet')
@@ -165,20 +177,13 @@ class NavMenu extends Component {
       messagePanelVisible: !preState.messagePanelVisible,
     }))
   }
-  hideMessagePanel = () => {
-    document.addEventListener('click', () => {
-      if (this.state.messagePanelVisible === true) {
-        this.setState({
-          messagePanelVisible: false,
-        })
-      }
-    })
-  }
 
   render () {
     const {cityName} = this.props
     const {
+      messageCount,
       selectedType,
+      unreadMessageCount,
       messagePanelVisible,
     } = this.state
     return (
@@ -273,7 +278,7 @@ class NavMenu extends Component {
                 <span>全部消息</span>
               </div>
             </div>
-            <div className="ignore-all-operate">全部忽略</div>
+            <div className="ignore-all-operate" onClick={ this.ignoreAll }>全部忽略</div>
           </div>
           { this.selectedMessageList().map(({
                                               id,
@@ -293,10 +298,19 @@ class NavMenu extends Component {
               updateTime={ updateTime }
               ignoreMessage={ this.ignoreMessage(id) }
             />) }
+          { selectedType === 'unread' && (this.selectedMessageList()).length < unreadMessageCount &&
           <div className="message-panel-footer">
             <span onClick={ this.loadMore } className="virtual-button"><i
               className="iconfont icon-load-more"/>加载更多</span>
           </div>
+          }
+          {
+            selectedType === 'all' && (this.selectedMessageList()).length < messageCount &&
+            <div className="message-panel-footer">
+            <span onClick={ this.loadMore } className="virtual-button"><i
+              className="iconfont icon-load-more"/>加载更多</span>
+            </div>
+          }
         </div> }
       </div>
     )
@@ -312,6 +326,7 @@ class NavMenu extends Component {
 
 const MessageItem = function ({
                                 type,
+                                status,
                                 content,
                                 seeDetails,
                                 updateTime,
@@ -325,7 +340,7 @@ const MessageItem = function ({
     <div className="message-item-content-wrapper">
       <div className="message-item-content">{ content }</div>
       <div className="message-item-operate">
-        <span className="message-item-operate-item" onClick={ ignoreMessage }>忽略</span>
+        { !status && <span className="message-item-operate-item" onClick={ ignoreMessage }>忽略</span> }
         <span className="message-item-operate-item" onClick={ seeDetails }>查看</span>
       </div>
     </div>
