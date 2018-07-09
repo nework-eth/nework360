@@ -1,6 +1,7 @@
 import { Button, Carousel, Rate } from 'antd'
 import 'moment/locale/zh-cn'
 import React, { Component } from 'react'
+import { DayPickerRangeController } from 'react-dates'
 import 'react-dates/initialize'
 import 'react-dates/lib/css/_datepicker.css'
 import { connect } from 'react-redux'
@@ -8,6 +9,31 @@ import { Link } from 'react-router'
 import { getSkillByUserId, getUserById } from '../../service/editData'
 import { getRate, getRelativeTime } from '../../utils'
 import './static/style/index.less'
+
+const isDayHighlighted = (serviceTimeList) => (value) => {
+  if (serviceTimeList.includes('w') && serviceTimeList.includes('sat') && serviceTimeList.includes('sun')) {
+    return true
+  }
+  if (serviceTimeList.includes('w') && serviceTimeList.includes('sat')) {
+    return value.day() < 6
+  }
+  if (serviceTimeList.includes('sat') && serviceTimeList.includes('sun')) {
+    return value.day() > 4
+  }
+  if (serviceTimeList.includes('w') && serviceTimeList.includes('sun')) {
+    return value.day() < 5 || value.day() === 6
+  }
+  if (serviceTimeList.includes('w')) {
+    return value.day() < 5
+  }
+  if (serviceTimeList.includes('sat')) {
+    return value.day() === 5
+  }
+  if (serviceTimeList.includes('sun')) {
+    return value.day() === 6
+  }
+  return false
+}
 
 const logoSrcList = [
   './images/宠物-icon.png',
@@ -48,6 +74,7 @@ class Profile extends Component {
   state = {
     data: {
       evaluate: {},
+      serviceTime: '',
     },
     userId: {},
     skillList: [],
@@ -86,7 +113,6 @@ class Profile extends Component {
         city,
         email,
         avatar,
-        latitude,
         evaluate: {
           ave,
           count,
@@ -94,10 +120,10 @@ class Profile extends Component {
         country,
         isPartyB,
         nickname,
-        longitude,
         hireTimes,
         createTime,
         checkStatus,
+        serviceTime,
         phoneNumber,
         description,
       },
@@ -151,12 +177,13 @@ class Profile extends Component {
           <div>
             <h3 className="location">营业时间与地点</h3>
             <div className="time-location-container">
-              { /*<DayPickerRangeController*/ }
-              { /*numberOfMonths={ 1 }*/ }
-              { /*hideKeyboardShortcutsPanel*/ }
-              { /*monthFormat="YYYY[年]M[月]"*/ }
-              { /*date={ moment() }*/ }
-              { /*/>*/ }
+              <DayPickerRangeController
+                disabled={ true }
+                numberOfMonths={ 1 }
+                hideKeyboardShortcutsPanel
+                monthFormat="YYYY[年]M[月]"
+                isDayHighlighted={ isDayHighlighted(serviceTime.split(',')) }
+              />
               <div id="mapContainer"/>
             </div>
           </div>
