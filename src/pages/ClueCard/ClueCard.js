@@ -6,13 +6,15 @@ import './static/style/index.less'
 const classNameSpace = 'clue-card'
 
 class ClueCard extends Component {
+  state = {}
+
   render () {
     return (
       <div className={ `${classNameSpace}-container` }>
         <main>
           <h2>购买线索卡</h2>
           <div className={ `${classNameSpace}-model-wrapper` }>
-            <p>剩余 7 张</p>
+            <p>剩余 { } 张</p>
           </div>
           <p className={ `${classNameSpace}-virtual-title` }>
             购买数量
@@ -50,6 +52,11 @@ class ClueCard extends Component {
       </div>
     )
   }
+
+  componentDidMount () {
+
+  }
+
 }
 
 export { ClueCard as page }

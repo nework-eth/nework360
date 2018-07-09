@@ -56,6 +56,11 @@ class Profile extends Component {
     const {data: {data, code}} = await getUserById({userId: this.state.userId})
     if (code === 200) {
       this.setState({data})
+      /* eslint-disable no-undef */
+      const map = new AMap.Map('mapContainer', {
+        center: [data.longitude, data.latitude],
+        zoom: 11,
+      })
     }
   }
   getSkillByUserId = async () => {
@@ -75,13 +80,15 @@ class Profile extends Component {
         city,
         email,
         avatar,
+        latitude,
         evaluate: {
           ave,
           count,
         },
         country,
-        nickname,
         isPartyB,
+        nickname,
+        longitude,
         hireTimes,
         createTime,
         checkStatus,
@@ -135,21 +142,19 @@ class Profile extends Component {
               }
             </Carousel>
           </div> }
-          {
-            false &&
-            <div>
-              <h3 className="location">营业时间与地点</h3>
-              <div className="time-location-container">
-                { /*<DayPickerRangeController*/ }
-                { /*numberOfMonths={ 1 }*/ }
-                { /*hideKeyboardShortcutsPanel*/ }
-                { /*monthFormat="YYYY[年]M[月]"*/ }
-                { /*date={ moment() }*/ }
-                { /*/>*/ }
-                <div id="mapContainer"/>
-              </div>
+          <div>
+            <h3 className="location">营业时间与地点</h3>
+            <div className="time-location-container">
+              { /*<DayPickerRangeController*/ }
+              { /*numberOfMonths={ 1 }*/ }
+              { /*hideKeyboardShortcutsPanel*/ }
+              { /*monthFormat="YYYY[年]M[月]"*/ }
+              { /*date={ moment() }*/ }
+              { /*/>*/ }
+              <div id="mapContainer"/>
             </div>
-          }
+          </div>
+
         </main>
         <footer>
           {
@@ -167,8 +172,6 @@ class Profile extends Component {
   }
 
   componentDidMount () {
-    /* eslint-disable no-undef */
-    // const map = new AMap.Map('mapContainer')
     /* eslint-disable no-undef */
     // console.log('AMap++++', AMap)
     if (this.props.location.state && this.props.location.state.userId) {
