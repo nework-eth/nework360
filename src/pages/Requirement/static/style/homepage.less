@@ -60,7 +60,9 @@
       }
     }
     .service-person-container {
-      padding: 40px calc(50vw - 530px);
+      margin: 0 auto;
+      width: 1060px;
+      padding-top: 40px;
       h2 {
         margin-bottom: 10px;
       }
@@ -69,6 +71,7 @@
         flex-wrap: wrap;
         .service-person-card {
           margin-top: 20px;
+          margin-right: 20px;
           padding: 30px;
           width: 340px;
           border: 1px solid #edf1f4;
@@ -80,8 +83,8 @@
           &:hover {
             box-shadow: 0 10px 30px 0 rgba(9, 34, 53, 0.10);
           }
-          &:not(:nth-of-type(3n+3)) {
-            margin-right: 20px;
+          &:nth-of-type(3n+3) {
+            margin-right: 0;
           }
           .service-person-card-top {
             display: flex;

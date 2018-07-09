@@ -379,10 +379,6 @@ class SelectCity extends Component {
       </div>
     )
   }
-
-  componentDidMount () {
-
-  }
 }
 
 export { SelectCity as view }
