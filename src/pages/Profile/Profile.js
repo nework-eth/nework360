@@ -113,13 +113,14 @@ class Profile extends Component {
         city,
         email,
         avatar,
+        country,
+        isPartyB,
+        nickname,
         evaluate: {
           ave,
           count,
         },
-        country,
-        isPartyB,
-        nickname,
+        bossTimes,
         hireTimes,
         createTime,
         checkStatus,
@@ -150,7 +151,8 @@ class Profile extends Component {
           </p>
           <a href="">查看更多介绍</a>
           <div className="information-container">
-            <div><i className="iconfont icon-hire"/>{ isPartyB ? '被' : '已' }雇佣 { hireTimes } 次</div>
+            <div><i className="iconfont icon-hire"/>{ isPartyB ? '被' : '已' }雇佣 { isPartyB ? hireTimes : bossTimes } 次
+            </div>
             { checkStatus === 2 && <div><i className="iconfont icon-identified"/>实名认证</div> }
             <div><i className="iconfont icon-joined-time"/>已加入{ getRelativeTime(createTime) }</div>
             { phoneNumber && <div><i className="iconfont icon-identified-phone"/>手机认证</div> }

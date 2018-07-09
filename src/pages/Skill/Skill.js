@@ -591,6 +591,13 @@ class SkillPage extends Component {
     })
   }
 
+  getUserById = async () => {
+    const {data: {data, code}} = await getUserById({userId: this.state.userId})
+    if (code === 200) {
+      this.setState()
+    }
+  }
+
   componentDidMount () {
     this.getCityTree()
     this.mapInit()

@@ -137,7 +137,7 @@ class RequirementHomePage extends Component {
                     avatarUrl={ userBasicInfoVO.avatar }
                     evaluation={ userEvaluate ? userEvaluate.content : '' }
                     jumpToProfile={ this.jumpToProfile(userBasicInfoVO.userId) }
-                    jumpToPostDemand={ this.jumpToPostDemand() }
+                    jumpToPostDemand={ this.jumpToPostDemand }
                   />)
               }
             </div>
