@@ -7,10 +7,10 @@ axios.defaults.baseURL = 'http://nework-web.rdc.waibaodashi.com'
 axios.defaults.withCredentials = true
 
 axios.interceptors.response.use(res => {
-  const {data: {code, desc}} = res
-  if (code === 501) {
-    message.error(desc)
+  const {data: {code, desc}, headers} = res
+  if (headers.token === 'timeout') {
     browserHistory.push('/login')
+    return res
   }
   if (code !== 200) {
     message.error(desc)
