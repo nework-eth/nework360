@@ -59,8 +59,14 @@ class Profile extends Component {
       /* eslint-disable no-undef */
       const map = new AMap.Map('mapContainer', {
         center: [data.longitude, data.latitude],
-        zoom: 11,
+        zoom: 13,
       })
+      console.log(data.location)
+      const marker = new AMap.Marker({
+        position: new AMap.LngLat(data.longitude, data.latitude),
+        title: data.locaiton,
+      })
+      map.add(marker)
     }
   }
   getSkillByUserId = async () => {
