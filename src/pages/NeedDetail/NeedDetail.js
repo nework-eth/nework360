@@ -20,7 +20,7 @@ class NeedDetail extends Component {
     needDetailItemList: [],
   }
   getNeedDetail = async () => {
-    const {data: {data, code}} = await getNeedDetail({needsId: '201806251010289473493322'})
+    const {data: {data, code}} = await getNeedDetail({needsId: this.state.needsId})
     if (code === 200) {
       this.setState({
         score: data.user.score.ave,
@@ -105,14 +105,11 @@ class NeedDetail extends Component {
   }
 
   componentDidMount () {
-    if (this.props.location.state && this.props.location.state.needsId) {
-      // this.props.form.setFieldsValue({ phoneNumber: this.props.location.state.phoneNumber })
-      this.setState({
-        needsId: this.props.location.state.needsId,
-      }, () => {
-      })
-    }
-    this.getNeedDetail()
+    this.setState({
+      needsId: this.props.location.state.needsId,
+    }, () => {
+      this.getNeedDetail()
+    })
   }
 
 }
