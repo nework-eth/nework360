@@ -10,40 +10,25 @@ export const classNameSpace = 'need-detail'
 
 class NeedDetail extends Component {
   state = {
-    pages: [
-      [
-        {content: '需要清洁的位置'},
-        {content: ['厨房过滤网', '厨房内部清洁']},
-      ],
-      [
-        {content: '需要清洁的时间'},
-        {content: ['2018 年 5 月 26 日（周六）', '2018 年 5 月 30 日（周三）']},
-      ],
-      [
-        {content: '需要清洁的地址'},
-        {content: '北京市朝阳区阜通东大街天启大厦2308'},
-      ],
-      [
-        {content: '特殊要求'},
-        {content: '我的地毯有些年头了，上面有些油渍比较难清洗，麻烦多带一些强力清洗且不伤皮毛的洗衣液。地毯每周都要用吸尘器清扫一次，经常踩踏的地方需要更频繁的清扫。经常用吸尘器清扫可以防止砂粒聚积，从而延长地毯寿命，因为砂粒过多会磨断地毯纤维。每隔几星期，再多花些时间使用缝隙清扫工具对护壁板、暖气和其他不容易够到的地方进行清扫。'},
-      ],
-    ],
     score: '',
     needsId: '',
+    nickName: '',
     avatarSrc: '',
     scoreCount: '',
     serviceName: '',
     quoteModalVisible: false,
+    needDetailItemList: [],
   }
   getNeedDetail = async () => {
-    const {data: {data, code}} = await getNeedDetail({needsId: this.state.needsId})
+    const {data: {data, code}} = await getNeedDetail({needsId: '201806251010289473493322'})
     if (code === 200) {
       this.setState({
         score: data.user.score.ave,
+        nickName: data.user.nickName,
         avatarSrc: data.user.photo,
         scoreCount: data.user.score.count,
         serviceName: data.serviceName,
-        needDetailItemList: data.needsItem,
+        needDetailItemList: data.needsItem.pages,
       })
     }
   }
@@ -68,10 +53,12 @@ class NeedDetail extends Component {
       pages,
       score,
       needsId,
+      nickName,
       avatarSrc,
       scoreCount,
       serviceName,
       quoteModalVisible,
+      needDetailItemList,
     } = this.state
     return (
       <div className={ `${classNameSpace}-container` }>
@@ -85,23 +72,23 @@ class NeedDetail extends Component {
             />
             <div>
               <div className={ `${classNameSpace}-profile-name` }>
-                rennaiqian
+                { nickName }
               </div>
               <div className={ `${classNameSpace}-rate-wrapper` }>
                 <Rate
                   allowHalf
                   disabled
-                  defaultValue={ getRate(score) }
+                  value={ getRate(score) }
                   character={ <i className="iconfont icon-rate-star-full"/> }
                 />
                 <p className="rate">{ score }</p>
-                <p className="evaluation">（{ +scoreCount }条评价）</p>
+                <p className="evaluation">（{ scoreCount }条评价）</p>
               </div>
             </div>
           </div>
           <h2>Hi，我需要{ serviceName }服务，我的需求如下：</h2>
           {
-            pages.map((page, index) => <NeedDetailItem data={ page } key={ index }/>)
+            needDetailItemList.map((page, index) => <NeedDetailItem data={ page } key={ index }/>)
           }
         </main>
         <QuoteModal
@@ -122,6 +109,7 @@ class NeedDetail extends Component {
       // this.props.form.setFieldsValue({ phoneNumber: this.props.location.state.phoneNumber })
       this.setState({
         needsId: this.props.location.state.needsId,
+      }, () => {
       })
     }
     this.getNeedDetail()

@@ -6,12 +6,12 @@ function NeedDetailItem ({ data }) {
   return (
     <div className={ `${classNameSpace}-item-wrapper` }>
       {
-        data.map(({ content }, index) => {
+        data.map(({content, resultValue}, index) => {
           if (index % 2) {
-            if (Array.isArray(content)) {
-              return content.map(item => <p key={ item }>{ item }</p>)
+            if (Array.isArray(resultValue)) {
+              return resultValue.map(item => <p key={ item }>{ item }</p>)
             }
-            return <p key={ content }>{ content }</p>
+            return <p key={ resultValue }>{ resultValue }</p>
           }
           return <h3 key={ content }>{ content }</h3>
         })
