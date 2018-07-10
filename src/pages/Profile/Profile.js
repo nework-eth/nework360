@@ -165,7 +165,9 @@ class Profile extends Component {
             { phoneNumber && <div><i className="iconfont icon-identified-phone"/>手机认证</div> }
             { email && <div><i className="iconfont icon-nav-message"/>邮箱认证</div> }
           </div>
-          { isPartyB && <div><h3 className="skill-title">技能<span>（{ skillList.length }）</span></h3>
+          { isPartyB &&
+          <div className="skill-carousel-container"><h3 className="skill-title">技能<span>（{ skillList.length }）</span>
+          </h3>
             <Carousel
               dots={ false }
               infinite={ false }
