@@ -1,4 +1,5 @@
 import { message, Progress } from 'antd'
+import moment from 'moment'
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import { createDemand, getMatchResult, getTemplate } from '../../service/demand'
@@ -305,6 +306,7 @@ class PostDemand extends Component {
         this.getNeedDetail()
       }
     })
+    console.log(moment(0))
   }
 
 }

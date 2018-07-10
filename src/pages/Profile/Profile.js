@@ -185,7 +185,7 @@ class Profile extends Component {
               }
             </Carousel>
           </div> }
-          <div>
+          { isPartyB && <div>
             <h3 className="location">营业时间与地点</h3>
             <div className="time-location-container">
               <DayPickerRangeController
@@ -197,7 +197,7 @@ class Profile extends Component {
               />
               <div id="mapContainer"/>
             </div>
-          </div>
+          </div> }
 
         </main>
         <footer>
