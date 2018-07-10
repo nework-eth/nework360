@@ -145,13 +145,13 @@ function Content ({
         title: '订单号',
         dataIndex: 'clueOrderId',
         key: 'clueOrderId',
-        width: 120,
+        width: 240,
       },
       {
         title: '张数',
         dataIndex: 'count',
         key: 'count',
-        width: 130,
+        width: 100,
         render (value, record) {
           switch (record.type) {
             case 'recharge':
@@ -210,7 +210,7 @@ function Content ({
         title: '交易时间',
         dataIndex: 'updateTime',
         key: 'updateTime',
-        width: 130,
+        width: 160,
       },
     ]
 
@@ -260,7 +260,7 @@ class Wallet extends Component {
     }
   }
   getUserTransactionRecord = async () => {
-    const {data: {data, code}} = await getUserTransactionRecord({userId: this.props.user.userId})
+    const {data: {data, code}} = await getUserTransactionRecord({userId: this.props.user.userId, limit: -1})
     if (code === 200) {
       this.setState({
         transactionRecordList: data,
@@ -268,7 +268,7 @@ class Wallet extends Component {
     }
   }
   getUserClueCardRecord = async () => {
-    const {data: {data, code}} = await getUserClueCardRecord({userId: this.props.user.userId})
+    const {data: {data, code}} = await getUserClueCardRecord({userId: this.props.user.userId, limit: -1})
     if (code === 200) {
       this.setState({
         clueCardRecordList: data,
@@ -289,7 +289,7 @@ class Wallet extends Component {
       <div className="wallet-container">
         <Menu
           onClick={ this.handleClick }
-          style={ {width: 188, height: 800} }
+          style={ {width: 188, height: 800, position: 'fixed'} }
           defaultSelectedKeys={ ['balance'] }
           mode="inline"
         >
