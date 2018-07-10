@@ -311,7 +311,7 @@ class EditData extends Component {
     if (code === 200) {
       const secondarySkillList = Object
       .values(data.skill)
-      .reduce((pre, cur) => [...pre, ...cur])
+      .reduce((pre, cur) => [...pre, ...cur], [])
       this.setState({
         skillList: [...secondarySkillList, ...data.skillTemp],
       })
@@ -902,10 +902,13 @@ class EditData extends Component {
       this.afterUpdate()
       this.mapInit()
       Promise.all([this.getCityTree(), this.getUserById()])
-             .then(() =>
-               this.setState({
-                 cityData: this.state.tree[this.state.data.country][this.state.data.province],
-               }),
+             .then(() => {
+                 if (this.state.data && this.state.data.country) {
+                   this.setState({
+                     cityData: this.state.tree[this.state.data.country][this.state.data.province],
+                   })
+                 }
+               },
              )
     })
   }

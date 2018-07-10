@@ -180,12 +180,12 @@ class List extends Component {
           >
             我需求的订单
           </h2>
-          <h2
+          { this.props.user.isPartyB && <h2
             className={ listType === 'service' ? 'checked-title' : '' }
             onClick={ this.changeListType('service') }
           >
             我服务的订单
-          </h2>
+          </h2> }
         </div>
         <div className="content-wrapper">
           {

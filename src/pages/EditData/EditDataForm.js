@@ -125,7 +125,7 @@ function EditDataForm ({
             <div className="introduce">只有在你和另一名Nework用户确认订单时，此资料才会被分享</div>
           </div>
         </div>
-        <div className="form-item-group">
+        { email && <div className="form-item-group">
           <div className="form-item">
             <div className="label">邮箱</div>
             <div className="content">
@@ -135,7 +135,7 @@ function EditDataForm ({
           <div className="form-item">
             <div className="introduce">我们不会向其他用户透露您的个人邮箱地址</div>
           </div>
-        </div>
+        </div> }
         <div className="form-item-group">
           <div className="form-item">
             <div className="label">国家或地区</div>
