@@ -22,7 +22,6 @@ function DateTemplate ({
           monthFormat="YYYY[年]M[月]"
           onDateChange={ (value) => {handleDateChange(value, index)} }
           enableOutsideDays
-          isOutsideRange={ () => true }
           date={ valueItem }
         />
       </div>) }
