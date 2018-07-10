@@ -8,7 +8,7 @@ import { signOut } from '../../service/auth'
 import { getCityByIp } from '../../service/homepage'
 import { getMessage, updateMessageStatus } from '../../service/navMenu'
 import store from '../../Store'
-import { deleteCookie } from '../../utils'
+import { contains, deleteCookie } from '../../utils'
 import { setCityId, setCityName, setCountryId, setUser } from './actions'
 import { positionReducer, userReducer } from './reducer'
 import './static/style/index.less'
@@ -176,6 +176,7 @@ class NavMenu extends Component {
   }
   toggleMessagePanelVisible = (e) => {
     e.stopPropagation()
+    console.log(e.target.className)
     this.setState((preState) => ({
       messagePanelVisible: !preState.messagePanelVisible,
     }))
@@ -214,8 +215,8 @@ class NavMenu extends Component {
                   <li className="li-item user-li-item">
                     <Link to="/list" style={ userLinkStyle }>我的订单</Link>
                   </li>
-                  <li className="li-item user-li-item">
-                    <span onClick={ this.toggleMessagePanelVisible }>消息中心</span>
+                  <li className="li-item user-li-item message-li" onClick={ this.toggleMessagePanelVisible }>
+                    <span className="message-span">消息中心</span>
                   </li>
                   <li className="li-item user-li-item">
                     <Dropdown overlay={
@@ -325,7 +326,17 @@ class NavMenu extends Component {
     }
     this.getMessage()
     this.getUnreadMessage()
-    // this.hideMessagePanel()
+    setTimeout(() => {
+      document.addEventListener('click', e => {
+        const messagePanel = document.querySelector('.message-panel-container')
+        const messageArea = document.querySelector('.message-li')
+        if (!contains(messageArea, e.target) && !contains(messagePanel, e.target)) {
+          this.setState({
+            messagePanelVisible: false,
+          })
+        }
+      })
+    })
   }
 }
 
