@@ -146,7 +146,10 @@ class List extends Component {
     }
     this.handleInitiatePaymentModalCancel()
   }
-  handleChangeDemand = (needsId) => () => browserHistory.push({pathname: '/post-demand', state: {needsId}})
+  handleChangeDemand = (needsId, serviceId) => () => browserHistory.push({
+    pathname: '/post-demand',
+    state: {needsId, serviceId},
+  })
   jumpToPay = ({amount, needsId}) => () => browserHistory.push({pathname: '/pay', state: {amount, needsId}})
 
   render () {
@@ -234,6 +237,7 @@ class List extends Component {
                                      quoteId,
                                      nickname,
                                      upateTime,
+                                     serviceId,
                                      serviceName,
                                      amountFinal,
                                    }) =>
@@ -249,7 +253,7 @@ class List extends Component {
                   showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickname) }
                   goNeedOrderDetail={ this.goNeedOrderDetail(needsId) }
                   showComplaintModal={ this.showComplaintModal }
-                  handleChangeDemand={ this.handleChangeDemand(needsId) }
+                  handleChangeDemand={ this.handleChangeDemand(needsId, serviceId) }
                 />)
           }
         </div>

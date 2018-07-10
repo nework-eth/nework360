@@ -67,6 +67,15 @@ const mapState = (state) => ({
   position: state.position,
 })
 
+const filterEditData = (editData) => editData.map(page => {
+  page.forEach(item => {
+    if (item.templateItemType === 'time') {
+      item.resultValue = item.resultValue.map(timeStr => moment(timeStr))
+    }
+  })
+  return page
+})
+
 @connect(mapState)
 class PostDemand extends Component {
 
@@ -223,10 +232,10 @@ class PostDemand extends Component {
     browserHistory.push({pathname: '/list', state: {listType: 'need'}})
   }
 
-  getNeedDetail = async () => {
-    const {data: {data, code}} = await getNeedDetail
+  getNeedDetail = async (needsId) => {
+    const {data: {data, code}} = await getNeedDetail({needsId})
     if (code === 200) {
-      this.setState({data})
+      this.setState({data: filterEditData(data.needsItem.pages)})
     }
   }
 
@@ -307,11 +316,10 @@ class PostDemand extends Component {
     }, () => {
       this.getTemplate()
       this.mapInit()
-      if (this.props.location.state.needsId) {
-        this.getNeedDetail()
+      if (this.props.location.state && this.props.location.state.needsId) {
+        this.getNeedDetail(this.props.location.state.needsId)
       }
     })
-    console.log(moment(0))
   }
 
 }
