@@ -123,6 +123,10 @@ class List extends Component {
     evaluateModalVisible: false,
   })
   handleEvaluateModalSubmit = async (score, content) => {
+    if (!score) {
+      message.error('请选择评分')
+      return
+    }
     const {data: {code}} = await evaluate({
       userId: this.state.evaluateUserId,
       needsId: this.state.evaluateNeedsId,
@@ -146,6 +150,10 @@ class List extends Component {
     initiatePaymentModalVisible: false,
   })
   handleInitiatePaymentModalSubmit = async (amount) => {
+    if (amount === 0) {
+      message.error('收款金额必须大于0')
+      return
+    }
     const {data: {code}} = await initiatePayment({quoteId: this.state.initiatePaymentQuoteId, amount})
     if (code === 200) {
       message.success('收款成功')

@@ -236,7 +236,7 @@ class SkillPage extends Component {
           }
         }
         const {data: {code}} = await updateUser({
-          districtId: this.state.cityId,
+          district: this.state.cityId,
           userId: this.props.user.userId,
           location: this.state.location,
           specAddr: this.state.specAddr,
@@ -323,7 +323,7 @@ class SkillPage extends Component {
       cityOptions,
       // selectedCity,
       selectedCity: undefined,
-      // cityId: (cityData.find(item => item.chinese === selectedCity)).districtId,
+      cityId: (cityData.find(item => item.chinese === selectedCity)).districtId,
       location: '',
       specAddr: '',
     })
@@ -338,7 +338,7 @@ class SkillPage extends Component {
       cityData,
       cityOptions,
       selectedCity: undefined,
-      // cityId: (cityData.find(item => item.chinese === cityOptions[ 0 ])).districtId,
+      cityId: (cityData.find(item => item.chinese === cityOptions[0])).districtId,
       location: '',
       specAddr: '',
     })
@@ -606,7 +606,7 @@ class SkillPage extends Component {
         passportSrc: data.passportPic,
         idCardPositiveSrc: data.idCardPositive,
         idCardNegativeSrc: data.idCardNegative,
-        serviceTimeList: data.serviceTime,
+        serviceTimeList: data.serviceTime.split(','),
         latitude: data.latitude,
         longitude: data.longitude,
       })

@@ -134,7 +134,11 @@ class PostDemand extends Component {
   }
 
   getMatchResult = async () => {
-    const {data: {code, data}} = await getMatchResult({userId: this.props.user.userId, serviceId: this.state.serviceId})
+    const {data: {code, data}} = await getMatchResult({
+      userId: this.props.user.userId,
+      serviceId: this.state.serviceId,
+      needsId: this.props.location.state.needsId,
+    })
     if (code === 200) {
       this.setState({
         matchResultList: data,
@@ -145,6 +149,7 @@ class PostDemand extends Component {
   appointment = async () => {
     const {data: {data, code}} = await appointment({
       userId: this.props.user.userId,
+      // needsId:this.p
       serviceId: this.state.serviceId,
       skillUserId: this.props.location.state.partyBId,
     })

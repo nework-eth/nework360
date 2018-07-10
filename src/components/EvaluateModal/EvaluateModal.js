@@ -9,6 +9,16 @@ class EvaluateModal extends Component {
     textAreaValue: '',
   }
 
+  handleTextAreaValueChange = (e) => {
+    let str = e.target.value
+    if (str.length > 200) {
+      str = str.slice(200)
+    }
+    this.setState({
+      textAreaValue: str,
+    })
+  }
+
   render () {
     const {
       visible,
@@ -56,7 +66,7 @@ class EvaluateModal extends Component {
             rows={ 6 }
             value={ textAreaValue }
             style={ {padding: '13px 20px', resize: 'none'} }
-            onChange={ (e) => this.setState({textAreaValue: e.target.value}) }
+            onChange={ this.handleTextAreaValueChange }
             placeholder="请输入"
           />
           <div style={ {marginTop: '30px'} }>

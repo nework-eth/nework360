@@ -250,7 +250,7 @@ class Wallet extends Component {
     })
   }
   getUserAccount = async () => {
-    const {data: {data, code}} = await getUserAccount()
+    const {data: {data, code}} = await getUserAccount({userId: this.props.user.userId})
     if (code === 200) {
       this.setState({
         money: data.money,
@@ -260,7 +260,7 @@ class Wallet extends Component {
     }
   }
   getUserTransactionRecord = async () => {
-    const {data: {data, code}} = await getUserTransactionRecord()
+    const {data: {data, code}} = await getUserTransactionRecord({userId: this.props.user.userId})
     if (code === 200) {
       this.setState({
         transactionRecordList: data,
@@ -268,7 +268,7 @@ class Wallet extends Component {
     }
   }
   getUserClueCardRecord = async () => {
-    const {data: {data, code}} = await getUserClueCardRecord()
+    const {data: {data, code}} = await getUserClueCardRecord({userId: this.props.user.userId})
     if (code === 200) {
       this.setState({
         clueCardRecordList: data,

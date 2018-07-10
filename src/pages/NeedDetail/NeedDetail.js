@@ -41,6 +41,14 @@ class NeedDetail extends Component {
     })
   }
   handleQuoteModalSubmit = (needsId) => async (amount, instruction) => {
+    if (!amount) {
+      message.error('报价金额不能为空')
+      return
+    }
+    if (typeof amount !== 'number') {
+      message.error('报价金额必须为数字')
+      return
+    }
     const {data: {code}} = await createQuote({needsId, amount, instruction})
     if (code === 200) {
       message.success('报价成功')
