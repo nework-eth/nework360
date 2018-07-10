@@ -155,12 +155,14 @@ const requireAuth = async (nextState, replaceState, callback) => {
   if (userId) {
     const {data: {data, code}} = await getUserById({userId})
     if (code === 200) {
+      console.log('here')
       store.dispatch({type: ActionTypes.SETUSER, user: data})
       store.dispatch({type: ActionTypes.SETUSERID, userId: data.userId})
       callback()
       return
     }
   }
+  console.log('here 2')
   replaceState('/login')
   callback()
 }

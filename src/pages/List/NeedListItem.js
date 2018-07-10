@@ -1,4 +1,5 @@
 import React from 'react'
+import { browserHistory } from 'react-router'
 
 const statusMap = {
   2: '等待报价',
@@ -6,6 +7,15 @@ const statusMap = {
   30: '等待服务',
   210: '等待支付',
   2310: '支付成功',
+}
+
+const jumpToProfile = (userId) => {
+  browserHistory.push({
+    pathname: '/profile',
+    state: {
+      userId,
+    },
+  })
 }
 
 function NeedListItem ({
@@ -47,6 +57,7 @@ function NeedListItem ({
                     alt="头像"
                     width="50"
                     height="50"
+                    onClick={ jumpToProfile(userId) }
                   />,
                 )
               }

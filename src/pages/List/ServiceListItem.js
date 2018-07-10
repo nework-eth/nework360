@@ -1,13 +1,24 @@
 import { Button, Rate } from 'antd'
 import React from 'react'
+import { browserHistory } from 'react-router'
 import { getRate } from '../../utils'
 
 const classNameSpace = 'service-list-item'
+
+const jumpToProfile = (userId) => {
+  browserHistory.push({
+    pathname: '/profile',
+    state: {
+      userId,
+    },
+  })
+}
 
 function ServiceListItem ({
                             score,
                             amount,
                             status,
+                            userId,
                             nickname,
                             avatarSrc,
                             scoreCount,
@@ -18,10 +29,10 @@ function ServiceListItem ({
                             serviceName,
                             hasEvaluated,
                             initiatePayment,
+                            showDeleteModal,
                             jumpToNeedDetail,
                             showEvaluateModal,
                             cancelServiceOrder,
-                            deleteServiceOrder,
                             withdrawServiceOrder,
                             showInitiatePaymentModal,
                           }) {
@@ -44,6 +55,7 @@ function ServiceListItem ({
               alt="头像"
               width="50"
               height="50"
+              onClick={ jumpToProfile(userId) }
             />
             <div>在线沟通</div>
           </div>
@@ -78,10 +90,10 @@ function ServiceListItem ({
             nickname,
             quoteNumber,
             hasEvaluated,
+            showDeleteModal,
             initiatePayment,
             showEvaluateModal,
             cancelServiceOrder,
-            deleteServiceOrder,
             withdrawServiceOrder,
             showInitiatePaymentModal,
           })
@@ -109,6 +121,7 @@ function OperatePanel ({
                          quoteNumber,
                          selectedUser,
                          hasEvaluated,
+                         showDeleteModal,
                          initiatePayment,
                          showEvaluateModal,
                          cancelServiceOrder,
@@ -188,7 +201,7 @@ function OperatePanel ({
       <p>
         订单已取消
       </p>
-      <p className="delete-order" onClick={ deleteServiceOrder }>删除订单</p>
+      <p className="delete-order" onClick={ showDeleteModal }>删除订单</p>
     </div>)
   }
   if (statusMap[status] === '错误') {

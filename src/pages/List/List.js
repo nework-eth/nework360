@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { ComplaintModal } from '../../components/ComplaintModal/ComplaintModal'
+import { DeleteModal } from '../../components/DeleteModal/DeleteModal'
 import { EvaluateModal } from '../../components/EvaluateModal/EvaluateModal'
 import { view as Footer } from '../../components/Footer/index.js'
 import { InitiatePaymentModal } from '../../components/InitiatePaymentModal/InitiatePaymentModal'
@@ -33,10 +34,12 @@ class List extends Component {
     limit: 10,
     listType: 'service',
     needOrderList: [],
+    deleteQuoteId: '',
     evaluateUserId: '',
     evaluateNeedsId: '',
     evaluateNickname: '',
     serviceOrderList: [],
+    deleteModalVisible: false,
     evaluateModalVisible: false,
     initiatePaymentQuoteId: '',
     complaintModalVisible: false,
@@ -80,13 +83,6 @@ class List extends Component {
       this.getServiceOrderList()
     }
   }
-  deleteServiceOrder = (quoteId) => async () => {
-    const {data: {code}} = await deleteServiceOrder({quoteId})
-    if (code === 200) {
-      message.success('删除服务订单成功')
-      this.getServiceOrderList()
-    }
-  }
   withdrawServiceOrder = (quoteId) => async () => {
     const {data: {code}} = await withdrawServiceOrder({quoteId})
     if (code === 200) {
@@ -103,6 +99,16 @@ class List extends Component {
   }
   jumpToNeedDetail = (needsId) => () => browserHistory.push({pathname: '/need-detail', state: {needsId}})
   showComplaintModal = () => this.setState({complaintModalVisible: true})
+  showDeleteModal = (quoteId) => () => this.setState({deleteModalVisible: true, deleteQuoteId: quoteId})
+  handleDeleteModalCancel = () => this.setState({deleteQuoteId: '', deleteModalVisible: false})
+  handleDeleteModalSubmit = async () => {
+    const {data: {code}} = await deleteServiceOrder({quoteId: this.state.deleteQuoteId})
+    if (code === 200) {
+      message.success('删除服务订单成功')
+      this.getServiceOrderList()
+      this.handleDeleteModalCancel()
+    }
+  }
   handleComplaintModalCancel = () => this.setState({complaintModalVisible: false})
   showEvaluateModal = (userId, needsId, nickname) => () => this.setState({
     evaluateUserId: userId,
@@ -155,9 +161,11 @@ class List extends Component {
   render () {
     const {
       listType,
+      deleteQuoteId,
       needOrderList,
       serviceOrderList,
       evaluateNickname,
+      deleteModalVisible,
       evaluateModalVisible,
       complaintModalVisible,
       initiatePaymentModalVisible,
@@ -187,6 +195,7 @@ class List extends Component {
                                           nickName: nickname,
                                           photo,
                                           score,
+                                          userId,
                                           // 注意是creatTime
                                           creatTime: userCreateTime,
                                         },
@@ -197,7 +206,6 @@ class List extends Component {
                                           evaluate: hasEvaluated,
                                         },
                                         amount,
-                                        userId,
                                         needsId,
                                         quoteId,
                                         updateTime,
@@ -208,6 +216,7 @@ class List extends Component {
                   key={ quoteId }
                   score={ score ? score.ave : '' }
                   status={ status }
+                  userId={ userId }
                   amount={ amount / 100 }
                   nickname={ nickname }
                   avatarUrl={ photo }
@@ -219,11 +228,11 @@ class List extends Component {
                   serviceName={ serviceName }
                   selectedUser={ selectedUser }
                   hasEvaluated={ hasEvaluated === 'yes' }
+                  showDeleteModal={ this.showDeleteModal(quoteId) }
                   jumpToNeedDetail={ this.jumpToNeedDetail(needsId) }
                   initiatePayment={ this.initiatePayment(quoteId, amount) }
                   showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickname) }
                   cancelServiceOrder={ this.cancelServiceOrder(quoteId) }
-                  deleteServiceOrder={ this.deleteServiceOrder(quoteId) }
                   withdrawServiceOrder={ this.withdrawServiceOrder(quoteId) }
                   showInitiatePaymentModal={ this.showInitiatePaymentModal(quoteId) }
                 />,
@@ -271,6 +280,11 @@ class List extends Component {
           visible={ initiatePaymentModalVisible }
           handleCancel={ this.handleInitiatePaymentModalCancel }
           handleSubmit={ this.handleInitiatePaymentModalSubmit }
+        />
+        <DeleteModal
+          visible={ deleteModalVisible }
+          handleCancel={ this.handleDeleteModalCancel }
+          handleSubmit={ this.handleDeleteModalSubmit }
         />
       </main>
       <Footer/>

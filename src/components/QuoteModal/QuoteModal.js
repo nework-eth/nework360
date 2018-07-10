@@ -9,6 +9,14 @@ class QuoteModal extends Component {
     textAreaValue: '',
   }
 
+  handleTextAreaValueChange = (e) => {
+    let str = e.target.value
+    if (str.length > 200) {
+      str = str.slice(0, 200)
+    }
+    this.setState({textAreaValue: str})
+  }
+
   render () {
     const {
       visible,
@@ -63,11 +71,12 @@ class QuoteModal extends Component {
           <TextArea
             rows={ 6 }
             value={ textAreaValue }
-            style={ {padding: '13px 20px', resize: 'none'} }
-            onChange={ (e) => this.setState({textAreaValue: e.target.value}) }
+            style={ {padding: '13px 20px', resize: 'none', marginBottom: '20px'} }
+            onChange={ this.handleTextAreaValueChange }
             placeholder="请输入"
           />
-          <div style={ {marginTop: '30px'} }>
+          <p>本次报价需消耗 5 张线索卡，提交报价后将自动扣除</p>
+          <div style={ {marginTop: '20px'} }>
             <Button
               type="primary"
               style={ {
