@@ -143,14 +143,14 @@ class PostDemand extends Component {
   }
 
   appointment = async () => {
-    const {data: {code}} = await appointment({
+    const {data: {data, code}} = await appointment({
       userId: this.props.user.userId,
       serviceId: this.state.serviceId,
       skillUserId: this.props.location.state.partyBId,
     })
     if (code === 200) {
       this.setState({
-        matchResultList: data,
+        matchResultList: [data],
       })
     }
   }
