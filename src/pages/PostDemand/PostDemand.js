@@ -1,6 +1,7 @@
 import { message, Progress } from 'antd'
 import moment from 'moment'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { createDemand, getMatchResult, getTemplate } from '../../service/demand'
 import { getNeedDetail } from '../../service/needDetail'
@@ -61,6 +62,12 @@ const generateInitValue = (type) => {
   }
 }
 
+const mapState = (state) => ({
+  user: state.user,
+  position: state.position,
+})
+
+@connect(mapState)
 class PostDemand extends Component {
 
   state = {
@@ -130,8 +137,7 @@ class PostDemand extends Component {
     this.mapApi.then(() => {
       /* eslint-disable no-undef */
       this.placeSearch = new AMap.Autocomplete({
-        // todo: 去掉假数据
-        city: (this.props.user && this.props.user.city) || '北京',
+        city: this.props.position.cityName,
         cityLimit: true,
       })
       keyword && this.placeSearch.search(keyword, (status, result) => {
@@ -151,9 +157,8 @@ class PostDemand extends Component {
         pages: this.state.data,
       },
       {
-        // todo: 换成真实数据
-        districtId: 110,
-        serviceId: this.state.userId,
+        districtId: this.props.position.cityId,
+        serviceId: this.state.serviceId,
         templateId: this.state.templateId,
       },
     )
