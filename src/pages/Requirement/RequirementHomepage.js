@@ -52,6 +52,16 @@ class RequirementHomePage extends Component {
     })
   }
 
+  appointment = (partyBId) => () => {
+    browserHistory.push({
+      pathname: '/post-demand', state: {
+        partyBId,
+        serviceId: this.state.serviceId,
+        serviceName: this.state.serviceName,
+      },
+    })
+  }
+
   jumpToProfile = (userId) => () => {
     browserHistory.push({
       pathname: '/profile',
@@ -63,6 +73,7 @@ class RequirementHomePage extends Component {
 
   render () {
     const {
+      serviceId,
       serviceName,
     } = this.state
     return (
@@ -136,8 +147,8 @@ class RequirementHomePage extends Component {
                     joinedTime={ userBasicInfoVO.createTime }
                     avatarUrl={ userBasicInfoVO.avatar }
                     evaluation={ userEvaluate ? userEvaluate.content : '' }
-                    jumpToProfile={ this.jumpToProfile(userBasicInfoVO.userId) }
-                    jumpToPostDemand={ this.jumpToPostDemand }
+                    jumpToProfile={ this.jumpToProfile(userBasicInfoVO.userId, serviceId, serviceName) }
+                    appointment={ this.appointment(userBasicInfoVO.userId) }
                   />)
               }
             </div>

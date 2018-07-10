@@ -43,6 +43,7 @@ function ServicePersonCard ({
                               avatarUrl,
                               joinedTime,
                               evaluation,
+                              appointment,
                               evaluateScore,
                               evaluateCount,
                               jumpToProfile,
@@ -58,7 +59,7 @@ function ServicePersonCard ({
           height="50"
           onClick={ jumpToProfile }
         />
-        <div className="operate" onClick={ jumpToPostDemand }>立即预约</div>
+        <div className="operate" onClick={ appointment } style={ {cursor: 'pointer'} }>立即预约</div>
       </div>
       <div>
         <div className="name">{ nickname }</div>

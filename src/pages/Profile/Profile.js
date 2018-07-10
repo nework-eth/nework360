@@ -24,7 +24,7 @@ const isDayHighlighted = (serviceTimeList) => (value) => {
     return value.day() < 6
   }
   if (serviceTimeList.includes('w')) {
-    return value.day() < 5 && value.day() > 0
+    return value.day() < 6 && value.day() > 0
   }
   if (serviceTimeList.includes('sat')) {
     return value.day() === 6
@@ -77,35 +77,43 @@ class Profile extends Component {
       serviceTime: '',
     },
     userId: {},
-    skillList: [],
+    skillList: [{}],
+    skillTempList: [],
     showAllIntroduce: false,
+    secondarySkillList: [],
   }
   getUserById = async () => {
     const {data: {data, code}} = await getUserById({userId: this.state.userId})
     if (code === 200) {
       this.setState({data})
-      /* eslint-disable no-undef */
-      const map = new AMap.Map('mapContainer', {
-        center: [data.longitude, data.latitude],
-        zoom: 13,
-      })
-      console.log(data.location)
-      const marker = new AMap.Marker({
-        position: new AMap.LngLat(data.longitude, data.latitude),
-        title: data.locaiton,
-      })
-      map.add(marker)
+      try {
+        /* eslint-disable no-undef */
+        const map = new AMap.Map('mapContainer', {
+          center: [data.longitude, data.latitude],
+          zoom: 13,
+        })
+        console.log(data.location)
+        const marker = new AMap.Marker({
+          position: new AMap.LngLat(data.longitude, data.latitude),
+          title: data.locaiton,
+        })
+        map.add(marker)
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
   getSkillByUserId = async () => {
     const {data: {data, code}} = await getSkillByUserId({userId: this.state.userId})
-    console.log(data)
     if (code === 200) {
-      const secondarySkillList = Object.values(data)
-                                       .reduce((previousValue, currentValue) => [...previousValue, ...currentValue])
-      console.log(secondarySkillList)
+      const skillList = Object.values(data.skill)
+                              .reduce((previousValue, currentValue) => [...previousValue, ...currentValue])
+      const skillTempList = data.skillTemp
+      const secondarySkillList = [...skillList, ...skillTempList]
       this.setState({
-        skillList: secondarySkillList,
+        skillList,
+        skillTempList,
+        secondarySkillList,
       })
     }
   }
@@ -138,6 +146,7 @@ class Profile extends Component {
       },
       skillList,
       showAllIntroduce,
+      secondarySkillList,
     } = this.state
     return (
       <div className="profile-container">
@@ -168,7 +177,8 @@ class Profile extends Component {
             { email && <div><i className="iconfont icon-nav-message"/>邮箱认证</div> }
           </div>
           { isPartyB &&
-          <div className="skill-carousel-container"><h3 className="skill-title">技能<span>（{ skillList.length }）</span>
+          <div className="skill-carousel-container"><h3
+            className="skill-title">技能<span>（{ secondarySkillList.length }）</span>
           </h3>
             <Carousel
               dots={ false }
@@ -178,7 +188,7 @@ class Profile extends Component {
               arrows={ true }
             >
               {
-                skillList.map(({secondServiceTypeName, firstServiceTypeName}, index) => <SkillItem
+                secondarySkillList.map(({secondServiceTypeName, firstServiceTypeName}, index) => <SkillItem
                   logoSrc={ logoSrcList.find(src => src.includes(firstServiceTypeName)) || './images/其他-icon.png' }
                   title={ secondServiceTypeName }
                   index={ index }
@@ -210,7 +220,11 @@ class Profile extends Component {
               : <Button type="primary"><Link
                 to={ {
                   pathname: '/post-demand',
-                  // state: {serviceName: skillList[0].serviceName, serviceId: skillList[0].skillId},
+                  state: {
+                    serviceName: skillList[0].secondServiceTypeName,
+                    serviceId: skillList[0].serviceId,
+                    partyBId: this.state.userId,
+                  },
                 } }
                 style={ {textDecoration: 'none'} }
               >联系</Link></Button>

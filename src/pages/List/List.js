@@ -154,7 +154,7 @@ class List extends Component {
   }
   handleChangeDemand = (needsId, serviceId) => () => browserHistory.push({
     pathname: '/post-demand',
-    state: {needsId, serviceId},
+    state: {needsId, serviceId, update: true},
   })
   jumpToPay = ({amount, needsId}) => () => browserHistory.push({pathname: '/pay', state: {amount, needsId}})
 

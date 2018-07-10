@@ -8,3 +8,5 @@ export const createDemand = (data, param) => axios.post(`/postDemand/createNeeds
 export const updateDemand = (data, param) => axios.post(`/postDemand/updateNeeds?${qs.stringify(param)}`, data)
 
 export const getMatchResult = params => axios('/skill/getSkillByScore', {params})
+
+export const appointment = params => axios('/skill/appointment', {params})

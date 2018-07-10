@@ -3,7 +3,7 @@ import moment from 'moment'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
-import { createDemand, getMatchResult, getTemplate, updateDemand } from '../../service/demand'
+import { appointment, createDemand, getMatchResult, getTemplate, updateDemand } from '../../service/demand'
 import { getNeedDetail } from '../../service/needDetail'
 import { view as Footer } from './Footer'
 import { MatchResultCardItem } from './MatchResultCardItem'
@@ -142,6 +142,19 @@ class PostDemand extends Component {
     }
   }
 
+  appointment = async () => {
+    const {data: {code}} = await appointment({
+      userId: this.props.user.userId,
+      serviceId: this.state.serviceId,
+      skillUserId: this.props.location.state.partyBId,
+    })
+    if (code === 200) {
+      this.setState({
+        matchResultList: data,
+      })
+    }
+  }
+
   getLocationOptions = keyword => {
     this.mapApi.then(() => {
       /* eslint-disable no-undef */
@@ -161,7 +174,7 @@ class PostDemand extends Component {
   }
 
   createDemand = async () => {
-    if (this.props.location && this.props.location.state.needsId) {
+    if (this.props.location.state && this.props.location.state.update) {
       const {data: {code}} = await updateDemand(
         {
           pages: this.state.data,
@@ -175,7 +188,7 @@ class PostDemand extends Component {
       )
       if (code === 200) {
         message.success('更新需求成功')
-        this.getMatchResult()
+        await this.getMatchResult()
         this.setState({
           showMatchResult: true,
           progressPercent: 100,
@@ -194,14 +207,22 @@ class PostDemand extends Component {
       )
       if (code === 200) {
         message.success('发布需求成功')
-        this.getMatchResult()
-        this.setState({
-          showMatchResult: true,
-          progressPercent: 100,
-        })
+        if (this.props.location.state && this.props.location.state.partyBId) {
+          console.log('here')
+          await this.appointment()
+          this.setState({
+            showMatchResult: true,
+            progressPercent: 100,
+          })
+        } else {
+          await this.getMatchResult()
+          this.setState({
+            showMatchResult: true,
+            progressPercent: 100,
+          })
+        }
       }
     }
-
   }
 
   handleGoNextButtonClick = () => {
