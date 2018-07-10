@@ -4,7 +4,6 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
-import { stateKey } from '../../components/NavMenu'
 import { setCityId, setCityName, setCountryId } from '../../components/NavMenu/actions'
 import { getCityByLetter, getCityBySearch, getCityTree, getDistByParam, getHotCity } from '../../service/homepage'
 import './static/style/index.less'
@@ -32,19 +31,13 @@ const LetterCity = ({letter, letterCityList, handleClick}) => {
   )
 }
 
-const mapState = (state) => ({
-  cityName: state[stateKey].cityName || '北京',
-  countryId: state[stateKey].countryId || 1,
-  cityId: state[stateKey].countryId || 110,
-})
-
 const mapDispatch = (dispatch) => bindActionCreators({
   setCountryId: setCountryId,
   setCityName: setCityName,
   setCityId: setCityId,
 }, dispatch)
 
-@connect(mapState, mapDispatch)
+@connect(null, mapDispatch)
 class SelectCity extends Component {
   constructor (props) {
     super(props)
@@ -110,6 +103,8 @@ class SelectCity extends Component {
       fetching: false,
     })
     this.props.setCityName(value)
+    this.props.setCityId((this.state.cityData.find(item => item.chinese === value)).districtId)
+    document.cookie = `cityName=${value}`
     browserHistory.push('/')
   }
   getHotCity = async () => {
@@ -176,19 +171,10 @@ class SelectCity extends Component {
       countryOptions: countryList,
       provinceOptions: provinceList,
       cityOptions: letterCityList,
-      // cityOptions: letterCityList,
-      // selectedCity: letterCityList[0]
     })
-    // this.props.setCityName('北京')
-    // this.props.setCityId(110)
-    // this.props.setCountryId(1)
   }
   handleCountryChange = (value) => {
     const provinceOptions = Object.keys(this.state.tree[value])
-    // const selectedProvince = provinceOptions[ 0 ]
-    // const cityData = this.state.tree[ value ][ selectedProvince ]
-    // const cityOptions = cityData.map(item => item.chinese)
-    // const selectedCity = cityOptions[ 0 ]
     const country = this.state.countryList.find(item => item.chinese === value)
     if (country && country.districtId) {
       this.setState({
@@ -198,15 +184,9 @@ class SelectCity extends Component {
     this.setState({
       selectedCountry: value,
       provinceOptions,
-      // selectedProvince: Object.keys(this.state.tree[ value ])[ 0 ],
       selectedProvince: undefined,
-      // cityData,
-      // cityOptions,
       selectedCity: undefined,
     })
-    // this.props.setCountryId(value)
-    // this.props.setCityName(selectedCity)
-    // this.props.setCityId((cityData.find(item => item.chinese === selectedCity).districtId))
   }
 
   componentDidMount () {
@@ -225,20 +205,23 @@ class SelectCity extends Component {
       cityOptions,
       selectedCity: undefined,
     })
-    // this.props.setCityName(cityOptions[ 0 ])
-    // this.props.setCityId((cityData.find(item => item.chinese === cityOptions[ 0 ])).districtId)
   }
   handleCityChange = (value) => {
     this.setState({
       selectedCity: value,
     })
     this.props.setCityName(value)
+    const cityId = (this.state.cityData.find(item => item.chinese === value)).districtId
     this.props.setCityId((this.state.cityData.find(item => item.chinese === value)).districtId)
+    document.cookie = `cityName=${value}`
+    document.cookie = `cityId=${cityId}`
     browserHistory.push('/')
   }
   handleButtonClick = (cityName, cityId) => {
     this.props.setCityName(cityName)
     this.props.setCityId(cityId)
+    document.cookie = `cityName=${cityName}`
+    document.cookie = `cityId=${cityId}`
     browserHistory.push('/')
   }
 

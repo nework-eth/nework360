@@ -156,7 +156,7 @@ class Profile extends Component {
           <p className="introduce" style={ showAllIntroduce ? {height: 'auto'} : {} }>
             { description }
           </p>
-          <a onClick={ this.showAllIntroduce }>查看更多介绍</a>
+          { !showAllIntroduce && <a onClick={ this.showAllIntroduce }>查看更多介绍</a> }
           <div className="information-container">
             <div><i className="iconfont icon-hire"/>{ isPartyB ? '被' : '已' }雇佣 { isPartyB ? hireTimes : bossTimes } 次
             </div>

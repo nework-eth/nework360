@@ -1,4 +1,5 @@
 import { Dropdown, Menu, message } from 'antd'
+import cookie from 'cookie'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory, Link } from 'react-router'
@@ -84,8 +85,10 @@ class NavMenu extends Component {
     const {data: {data}} = await getCityByIp()
     if (data !== '未知城市') {
       this.props.setCityName(data.city)
+      this.props.setCityId(data.cityId)
     } else {
       this.props.setCityName('北京')
+      this.props.setCityId(110)
     }
   }
   getMessage = async () => {
@@ -317,7 +320,9 @@ class NavMenu extends Component {
   }
 
   componentDidMount () {
-    this.getCityByIp()
+    if (!(cookie.parse(document.cookie)).cityName) {
+      this.getCityByIp()
+    }
     this.getMessage()
     this.getUnreadMessage()
     // this.hideMessagePanel()

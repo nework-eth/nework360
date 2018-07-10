@@ -12,7 +12,7 @@ axios.interceptors.response.use(res => {
     browserHistory.push('/login')
     return res
   }
-  if (code !== 200) {
+  if (code !== 200 && code !== 302) {
     message.error(desc)
   }
   return res

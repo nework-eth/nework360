@@ -166,7 +166,8 @@ const requireAuth = async (nextState, replaceState, callback) => {
 }
 
 const autoLogin = async (nextState, replaceState, callback) => {
-  if ((store.getState()).user.userId) {
+  const state = store.getState()
+  if (state.user.userId) {
     callback()
     return
   }
@@ -177,6 +178,14 @@ const autoLogin = async (nextState, replaceState, callback) => {
       store.dispatch({type: ActionTypes.SETUSER, user: data})
       store.dispatch({type: ActionTypes.SETUSERID, userId: data.userId})
     }
+  }
+  const cityName = (cookie.parse(document.cookie)).cityName
+  if (cityName && cityName !== state.position.cityName) {
+    store.dispatch({type: ActionTypes.SETCITYNAME, cityName})
+  }
+  const cityId = (cookie.parse(document.cookie).cityId)
+  if (cityId && cityId !== state.position.cityId) {
+    store.dispatch({type: ActionTypes.SETCITYID, cityId})
   }
   callback()
 }

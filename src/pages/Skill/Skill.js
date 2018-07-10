@@ -592,25 +592,44 @@ class SkillPage extends Component {
   }
 
   getUserById = async () => {
-    const {data: {data, code}} = await getUserById({userId: this.state.userId})
+    const {data: {data, code}} = await getUserById({userId: this.props.userId})
     if (code === 200) {
-      this.setState()
+      this.setState({
+        selectedCountry: data.country,
+        selectedProvince: data.province,
+        selectedCity: data.city,
+        location: data.location,
+        specAddr: data.specAddr,
+        description: data.description,
+        avatarSrc: data.avatar,
+        photoSrc: data.photo,
+        passportSrc: data.passportPic,
+        idCardPositiveSrc: data.idCardPositive,
+        idCardNegativeSrc: data.idCardNegative,
+        serviceTimeList: data.serviceTime,
+        latitude: data.latitude,
+        longitude: data.longitude,
+      })
     }
   }
 
+  // getSkillByUserId = async () => {
+  //   const {data: {data, code}} = await getSkillByUserId({userId: this.props.userId})
+  //   if (code === 200) {
+  //     this.setState({
+  //       firstServiceList: Object.keys(data),
+  //       secondServiceList: Object
+  //     })
+  //   }
+  // }
+
   componentDidMount () {
+    this.getUserById()
     this.getCityTree()
     this.mapInit()
   }
 
   updateStatus = async () => {
-    // const { data: { desc, code } } = await updateUser({
-    //   userId: this.props.user.userId,
-    //   checkStatus: 1,
-    // })
-    // if (code !== 200) {
-    //   message.error(desc)
-    // }
     await updateUser({
       userId: this.props.user.userId,
       checkStatus: 1,
@@ -695,6 +714,7 @@ class SkillPage extends Component {
       </div>
     )
   }
+
 }
 
 export { SkillPage as page }
