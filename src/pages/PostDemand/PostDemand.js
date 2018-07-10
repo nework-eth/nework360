@@ -3,7 +3,7 @@ import moment from 'moment'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
-import { createDemand, getMatchResult, getTemplate } from '../../service/demand'
+import { createDemand, getMatchResult, getTemplate, updateDemand } from '../../service/demand'
 import { getNeedDetail } from '../../service/needDetail'
 import { view as Footer } from './Footer'
 import { MatchResultCardItem } from './MatchResultCardItem'
@@ -161,24 +161,47 @@ class PostDemand extends Component {
   }
 
   createDemand = async () => {
-    const {data: {code}} = await createDemand(
-      {
-        pages: this.state.data,
-      },
-      {
-        districtId: this.props.position.cityId,
-        serviceId: this.state.serviceId,
-        templateId: this.state.templateId,
-      },
-    )
-    if (code === 200) {
-      message.success('发布需求成功')
-      this.getMatchResult()
-      this.setState({
-        showMatchResult: true,
-        progressPercent: 100,
-      })
+    if (this.props.location && this.props.location.state.needsId) {
+      const {data: {code}} = await updateDemand(
+        {
+          pages: this.state.data,
+        },
+        {
+          needsId: this.props.location.state.needsId,
+          districtId: this.props.position.cityId,
+          serviceId: this.state.serviceId,
+          templateId: this.state.templateId,
+        },
+      )
+      if (code === 200) {
+        message.success('更新需求成功')
+        this.getMatchResult()
+        this.setState({
+          showMatchResult: true,
+          progressPercent: 100,
+        })
+      }
+    } else {
+      const {data: {code}} = await createDemand(
+        {
+          pages: this.state.data,
+        },
+        {
+          districtId: this.props.position.cityId,
+          serviceId: this.state.serviceId,
+          templateId: this.state.templateId,
+        },
+      )
+      if (code === 200) {
+        message.success('发布需求成功')
+        this.getMatchResult()
+        this.setState({
+          showMatchResult: true,
+          progressPercent: 100,
+        })
+      }
     }
+
   }
 
   handleGoNextButtonClick = () => {
