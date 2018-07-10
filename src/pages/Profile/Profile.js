@@ -15,22 +15,22 @@ const isDayHighlighted = (serviceTimeList) => (value) => {
     return true
   }
   if (serviceTimeList.includes('w') && serviceTimeList.includes('sat')) {
-    return value.day() < 6
+    return value.day() > 0
   }
   if (serviceTimeList.includes('sat') && serviceTimeList.includes('sun')) {
-    return value.day() > 4
+    return value.day() === 0 || value.day() === 6
   }
   if (serviceTimeList.includes('w') && serviceTimeList.includes('sun')) {
-    return value.day() < 5 || value.day() === 6
+    return value.day() < 6
   }
   if (serviceTimeList.includes('w')) {
-    return value.day() < 5
+    return value.day() < 5 && value.day() > 0
   }
   if (serviceTimeList.includes('sat')) {
-    return value.day() === 5
+    return value.day() === 6
   }
   if (serviceTimeList.includes('sun')) {
-    return value.day() === 6
+    return value.day() === 0
   }
   return false
 }
@@ -99,9 +99,11 @@ class Profile extends Component {
   }
   getSkillByUserId = async () => {
     const {data: {data, code}} = await getSkillByUserId({userId: this.state.userId})
+    console.log(data)
     if (code === 200) {
       const secondarySkillList = Object.values(data)
                                        .reduce((previousValue, currentValue) => [...previousValue, ...currentValue])
+      console.log(secondarySkillList)
       this.setState({
         skillList: secondarySkillList,
       })
@@ -208,7 +210,7 @@ class Profile extends Component {
               : <Button type="primary"><Link
                 to={ {
                   pathname: '/post-demand',
-                  state: {serviceName: skillList[0].serviceName, serviceId: skillList[0].skillId},
+                  // state: {serviceName: skillList[0].serviceName, serviceId: skillList[0].skillId},
                 } }
                 style={ {textDecoration: 'none'} }
               >联系</Link></Button>
