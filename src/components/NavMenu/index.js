@@ -176,7 +176,6 @@ class NavMenu extends Component {
   }
   toggleMessagePanelVisible = (e) => {
     e.stopPropagation()
-    console.log(e.target.className)
     this.setState((preState) => ({
       messagePanelVisible: !preState.messagePanelVisible,
     }))
@@ -356,8 +355,8 @@ const MessageItem = function ({
     <div className="message-item-content-wrapper">
       <div className="message-item-content">{ content }</div>
       <div className="message-item-operate">
-        { !status && <span className="message-item-operate-item" onClick={ ignoreMessage }>忽略</span> }
-        <span className="message-item-operate-item" onClick={ seeDetails }>查看</span>
+        { status === 0 && <span className="message-item-operate-item" onClick={ ignoreMessage }>忽略</span> }
+        { status === 0 && < span className='message-item-operate-item' onClick={ seeDetails }>查看</span> }
       </div>
     </div>
   </div>)
