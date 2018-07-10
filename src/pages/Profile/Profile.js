@@ -107,7 +107,7 @@ class Profile extends Component {
     const {data: {data, code}} = await getSkillByUserId({userId: this.state.userId})
     if (code === 200) {
       const skillList = Object.values(data.skill)
-                              .reduce((previousValue, currentValue) => [...previousValue, ...currentValue])
+                              .reduce((previousValue, currentValue) => [...previousValue, ...currentValue], [])
       const skillTempList = data.skillTemp
       const secondarySkillList = [...skillList, ...skillTempList]
       this.setState({

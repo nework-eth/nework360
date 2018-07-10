@@ -5,7 +5,7 @@ import { getRate } from '../../utils'
 
 const classNameSpace = 'service-list-item'
 
-const jumpToProfile = (userId) => {
+const jumpToProfile = (userId) => () => {
   browserHistory.push({
     pathname: '/profile',
     state: {
@@ -55,6 +55,7 @@ function ServiceListItem ({
               alt="头像"
               width="50"
               height="50"
+              style={ {cursor: 'pointer'} }
               onClick={ jumpToProfile(userId) }
             />
             <div>在线沟通</div>

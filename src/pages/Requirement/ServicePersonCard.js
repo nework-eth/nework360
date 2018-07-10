@@ -57,6 +57,7 @@ function ServicePersonCard ({
           alt="头像"
           width="50"
           height="50"
+          style={ {cursor: 'pointer'} }
           onClick={ jumpToProfile }
         />
         <div className="operate" onClick={ appointment } style={ {cursor: 'pointer'} }>立即预约</div>

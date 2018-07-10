@@ -9,7 +9,7 @@ const statusMap = {
   2310: '支付成功',
 }
 
-const jumpToProfile = (userId) => {
+const jumpToProfile = (userId) => () => {
   browserHistory.push({
     pathname: '/profile',
     state: {
@@ -57,6 +57,7 @@ function NeedListItem ({
                     alt="头像"
                     width="50"
                     height="50"
+                    style={ {cursor: 'pointer'} }
                     onClick={ jumpToProfile(userId) }
                   />,
                 )
