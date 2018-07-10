@@ -143,7 +143,8 @@ class NavMenu extends Component {
       this.getUnreadMessage()
     }
   }
-  seeDetails = (action) => () => {
+  seeDetails = (action, id) => async () => {
+    await this.ignoreMessage(id)()
     switch (action) {
       case 'needs':
         browserHistory.push('/need-detail')
@@ -297,7 +298,7 @@ class NavMenu extends Component {
               type={ msgType }
               status={ status }
               content={ msgContent }
-              seeDetails={ this.seeDetails(action) }
+              seeDetails={ this.seeDetails(action, id) }
               updateTime={ updateTime }
               ignoreMessage={ this.ignoreMessage(id) }
             />) }

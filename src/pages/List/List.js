@@ -150,6 +150,7 @@ class List extends Component {
     if (code === 200) {
       message.success('收款成功')
     }
+    this.getServiceOrderList()
     this.handleInitiatePaymentModalCancel()
   }
   handleChangeDemand = (needsId, serviceId) => () => browserHistory.push({
