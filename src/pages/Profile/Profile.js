@@ -205,7 +205,13 @@ class Profile extends Component {
             this.state.data.isPartyB
               ? this.props.user.userId === this.state.data.userId
               ? <Button type="primary"><Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link></Button>
-              : <Button type="primary"><Link to="/post-demand" style={ {textDecoration: 'none'} }>联系</Link></Button>
+              : <Button type="primary"><Link
+                to={ {
+                  pathname: '/post-demand',
+                  state: {serviceName: skillList[0].serviceName, serviceId: skillList[0].skillId},
+                } }
+                style={ {textDecoration: 'none'} }
+              >联系</Link></Button>
               : this.props.user.userId === this.state.data.userId
               ? <Button type="primary"><Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link></Button>
               : ''
