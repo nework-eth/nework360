@@ -46,6 +46,19 @@ const SkillCardItem = ({logoSrc, title, index, deleteSkill}) => (<div className=
   <i className="iconfont icon-delete1" onClick={ deleteSkill }/>
 </div>)
 
+const beforeUpload = (file) => {
+  const isLt5M = file.size / 1024 / 1024 < 5
+  if (!isLt5M) {
+    message.error('请上传5M以内jpg/jpeg/gif/bmp/png格式的图片')
+  }
+  const typeArray = ['image/jpeg', 'image/png', 'image/bmp']
+  const typeValid = typeArray.includes(file.type)
+  if (!typeValid) {
+    message.error('请上传5M以内jpg/jpeg/gif/bmp/png格式的图片')
+  }
+  return isLt5M && typeValid
+}
+
 function EditDataForm ({
                          selectedItem,
                          data: {
@@ -301,6 +314,7 @@ function EditDataForm ({
         <div className="button-wrapper">
           <div style={ {marginTop: '20px'} }>
             <Upload
+              beforeUpload={ beforeUpload }
               action={ `${baseUrl}/qiniu/uploadUserFile` }
               onChange={ (info) => {
                 if (info.file.status !== 'uploading') {
