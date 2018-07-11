@@ -43,6 +43,10 @@ class ClueCard extends Component {
       message.error('请输入整数')
       return
     }
+    if (clueCardCount < 10) {
+      message.error('请输入10及以上的整数')
+      return
+    }
     browserHistory.push({
       pathname: '/pay',
       state: {count: this.state.clueCardCount, type: 'clue'},
