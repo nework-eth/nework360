@@ -133,11 +133,11 @@ class PostDemand extends Component {
     })
   }
 
-  getMatchResult = async () => {
+  getMatchResult = async (needsId) => {
     const {data: {code, data}} = await getMatchResult({
       userId: this.props.user.userId,
       serviceId: this.state.serviceId,
-      needsId: this.props.location.state.needsId,
+      needsId: this.props.location.state.needsId || needsId,
     })
     if (code === 200) {
       this.setState({
@@ -146,10 +146,10 @@ class PostDemand extends Component {
     }
   }
 
-  appointment = async () => {
+  appointment = async (needsId) => {
     const {data: {data, code}} = await appointment({
       userId: this.props.user.userId,
-      // needsId:this.p
+      needsId,
       serviceId: this.state.serviceId,
       skillUserId: this.props.location.state.partyBId,
     })
@@ -200,7 +200,7 @@ class PostDemand extends Component {
         })
       }
     } else {
-      const {data: {code}} = await createDemand(
+      const {data: {code, needsId}} = await createDemand(
         {
           pages: this.state.data,
         },
@@ -214,13 +214,13 @@ class PostDemand extends Component {
         message.success('发布需求成功')
         if (this.props.location.state && this.props.location.state.partyBId) {
           console.log('here')
-          await this.appointment()
+          await this.appointment(needsId)
           this.setState({
             showMatchResult: true,
             progressPercent: 100,
           })
         } else {
-          await this.getMatchResult()
+          await this.getMatchResult(needsId)
           this.setState({
             showMatchResult: true,
             progressPercent: 100,

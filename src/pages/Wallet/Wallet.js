@@ -66,7 +66,7 @@ function Content ({
                 { clue }
               </p>
               <p className="balance-type">线索卡（张）</p>
-              <Link href="/">购买</Link>
+              <Link href="/clue-card">购买</Link>
             </div>
           </div> }
         </div>
