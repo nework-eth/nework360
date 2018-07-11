@@ -291,7 +291,7 @@ class NavMenu extends Component {
                                               msgType,
                                               seeDetails,
                                               msgContent,
-                                              updateTime,
+                                              createTime,
                                             }) =>
             <MessageItem
               key={ id }
@@ -299,7 +299,7 @@ class NavMenu extends Component {
               status={ status }
               content={ msgContent }
               seeDetails={ this.seeDetails(action, id) }
-              updateTime={ updateTime }
+              updateTime={ createTime }
               ignoreMessage={ this.ignoreMessage(id) }
             />) }
           { selectedType === 'unread' && (this.selectedMessageList()).length < unreadMessageCount &&

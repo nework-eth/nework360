@@ -46,7 +46,7 @@ function NeedOrderDetailLIstItem ({
           <div><i className="iconfont icon-joined-time"/>{ joinedTime }</div>
         </div>
         {
-          buttonStatus === 'selected' && <Button type="primary" onClick={ selectPartyB }>选择Ta</Button>
+          buttonStatus === 'select' && <Button type="primary" onClick={ selectPartyB }>选择Ta</Button>
         }
         {
           buttonStatus === 'disabled' && <Button disabled={ true }>选择Ta</Button>

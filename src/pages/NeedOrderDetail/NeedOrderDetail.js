@@ -17,7 +17,10 @@ const statusMap = {
   2310: '支付成功',
 }
 
-const generateButtonStatus = (orderStatus, selectedQuoteId, quotedId) => {
+const generateButtonStatus = (orderStatus, selectedQuoteId, quotedId, quoteStatus) => {
+  if (quoteStatus === 2) {
+    return 'disabled'
+  }
   if (statusMap[orderStatus] === '等待选择服务') {
     return 'select'
   }
@@ -68,7 +71,13 @@ class NeedOrderDetail extends Component {
       this.getNeedOrderDetail()
     }
   }
-  cancelOrder = () => cancelOrder({needsId: '201805261855396846258489'})
+  cancelOrder = async () => {
+    const {data: {code}} = await cancelOrder({needsId: this.state.needsId})
+    if (code === 200) {
+      message.success('取消订单成功')
+      this.getNeedOrderDetail()
+    }
+  }
   IMInit = () => {
     /* eslint-disable no-undef */
     const conn = new WebIM.connection({
@@ -187,6 +196,7 @@ class NeedOrderDetail extends Component {
                             creatTime,
                           },
                           photo,
+                          status,
                           amount,
                           quoteId,
                         }) =>
@@ -200,9 +210,9 @@ class NeedOrderDetail extends Component {
                 hireTimes={ hireTimes }
                 scoreCount={ count }
                 joinedTime={ creatTime }
-                cancelOrder={ cancelOrder }
+                cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
-                buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId) }
+                buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status) }
               />,
             )
           }

@@ -31,8 +31,11 @@ const mapState = (state) => ({
 class List extends Component {
 
   state = {
-    limit: 10,
     listType: 'service',
+    needLimit: 10,
+    needTotal: 0,
+    serviceLimit: 10,
+    serviceTotal: 0,
     needOrderList: [],
     deleteQuoteId: '',
     evaluateUserId: '',
@@ -48,12 +51,13 @@ class List extends Component {
 
   getNeedOrderList = async () => {
     try {
-      const {data: {data, code}} = await getNeedOrderList({
-        limit: this.state.limit,
+      const {data: {data, code, pageinfo}} = await getNeedOrderList({
+        limit: this.state.needLimit,
       })
       if (code === 200) {
         this.setState({
           needOrderList: data.orders,
+          needTotal: pageinfo.totalCount,
         })
       }
     } catch (e) {
@@ -61,9 +65,12 @@ class List extends Component {
     }
   }
   getServiceOrderList = async () => {
-    const {data: {data, code}} = await getServiceOrderList()
+    const {data: {data, code, pageinfo}} = await getServiceOrderList({limit: this.state.serviceLimit})
     if (code === 200) {
-      this.setState({serviceOrderList: data.quotes})
+      this.setState({
+        serviceOrderList: data.quotes,
+        serviceTotal: pageinfo.totalCount,
+      })
     }
   }
   changeListType = (listType) => () => this.setState({
@@ -165,11 +172,44 @@ class List extends Component {
     pathname: '/post-demand',
     state: {needsId, serviceId, update: true},
   })
-  jumpToPay = ({amount, needsId}) => () => browserHistory.push({pathname: '/pay', state: {amount, needsId}})
+  jumpToPay = ({amount, needsId, userBName}) => () => browserHistory.push({
+    pathname: '/pay',
+    state: {amount, needsId, userBName},
+  })
+  loadMoreVisible = () => {
+    if (this.state.listType === 'need') {
+      return this.state.needLimit < this.state.needTotal
+    }
+    if (this.state.listType === 'service') {
+      return this.state.serviceLimit < this.state.serviceTotal
+    }
+  }
+  loadMore = () => {
+    if (this.state.listType === 'need') {
+      return this.setState((preState) => (
+          {
+            needLimit: preState.needLimit + 10,
+          }),
+        () => this.getNeedOrderList(),
+      )
+    }
+    if (this.state.listType === 'service') {
+      return this.setState(
+        (preState) => (
+          {
+            serviceLimit: preState.serviceLimit + 10,
+          }
+        ),
+        () => this.getServiceOrderList(),
+      )
+    }
+  }
 
   render () {
     const {
       listType,
+      needLimit,
+      serviceLimit,
       deleteQuoteId,
       needOrderList,
       serviceOrderList,
@@ -255,6 +295,7 @@ class List extends Component {
                                      quoteId,
                                      nickname,
                                      upateTime,
+                                     userBName,
                                      serviceId,
                                      serviceName,
                                      amountFinal,
@@ -265,7 +306,7 @@ class List extends Component {
                   title={ serviceName }
                   quotes={ quotes }
                   status={ status }
-                  jumpToPay={ this.jumpToPay({amount: amountFinal, needsId}) }
+                  jumpToPay={ this.jumpToPay({amount: amountFinal, needsId, userBName}) }
                   goNeedDetail={ this.goNeedDetail(needsId) }
                   selectedQuote={ quotes.find(item => item.quoteId === quoteId) || {} }
                   showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickname) }
@@ -275,6 +316,10 @@ class List extends Component {
                 />)
           }
         </div>
+        { this.loadMoreVisible() && <div className="list-page-load-more">
+          <i className="iconfont icon-load-more" onClick={ this.loadMore }/>
+          <span onClick={ this.loadMore }>加载更多</span>
+        </div> }
         <ComplaintModal
           visible={ complaintModalVisible }
           handleCancel={ this.handleComplaintModalCancel }

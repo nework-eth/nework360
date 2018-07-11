@@ -110,7 +110,7 @@ function NeedListItem ({
             statusMap[status] === '等待报价' && <div><span onClick={ handleChangeDemand }>修改需求</span></div>
           }
           {
-            statusMap[status] === '等待选择' && <div><span onClick={ goNeedDetail }>查看详情</span></div>
+            statusMap[status] === '等待选择服务' && <div><span onClick={ goNeedOrderDetail }>查看详情</span></div>
           }
           {
             statusMap[status] === '等待服务' && <div><span onClick={ goNeedOrderDetail }>查看详情</span></div>
@@ -123,7 +123,7 @@ function NeedListItem ({
               <div><span onClick={ showComplaintModal } style={ {paddingRight: '20px'} }>投诉</span><span>|</span><span
                 onClick={ showEvaluateModal }
                 style={ {paddingLeft: '20px', paddingRight: '20px'} }>评价</span><span>|</span><span
-                style={ {paddingLeft: '20px'} } onClick={ goNeedDetail }>查看详情</span>
+                style={ {paddingLeft: '20px'} } onClick={ goNeedOrderDetail }>查看详情</span>
               </div>)
           }
         </div>

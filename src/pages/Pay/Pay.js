@@ -1,4 +1,5 @@
 import { Button } from 'antd'
+import moment from 'moment'
 import React, { Component } from 'react'
 import { getPayInfo } from '../../service/needOrderDetail'
 import './static/style/index.less'
@@ -8,6 +9,7 @@ class Pay extends Component {
   state = {
     amount: 0,
     needsId: '',
+    userBName: '',
     selectedChannel: 'balance',
   }
   changeSelectedChannel = (channel) => () => {
@@ -30,6 +32,7 @@ class Pay extends Component {
     const {
       amount,
       needsId,
+      userBName,
       selectedChannel,
     } = this.state
     return (
@@ -42,9 +45,10 @@ class Pay extends Component {
             <div className="list-row"><span className="virtual-title">数量：</span><span>1</span></div>
           </div>
           <div className="list-container">
-            <div className="list-row"><span className="virtual-title">支付金额：</span><span>{ amount }</span></div>
-            <div className="list-row"><span className="virtual-title">到款账户：</span><span>Ron Heard</span></div>
-            <div className="list-row"><span className="virtual-title">下单时间：</span><span>2018-7-22</span></div>
+            <div className="list-row"><span className="virtual-title">支付金额：</span><span>{ amount / 100 }元</span></div>
+            <div className="list-row"><span className="virtual-title">到款账户：</span><span>{ userBName }</span></div>
+            <div className="list-row"><span className="virtual-title">下单时间：</span><span>{ moment()
+            .format('YYYY-MM-DD') }</span></div>
           </div>
         </div>
         <h3>选择支付方式</h3>
@@ -70,6 +74,7 @@ class Pay extends Component {
     this.setState({
       needsId: this.props.location.state.needsId,
       amount: this.props.location.state.amount,
+      userBName: this.props.location.state.userBName,
     })
   }
 
