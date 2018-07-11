@@ -314,6 +314,7 @@ class SkillPage extends Component {
     const selectedProvince = provinceOptions[0]
     const cityData = this.state.tree[value][selectedProvince]
     const cityOptions = cityData.map(item => item.chinese)
+    const selectedCity = cityOptions[0]
     this.setState({
       selectedCountry: value,
       provinceOptions,
@@ -624,6 +625,12 @@ class SkillPage extends Component {
   // }
 
   componentDidMount () {
+    if (this.props.location.state && this.props.location.state.auth) {
+      this.setState({
+        step: 7,
+        progressPercent: 8 * 10 + 10,
+      })
+    }
     this.getUserById()
     this.getCityTree()
     this.mapInit()
@@ -679,7 +686,14 @@ class SkillPage extends Component {
         <footer>
           <p
             onClick={ this.handleGoBack }
-            style={ step === 0 || step === 6 || step === 9 ? {visibility: 'hidden'} : {} }
+            style={
+              step === 0
+              || step === 6
+              || (step === 7 && this.props.location.state && this.props.location.state.auth)
+              || step === 9
+                ? {visibility: 'hidden'}
+                : {}
+            }
           >
             <i className="iconfont icon-return"/>
             返回

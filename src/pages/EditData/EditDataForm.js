@@ -98,6 +98,7 @@ function EditDataForm ({
                          handlePwdBlur,
                          handleNewPwdBlur,
                          handleNewPwdRepeatBlur,
+                         jumpToAuth,
                        }) {
   switch (selectedItem) {
     case 'basic':
@@ -367,13 +368,18 @@ function EditDataForm ({
         <p>实名验证帮助用户之间建立信任，让每个人更安心地使用我们的服务。</p>
         <p>请放心，其他顾客和服务商不会看到您的身份信息。</p>
         { user.checkStatus
-          ? <div className="check-status">
-            <div className="circle"><i className="iconfont icon-selected"/></div>
-            <span>您已实名认证</span>
-          </div>
+          ? user.checkStatus === 2 ? <div className="check-status">
+              <div className="circle"><i className="iconfont icon-selected"/></div>
+              <span>您已实名认证</span>
+            </div>
+            : <div className="check-status">
+              <div className="circle"><i className="iconfont icon-selected"/></div>
+              <span>待审核</span>
+            </div>
           : <Button
             className="auth-button"
             type="primary"
+            onClick={ jumpToAuth }
           >
             认证
           </Button> }

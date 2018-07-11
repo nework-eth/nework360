@@ -2,6 +2,7 @@ import { Button, Input, Menu, Modal } from 'antd'
 import { message } from 'antd/lib/index'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
 import { setUser } from '../../components/NavMenu/actions'
 import {
@@ -702,6 +703,10 @@ class EditData extends Component {
     }
   }
 
+  jumpToAuth = () => {
+    browserHistory.push({pathname: '/skill', state: {auth: true}})
+  }
+
   render () {
     const {
       selectedItem,
@@ -786,6 +791,7 @@ class EditData extends Component {
             handlePwdBlur={ this.handlePwdBlur }
             handleNewPwdBlur={ this.handleNewPwdBlur }
             handleNewPwdRepeatBlur={ this.handleNewPwdRepeatBlur }
+            jumpToAuth={ this.jumpToAuth }
           />
         </div>
         <Modal
