@@ -222,100 +222,97 @@
       }
     }
   }
-  .select-type-card-container {
-    width: 700px;
-    height: 360px;
-    display: flex;
-    flex-wrap: wrap;
-    .select-type-card-item {
-      position: relative;
-      width: 175px;
-      height: 120px;
-      border: 2px solid #F2F6F6;
-      padding-top: 23px;
-      text-align: center;
-      font-size: 0;
-      cursor: pointer;
-      &:hover {
-        background-color: #f6f8f9;
-      }
-      &:nth-of-type(n+5):nth-of-type(-n+8) {
-        border-top-color: transparent;
-        border-bottom-color: transparent;
-      }
-      &:nth-of-type(n+1):nth-of-type(-n+3), &:nth-of-type(n+9):nth-of-type(-n+11), &:nth-of-type(n+5):nth-of-type(-n+7) {
-        border-right-color: transparent;
-      }
-      img {
-        margin-bottom: 5px;
-      }
-      p {
-        font-size: 16px;
-        line-height: 22px;
-        font-weight: bold;
-      }
-      i {
-        color: #fff;
-        font-size: 18px;
-        position: absolute;
-        top: 0;
-        right: 1px;
-      }
-    }
-    .selected-card-item {
-      border: 2px solid #008bf7 !important;
-      background: linear-gradient(-135deg, #008bf7 25px, #fff 0);
-      &:hover {
-        background: linear-gradient(-135deg, #008bf7 25px, #f6f8f9 0);
-      }
-    }
-  }
+}
 
-  .secondary-type-select-container {
-    display: flex;
-    width: 700px;
-    flex-wrap: wrap;
-    .select-type-card-item {
-      position: relative;
-      width: 175px;
-      height: 80px;
-      line-height: 80px;
-      text-align: center;
+.select-type-card-container {
+  margin: 0 auto;
+  width: 360px;
+  height: 360px;
+  display: flex;
+  flex-wrap: wrap;
+  .select-type-card-item {
+    margin-right: 10px;
+    margin-bottom: 10px;
+    position: relative;
+    width: 175px;
+    height: 120px;
+    border: 2px solid #F2F6F6;
+    padding-top: 23px;
+    text-align: center;
+    font-size: 0;
+    cursor: pointer;
+    &:hover {
+      background-color: #f6f8f9;
+    }
+    &:nth-of-type(2n+2) {
+      margin-right: 0px;
+    }
+    img {
+      margin-bottom: 5px;
+    }
+    p {
       font-size: 16px;
+      line-height: 22px;
       font-weight: bold;
-      border: 2px solid #f2f6f6;
-      cursor: pointer;
-      &:hover {
-        background-color: #f6f8f9;
-      }
-      &:nth-of-type(n+5):nth-of-type(-n+8) {
-        border-top-color: transparent;
-        border-bottom-color: transparent;
-      }
-      &:nth-of-type(n+1):nth-of-type(-n+3),
-      &:nth-of-type(n+9):nth-of-type(-n+11),
-      &:nth-of-type(n+5):nth-of-type(-n+7) {
-        border-right-color: transparent;
-      }
-      i {
-        color: #fff;
-        font-size: 18px;
-        line-height: 18px;
-        font-weight: normal;
-        position: absolute;
-        top: 0;
-        right: 1px;
-      }
     }
-    .selected-card-item {
-      border-color: #008bf7 !important;
-      background: linear-gradient(-135deg, #008bf7 25px, #fff 0);
-      &:hover {
-        background: linear-gradient(-135deg, #008bf7 25px, #f6f8f9 0);
-      }
+    i {
+      color: #fff;
+      font-size: 18px;
+      position: absolute;
+      top: 0;
+      right: 1px;
     }
-
   }
+  .selected-card-item {
+    border: 2px solid #008bf7 !important;
+    background: linear-gradient(-135deg, #008bf7 25px, #fff 0);
+    &:hover {
+      background: linear-gradient(-135deg, #008bf7 25px, #f6f8f9 0);
+    }
+  }
+}
+
+.secondary-type-select-container {
+  margin: 0 auto;
+  display: flex;
+  width: 360px;
+  flex-wrap: wrap;
+  .select-type-card-item {
+    position: relative;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    width: 175px;
+    height: 80px;
+    line-height: 80px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    border: 2px solid #f2f6f6;
+    cursor: pointer;
+    &:hover {
+      background-color: #f6f8f9;
+    }
+    &:nth-of-type(2n+2) {
+      margin-right: 0;
+    }
+    i {
+      color: #fff;
+      font-size: 18px;
+      line-height: 18px;
+      font-weight: normal;
+      position: absolute;
+      top: 0;
+      right: 1px;
+    }
+  }
+  .selected-card-item {
+    border-color: #008bf7 !important;
+    background: linear-gradient(-135deg, #008bf7 25px, #fff 0);
+    &:hover {
+      background: linear-gradient(-135deg, #008bf7 25px, #f6f8f9 0);
+    }
+  }
+
 }
 
 

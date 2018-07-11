@@ -23,6 +23,21 @@ import { view as EditDataForm } from './EditDataForm'
 import { view as ModalForm } from './ModalForm'
 import './static/style/index.less'
 
+const logoSrcList = [
+  './images/宠物-icon.png',
+  './images/健康-icon.png',
+  './images/其他-icon.png',
+  './images/家政-icon.png',
+  './images/摄影摄像-icon.png',
+  './images/教育培训-icon.png',
+  './images/数码维修-icon.png',
+  './images/活动-icon.png',
+  './images/美容美甲-icon.png',
+  './images/上门维修-icon.png',
+  './images/婚礼策划-icon.png',
+  './images/运动健身-icon.png',
+]
+
 const MenuItem = Menu.Item
 
 const mapState = (state) => ({
@@ -249,6 +264,7 @@ class EditData extends Component {
     modalVisible: false,
     modalTitle: '',
     skillList: [],
+    originSkillList: [],
     skillModalStep: 0,
     skillModalVisible: false,
     firstServiceList: [],
@@ -315,6 +331,7 @@ class EditData extends Component {
       .reduce((pre, cur) => [...pre, ...cur], [])
       this.setState({
         skillList: [...secondarySkillList, ...data.skillTemp],
+        originSkillList: secondarySkillList.map(({serviceId}) => serviceId),
       })
     }
   }
@@ -471,6 +488,7 @@ class EditData extends Component {
       modalVisible: true,
     })
   }
+
   getMailCode = async () => {
     const {data: {code}} = await getMailCode({email: this.state.data.email})
     if (code === 200) {
@@ -557,6 +575,9 @@ class EditData extends Component {
 
   hideSkillModal = () => this.setState({
     skillModalVisible: false,
+    skillModalStep: 0,
+    selectedFirstService: '',
+    selectedSecondService: [],
   })
 
   skillModalNextStep = () => this.setState({
@@ -592,20 +613,22 @@ class EditData extends Component {
       promiseArr.push(this.postSkillTemp())
     }
     if (promiseArr.length === 1) {
-      const [{code}] = await Promise.all(promiseArr)
+      const [{data: {code}}] = await Promise.all(promiseArr)
       if (code === 200) {
         message.success('新增技能成功')
         this.getSkillByUserId()
+        this.hideSkillModal()
         this.hideSkillModal()
       }
       return
     }
     if (promiseArr.length === 2) {
-      const [{code: code1}, {code: code2}] = await Promise.all(promiseArr)
+      const [{data: {code: code1}}, {data: {code: code2}}] = await Promise.all(promiseArr)
       if (code1 === 200 && code2 === 200) {
         message.success('新增技能成功')
         this.hideSkillModal()
         this.getSkillByUserId()
+        this.hideSkillModal()
       }
     }
   }
@@ -614,7 +637,11 @@ class EditData extends Component {
     userId: this.props.user.userId,
     latitude: this.props.user.latitude,
     longitude: this.props.user.longitude,
-    serviceIds: this.state.selectedSecondService.join(','),
+    serviceIds:
+      [...new Set([
+        ...this.state.selectedSecondService.filter(item => item !== -1),
+        ...this.state.originSkillList])]
+      .join(','),
   })
 
   postSkillTemp = () =>
@@ -870,7 +897,9 @@ class EditData extends Component {
                 {
                   firstServiceList.map((serviceName) =>
                     <CardItem
-                      imgSrc={ './images/head-test.jpg' }
+                      imgSrc={ logoSrcList.some(item => item.includes(serviceName))
+                        ? logoSrcList.find(item => item.includes(serviceName))
+                        : './images/其他-icon.png' }
                       title={ serviceName }
                       key={ serviceName }
                       isSelected={ serviceName === selectedFirstService }
