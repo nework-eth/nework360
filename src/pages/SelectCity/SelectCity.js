@@ -103,7 +103,7 @@ class SelectCity extends Component {
       fetching: false,
     })
     this.props.setCityName(value)
-    this.props.setCityId((this.state.cityData.find(item => item.chinese === value)).districtId)
+    this.props.setCityId((this.state.searchOptions.find(item => item.chinese === value)).districtId)
     document.cookie = `cityName=${value}`
     browserHistory.push('/')
   }
