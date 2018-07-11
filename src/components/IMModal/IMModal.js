@@ -1,6 +1,7 @@
 import { Input, Modal } from 'antd'
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
+import './static/style/index.less'
 
 const {TextArea} = Input
 const classNameSpace = 'im'
@@ -54,6 +55,18 @@ class IMModal extends Component {
           <div className="im-top-wrapper">
             <p>{ phoneNumber }</p>
             <p><span onClick={ this.jumpToDemand }>查看需求</span><span>投诉</span></p>
+          </div>
+          <div className="im-content-wrapper">
+
+          </div>
+          <div className="im-input-wrapper">
+              <TextArea
+                rows={ 6 }
+                value={ textAreaValue }
+                style={ {padding: '13px 20px', resize: 'none', marginBottom: '20px'} }
+                onChange={ this.handleTextAreaValueChange }
+                placeholder="在这里输入您要发送的消息…"
+              />
           </div>
         </div>
       </Modal>

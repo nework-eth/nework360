@@ -1,14 +1,19 @@
-import { Button } from 'antd'
+import { Button, message } from 'antd'
 import moment from 'moment'
 import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
+import { buyClueCard, getClueCardPayInfo } from '../../service/clueCard'
 import { getPayInfo } from '../../service/needOrderDetail'
 import './static/style/index.less'
 
 class Pay extends Component {
 
   state = {
-    amount: 0,
+    type: '',
+    count: 0,
+    amount: 1,
     needsId: '',
+    orderId: '',
     userBName: '',
     selectedChannel: 'balance',
   }
@@ -18,20 +23,45 @@ class Pay extends Component {
     })
   }
   pay = async () => {
-    const {data: {data, code}} = await getPayInfo({
-      channel: this.state.selectedChannel,
-      amount: this.state.amount,
-      needsId: this.state.needsId,
-    })
+    if (this.props.location.state.type === 'clue') {
+      const {data: {code}} = await buyClueCard({
+        channel: 'balance',
+        amount: this.state.amount,
+        orderNo: this.state.orderId,
+        culeCount: this.props.location.state.count,
+      })
+      if (code === 200) {
+        message.success('购买线索卡成功')
+        browserHistory.push('/wallet')
+      }
+    } else {
+      const {data: {code}} = await getPayInfo({
+        channel: this.state.selectedChannel,
+        amount: this.state.amount,
+        needsId: this.state.needsId,
+      })
+      if (code === 200) {
+        message.success('支付成功')
+        browserHistory.push('/list')
+      }
+    }
+  }
+  getClueCardPayInfo = async () => {
+    const {data: {code, orderNo, amount}} = await getClueCardPayInfo({culeCount: this.props.location.state.count})
     if (code === 200) {
-      console.log(data)
+      this.setState({
+        orderId: orderNo,
+        amount,
+      })
     }
   }
 
   render () {
     const {
+      type,
       amount,
       needsId,
+      orderId,
       userBName,
       selectedChannel,
     } = this.state
@@ -40,13 +70,15 @@ class Pay extends Component {
         <h2>支付订单</h2>
         <div className="pay-content-container">
           <div className="list-container">
-            <div className="list-row"><span className="virtual-title">订单号：</span><span>{ needsId }</span></div>
-            <div className="list-row"><span className="virtual-title">商品名：</span><span>线索卡/服务</span></div>
+            <div className="list-row"><span className="virtual-title">订单号：</span><span>{ orderId }</span></div>
+            <div className="list-row"><span
+              className="virtual-title">商品名：</span><span>{ type === 'clue' ? '线索卡' : '服务' }</span></div>
             <div className="list-row"><span className="virtual-title">数量：</span><span>1</span></div>
           </div>
           <div className="list-container">
             <div className="list-row"><span className="virtual-title">支付金额：</span><span>{ amount / 100 }元</span></div>
-            <div className="list-row"><span className="virtual-title">到款账户：</span><span>{ userBName }</span></div>
+            <div className="list-row"><span className="virtual-title">到款账户：</span><span>{ userBName || 'system' }</span>
+            </div>
             <div className="list-row"><span className="virtual-title">下单时间：</span><span>{ moment()
             .format('YYYY-MM-DD') }</span></div>
           </div>
@@ -56,13 +88,13 @@ class Pay extends Component {
           <div className={ selectedChannel === 'balance' ? 'virtual-button selected-virtual-button' : 'virtual-button' }
             onClick={ this.changeSelectedChannel('balance') }>
             <i className="iconfont icon-selected"/>
-            <span>账户余额</span>
+            <img src="./images/balance.png" alt="余额支付" width="109" height="32"/>
           </div>
           <div
             className={ selectedChannel === 'wx_pub_qr' ? 'virtual-button selected-virtual-button' : 'virtual-button' }
             onClick={ this.changeSelectedChannel('wx_pub_qr') }>
             <i className="iconfont icon-selected"/>
-            <span>微信支付</span>
+            <img src="./images/wechatpay.png" alt="微信支付" width="110" height="30"/>
           </div>
         </div>
         <Button onClick={ this.pay }>立即支付</Button>
@@ -71,11 +103,15 @@ class Pay extends Component {
   }
 
   componentDidMount () {
-    this.setState({
-      needsId: this.props.location.state.needsId,
-      amount: this.props.location.state.amount,
-      userBName: this.props.location.state.userBName,
-    })
+    if (this.props.location.state.type === 'clue') {
+      this.getClueCardPayInfo()
+    } else {
+      this.setState({
+        needsId: this.props.location.state.needsId,
+        amount: this.props.location.state.amount,
+        userBName: this.props.location.state.userBName,
+      })
+    }
   }
 
 }

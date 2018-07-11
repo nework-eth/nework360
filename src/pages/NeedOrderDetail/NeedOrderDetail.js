@@ -157,6 +157,7 @@ class NeedOrderDetail extends Component {
     //   conn.send(msg.body)
     // }, 1000)
   }
+
   pay = async () => {
     const {data: {data, code}} = await getPayInfo({channel: 'wx_pub_qr', amount: 200, needsId: '222222'})
     if (code === 200) {

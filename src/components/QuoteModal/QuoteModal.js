@@ -51,7 +51,7 @@ class QuoteModal extends Component {
             fontWeight: 'bold',
             marginBottom: '10px',
           } }>
-            输入收款金额
+            输入报价金额（元）
           </p>
           <Input
             value={ value }
@@ -75,7 +75,7 @@ class QuoteModal extends Component {
             onChange={ this.handleTextAreaValueChange }
             placeholder="请输入"
           />
-          <p>本次报价需消耗 5 张线索卡，提交报价后将自动扣除</p>
+          <p>本次报价需消耗 <span style={ {color: '#008bf7'} }>5</span> 张线索卡，提交报价后将自动扣除</p>
           <div style={ {marginTop: '20px'} }>
             <Button
               type="primary"

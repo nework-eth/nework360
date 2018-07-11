@@ -1,27 +1,76 @@
-import { Button, Input } from 'antd'
+import { Button, Input, message } from 'antd'
 import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
 import { view as Footer } from '../../components/Footer'
+import { getClueCardPrice } from '../../service/clueCard'
+import { getUserAccount } from '../../service/wallet'
 import './static/style/index.less'
 
 const classNameSpace = 'clue-card'
 
 class ClueCard extends Component {
-  state = {}
+  state = {
+    clueCardPrice: 0,
+    remainClueCard: 0,
+    clueCardCount: '',
+  }
+
+  getClueCardPrice = async () => {
+    const {data: {culeMoney, code}} = await getClueCardPrice()
+    if (code === 200) {
+      this.setState({
+        clueCardPrice: culeMoney,
+      })
+    }
+  }
+
+  getRemainClueCard = async () => {
+    const {data: {data, code}} = await getUserAccount()
+    if (code === 200) {
+      this.setState({
+        remainClueCard: data.cule,
+      })
+    }
+  }
+
+  jumpToPay = () => {
+    const clueCardCount = +this.state.clueCardCount
+    if (!clueCardCount) {
+      message.error('请输入数量')
+      return
+    }
+    if (!Number.isInteger(clueCardCount)) {
+      message.error('请输入整数')
+      return
+    }
+    browserHistory.push({
+      pathname: '/pay',
+      state: {count: this.state.clueCardCount, type: 'clue'},
+    })
+  }
 
   render () {
+    const {
+      clueCardCount,
+      clueCardPrice,
+      remainClueCard,
+    } = this.state
     return (
       <div className={ `${classNameSpace}-container` }>
         <main>
           <h2>购买线索卡</h2>
           <div className={ `${classNameSpace}-model-wrapper` }>
-            <p>剩余 { } 张</p>
+            <p>剩余 { remainClueCard } 张</p>
           </div>
           <p className={ `${classNameSpace}-virtual-title` }>
             购买数量
           </p>
           <div className={ `${classNameSpace}-input-wrapper` }>
             <Input
+              type='number'
               placeholder="请输入10及以上的整数"
+              value={ clueCardCount }
+              onChange={ (e) => {this.setState({clueCardCount: e.target.value})} }
             />
             <span className="tip">张</span>
           </div>
@@ -29,9 +78,13 @@ class ClueCard extends Component {
             价格
           </p>
           <div className={ `${classNameSpace}-price` }>
-            ¥ 20<span className={ `${classNameSpace}-price-decimal` }>.00</span>
+            ¥ { (+clueCardPrice / 100).toFixed(2).split('.')[0] }<span
+            className={ `${classNameSpace}-price-decimal` }>.{ (clueCardPrice / 100).toFixed(2).split('.')[1] }</span>
           </div>
-          <Button type="primary">
+          <Button
+            type="primary"
+            onClick={ this.jumpToPay }
+          >
             立即支付
           </Button>
           <h3>什么是 Nework 线索卡？</h3>
@@ -54,7 +107,8 @@ class ClueCard extends Component {
   }
 
   componentDidMount () {
-
+    this.getClueCardPrice()
+    this.getRemainClueCard()
   }
 
 }

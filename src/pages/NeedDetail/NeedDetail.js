@@ -1,21 +1,33 @@
 import { Button, message, Rate } from 'antd'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
 import { QuoteModal } from '../../components/QuoteModal/QuoteModal'
-import { createQuote, getNeedDetail } from '../../service/needDetail/index'
+import { TipModal } from '../../components/TipModal/TipModal'
+import { createQuote, getNeedDetail, withdrawQuote } from '../../service/needDetail/index'
+import { getUserAccount } from '../../service/wallet'
 import { getRate } from '../../utils'
 import { view as NeedDetailItem } from './NeedDetailItem'
 import './static/style/index.less'
 
 export const classNameSpace = 'need-detail'
 
+const mapState = (state) => ({
+  user: state.user,
+})
+
+@connect(mapState)
 class NeedDetail extends Component {
   state = {
     score: '',
     needsId: '',
     nickName: '',
+    hasQuoted: true,
     avatarSrc: '',
     scoreCount: '',
     serviceName: '',
+    clueCardCount: 0,
+    tipModalVisible: false,
     quoteModalVisible: false,
     needDetailItemList: [],
   }
@@ -29,6 +41,7 @@ class NeedDetail extends Component {
         scoreCount: data.user.score.count,
         serviceName: data.serviceName,
         needDetailItemList: data.needsItem.pages,
+        hasQuoted: data.quote === 'yes',
       })
     }
   }
@@ -45,9 +58,16 @@ class NeedDetail extends Component {
       message.error('报价金额不能为空')
       return
     }
-    if (typeof amount !== 'number') {
+    if (Number.isNaN(+amount)) {
       message.error('报价金额必须为数字')
       return
+    }
+    const res = await getUserAccount({userId: this.props.user.userId})
+    if (res.data.code !== 200) {
+      return
+    }
+    if (res.data.cule < 5) {
+      return this.showTipModal(res.data.cule)
     }
     const {data: {code}} = await createQuote({needsId, amount, instruction})
     if (code === 200) {
@@ -56,15 +76,35 @@ class NeedDetail extends Component {
       this.hideQuoteModal()
     }
   }
+  showTipModal = (count) => {
+    this.setState({
+      clueCardCount: count,
+      tipModalVisible: true,
+    })
+  }
+  withdrawQuote = async () => {
+    const {data: {code}} = await withdrawQuote({quoteId: this.props.location.state.quoteId})
+    if (code === 200) {
+      message.success('取消报价成功')
+      this.getNeedDetail()
+    }
+  }
+  handleConfirm = () => browserHistory.push('/clue-card')
+  handleTipModalCancel = () => this.setState({
+    tipModalVisible: false,
+  })
 
   render () {
     const {
       score,
       needsId,
       nickName,
+      hasQuoted,
       avatarSrc,
       scoreCount,
       serviceName,
+      clueCardCount,
+      tipModalVisible,
       quoteModalVisible,
       needDetailItemList,
     } = this.state
@@ -104,9 +144,21 @@ class NeedDetail extends Component {
           handleSubmit={ this.handleQuoteModalSubmit(needsId) }
           handleCancel={ this.hideQuoteModal }
         />
+        <TipModal
+          count={ clueCardCount }
+          visible={ tipModalVisible }
+          handleConfirm={ this.handleConfirm }
+          handleCancel={ this.handleTipModalCancel }
+        />
         <footer>
-          <div/>
-          <Button type="primary" onClick={ this.showQuoteModal }>立即报价</Button>
+          <div>{ hasQuoted && <div>
+            <p className="quote-amount">¥ { (this.props.location.state.amount / 100).toFixed(2) }</p>
+            <p className="quote-amount-tip">您的报价</p>
+          </div> }</div>
+          { !hasQuoted
+            ? <Button type="primary" onClick={ this.showQuoteModal }>立即报价</Button>
+            : <Button onClick={ this.withdrawQuote }>取消报价</Button>
+          }
         </footer>
       </div>
     )
