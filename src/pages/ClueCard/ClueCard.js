@@ -49,7 +49,7 @@ class ClueCard extends Component {
     }
     browserHistory.push({
       pathname: '/pay',
-      state: {count: this.state.clueCardCount, state: {type: 'clue'}},
+      state: {count: this.state.clueCardCount, type: 'clue'},
     })
   }
 
