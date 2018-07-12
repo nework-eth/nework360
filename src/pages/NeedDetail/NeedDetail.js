@@ -151,7 +151,7 @@ class NeedDetail extends Component {
           handleCancel={ this.handleTipModalCancel }
         />
         <footer>
-          <div>{ hasQuoted && <div>
+          <div>{ hasQuoted && this.props.location.state && this.props.location.state.amount && <div>
             <p className="quote-amount">¥ { (this.props.location.state.amount / 100).toFixed(2) }</p>
             <p className="quote-amount-tip">您的报价</p>
           </div> }</div>

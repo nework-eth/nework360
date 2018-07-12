@@ -173,6 +173,10 @@ class NavMenu extends Component {
       browserHistory.push({pathname: '/wallet'})
       return
     }
+    if (action.startsWith('non')) {
+      browserHistory.push({pathname: '/profile'})
+      return
+    }
     if (action.startsWith('order')) {
       browserHistory.push('/need-order-detail')
 
