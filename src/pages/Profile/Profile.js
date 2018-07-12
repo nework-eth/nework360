@@ -1,4 +1,4 @@
-import { Button, Carousel, Rate } from 'antd'
+import { Carousel, Rate } from 'antd'
 import 'moment/locale/zh-cn'
 import React, { Component } from 'react'
 import { DayPickerRangeController } from 'react-dates'
@@ -216,8 +216,9 @@ class Profile extends Component {
           {
             this.state.data.isPartyB
               ? this.props.user.userId === this.state.data.userId
-              ? <Button type="primary"><Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link></Button>
-              : <Button type="primary"><Link
+              ? <Link to={ {pathname: '/editData'} }
+                style={ {textDecoration: 'none'} }>编辑</Link>
+              : <Link
                 to={ {
                   pathname: '/post-demand',
                   state: {
@@ -227,9 +228,9 @@ class Profile extends Component {
                   },
                 } }
                 style={ {textDecoration: 'none'} }
-              >联系</Link></Button>
+              >联系</Link>
               : this.props.user.userId === this.state.data.userId
-              ? <Button type="primary"><Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link></Button>
+              ? <Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link>
               : ''
           }
         </footer>
