@@ -26,7 +26,11 @@ class WechatPay extends Component {
           if (status === 'succ') {
             message.success('购买成功')
             clearInterval(timer)
-            browserHistory.push('/wallet')
+            if (this.props.location.state.type === 'cule') {
+              browserHistory.push('/wallet')
+            } else {
+              browserHistory.push('/list')
+            }
             return
           }
           if (status === 'fail') {
