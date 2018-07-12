@@ -128,8 +128,8 @@ class Profile extends Component {
   jumpToPostDemand = () => {
     browserHistory.push({
       pathname: '/post-demand', state: {
-        serviceName: this.skillList[0].secondServiceTypeName,
-        serviceId: this.skillList[0].serviceId,
+        serviceName: this.state.skillList[0].secondServiceTypeName,
+        serviceId: this.state.skillList[0].serviceId,
         partyBId: this.state.userId,
       },
     })
