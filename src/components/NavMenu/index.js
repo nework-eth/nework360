@@ -169,19 +169,26 @@ class NavMenu extends Component {
       console.log('action', action)
       console.log('needsId', action.split('--'))
       browserHistory.push({pathname: '/need-detail', state: {needsId: action.split('--')[1]}})
+      await updateMessageStatus({id, status: -1})
+      this.getMessage()
       return
     }
     if (action.startsWith('trans')) {
       browserHistory.push({pathname: '/wallet'})
+      await updateMessageStatus({id, status: -1})
+      this.getMessage()
       return
     }
     if (action.startsWith('non')) {
       browserHistory.push({pathname: '/profile'})
+      await updateMessageStatus({id, status: -1})
+      this.getMessage()
       return
     }
     if (action.startsWith('order')) {
       browserHistory.push({pathname: '/need-order-detail', state: {needsId: action.split('--')[1]}})
-
+      await updateMessageStatus({id, status: -1})
+      this.getMessage()
     }
   }
   changeMessageListType = (type) => () => this.setState({
