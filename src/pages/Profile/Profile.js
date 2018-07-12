@@ -1,11 +1,11 @@
-import { Carousel, Rate } from 'antd'
+import { Button, Carousel, Rate } from 'antd'
 import 'moment/locale/zh-cn'
 import React, { Component } from 'react'
 import { DayPickerRangeController } from 'react-dates'
 import 'react-dates/initialize'
 import 'react-dates/lib/css/_datepicker.css'
 import { connect } from 'react-redux'
-import { Link } from 'react-router'
+import { browserHistory } from 'react-router'
 import { getSkillByUserId, getUserById } from '../../service/editData'
 import { getRate, getRelativeTime } from '../../utils'
 import './static/style/index.less'
@@ -122,6 +122,18 @@ class Profile extends Component {
       showAllIntroduce: true,
     })
   }
+  jumpToEditData = () => {
+    browserHistory.push('/editData')
+  }
+  jumpToPostDemand = () => {
+    browserHistory.push({
+      pathname: '/post-demand', state: {
+        serviceName: this.skillList[0].secondServiceTypeName,
+        serviceId: this.skillList[0].serviceId,
+        partyBId: this.state.userId,
+      },
+    })
+  }
 
   render () {
     const {
@@ -216,21 +228,10 @@ class Profile extends Component {
           {
             this.state.data.isPartyB
               ? this.props.user.userId === this.state.data.userId
-              ? <Link to={ {pathname: '/editData'} }
-                style={ {textDecoration: 'none'} }>编辑</Link>
-              : <Link
-                to={ {
-                  pathname: '/post-demand',
-                  state: {
-                    serviceName: skillList[0].secondServiceTypeName,
-                    serviceId: skillList[0].serviceId,
-                    partyBId: this.state.userId,
-                  },
-                } }
-                style={ {textDecoration: 'none'} }
-              >联系</Link>
+              ? <Button type="primary" onClick={ this.jumpToEditData }>编辑</Button>
+              : <Button type="primary" onClick={ this.jumpToPostDemand }>联系</Button>
               : this.props.user.userId === this.state.data.userId
-              ? <Link to="/editData" style={ {textDecoration: 'none'} }>编辑</Link>
+              ? <Button type="primary" onClick={ this.jumpToEditData }>编辑</Button>
               : ''
           }
         </footer>
