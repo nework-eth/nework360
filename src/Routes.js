@@ -146,7 +146,7 @@ const getWithdraw = async (nextState, callback) => callback(
 
 const getWechatPay = async (nextState, callback) => callback(
   null,
-  (await import(/* webpackChunkName: "Pay" */'./pages/WechatPay/WechatPay.js')).page,
+  (await import(/* webpackChunkName: "WechatPay" */'./pages/WechatPay/WechatPay.js')).page,
 )
 
 const history = syncHistoryWithStore(browserHistory, store)
