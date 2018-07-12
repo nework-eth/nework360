@@ -560,7 +560,7 @@ class EditData extends Component {
 
   getServiceTree = async () => {
     try {
-      const {data: {data, code}} = await getServiceTree({cityId: this.props.user.district})
+      const {data: {data, code}} = await getServiceTree({cityId: this.props.user.district || 110})
       if (code === 200) {
         const firstServiceList = data.map(item => item.serviceTypeName)
         this.setState({

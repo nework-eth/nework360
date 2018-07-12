@@ -1,4 +1,4 @@
-import { Input, Modal } from 'antd'
+import { Button, Input, Modal } from 'antd'
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import './static/style/index.less'
@@ -60,13 +60,14 @@ class IMModal extends Component {
 
           </div>
           <div className="im-input-wrapper">
-              <TextArea
-                rows={ 6 }
-                value={ textAreaValue }
-                style={ {padding: '13px 20px', resize: 'none', marginBottom: '20px'} }
-                onChange={ this.handleTextAreaValueChange }
-                placeholder="在这里输入您要发送的消息…"
-              />
+            <TextArea
+              rows={ 6 }
+              value={ textAreaValue }
+              style={ {padding: '13px 20px', resize: 'none', marginBottom: '20px'} }
+              onChange={ this.handleTextAreaValueChange }
+              placeholder="在这里输入您要发送的消息…"
+            />
+            <Button>发送</Button>
           </div>
         </div>
       </Modal>
