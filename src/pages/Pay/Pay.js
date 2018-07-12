@@ -24,15 +24,37 @@ class Pay extends Component {
   }
   pay = async () => {
     if (this.props.location.state.type === 'clue') {
-      const {data: {code}} = await buyClueCard({
-        channel: 'balance',
-        amount: this.state.amount,
-        orderNo: this.state.orderId,
-        culeCount: this.props.location.state.count,
-      })
-      if (code === 200) {
-        message.success('购买线索卡成功')
-        browserHistory.push('/wallet')
+      if (this.state.selectedChannel === 'balance') {
+        const {data: {code}} = await buyClueCard({
+          channel: 'balance',
+          amount: this.state.amount,
+          orderNo: this.state.orderId,
+          culeCount: this.props.location.state.count,
+        })
+        if (code === 200) {
+          message.success('购买线索卡成功')
+          browserHistory.push('/wallet')
+        }
+      } else {
+        const {data: {data, code}} = await buyClueCard({
+          channel: 'wx_pub_qr',
+          amount: this.state.amount,
+          orderNo: this.state.orderId,
+          culeCount: this.props.location.state.count,
+        })
+        if (code === 200) {
+          browserHistory.push(
+            {
+              pathname: '/wechat-pay',
+              state: {
+                QR: data.credential.wx_pub_qr,
+                orderId: this.state.orderId,
+                chargeId: data.id,
+                type: 'cule',
+              },
+            },
+          )
+        }
       }
     } else {
       const {data: {code}} = await getPayInfo({

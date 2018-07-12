@@ -47,11 +47,12 @@ class NeedOrderDetail extends Component {
 
   state = {
     data: '',
+    userB: '',
     quotes: [],
     needsId: this.props.location.state.needsId,
     orderStatus: '',
-    selectedQuoteId: '',
     IMModalVisible: false,
+    selectedQuoteId: '',
   }
   getNeedOrderDetail = async () => {
     const {data: {data, code}} = await getNeedOrderDetail({needsId: this.state.needsId})
@@ -78,89 +79,11 @@ class NeedOrderDetail extends Component {
       this.getNeedOrderDetail()
     }
   }
-  IMInit = () => {
-    /* eslint-disable no-undef */
-    const conn = new WebIM.connection({
-      isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
-      https: typeof WebIM.config.https === 'boolean' ? WebIM.config.https : window.location.protocol === 'https:',
-      url: WebIM.config.xmppURL,
-      heartBeatWait: WebIM.config.heartBeatWait,
-      autoReconnectNumMax: WebIM.config.autoReconnectNumMax,
-      autoReconnectInterval: WebIM.config.autoReconnectInterval,
-      apiUrl: WebIM.config.apiURL,
-      isAutoLogin: true,
-    })
-    conn.listen({
-      onOpened: function (message) {
-        console.log('open', message)
-        //连接成功回调
-        // 如果isAutoLogin设置为false，那么必须手动设置上线，否则无法收消息
-        // 手动上线指的是调用conn.setPresence(); 如果conn初始化时已将isAutoLogin设置为true
-        // 则无需调用conn.setPresence();
-      },
-      onClosed: function (message) {
-        console.log('close', message)
-      },         //连接关闭回调
-      onTextMessage: function (message) {console.log(message)},    //收到文本消息
-      onEmojiMessage: function (message) {},   //收到表情消息
-      onPictureMessage: function (message) {}, //收到图片消息
-      onCmdMessage: function (message) {},     //收到命令消息
-      onAudioMessage: function (message) {},   //收到音频消息
-      onLocationMessage: function (message) {},//收到位置消息
-      onFileMessage: function (message) {},    //收到文件消息
-      onVideoMessage: function (message) {},   //收到视频消息
-      onPresence: function (message) {},       //处理“广播”或“发布-订阅”消息，如联系人订阅请求、处理群组、聊天室被踢解散等消息
-      onRoster: function (message) {},         //处理好友申请
-      onInviteMessage: function (message) {},  //处理群组邀请
-      onOnline: function () {},                  //本机网络连接成功
-      onOffline: function () {},                 //本机网络掉线
-      onError: function (message) {
-        console.log('error', message)
-      },          //失败回调
-      onBlacklistUpdate: function (list) {       //黑名单变动
-                                                 // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
-        console.log(list)
-      },
-      onReceivedMessage: function (message) {},    //收到消息送达服务器回执
-      onDeliveredMessage: function (message) {},   //收到消息送达客户端回执
-      onReadMessage: function (message) {},        //收到消息已读回执
-      onCreateGroup: function (message) {},        //创建群组成功回执（需调用createGroupNew）
-      onMutedMessage: function (message) {},        //如果用户在A群组被禁言，在A群发消息会走这个回调并且消息不会传递给群其它成员
-    })
-    // conn.registerUser({
-    //   username: '21',
-    //   password: '21',
-    //   nickname: 'nickname',
-    //   appKey: WebIM.config.appkey,
-    //   success: function (msg) {console.log('success', msg) },
-    //   error: function (e) {console.log('error', e) },
-    //   apiUrl: WebIM.config.apiURL,
-    // })
-    // conn.close()
-    // conn.close()
-    // 生成本地消息id
-    // setTimeout(()=>{
-    //   var id = conn.getUniqueId()
-    //   var msg = new WebIM.message('txt', id)      // 创建文本消息
-    //   msg.set({
-    //     msg: 'this is a test',                  // 消息内容
-    //     to: '21',                          // 接收消息对象（用户id）
-    //     roomType: false,
-    //     success: function (id, serverMsgId) {
-    //       console.log('send private text Success')
-    //     },
-    //     fail: function (e) {
-    //       console.log('Send private text error')
-    //     },
-    //   })
-    //   msg.body.chatType = 'singleChat'
-    //   conn.send(msg.body)
-    // }, 1000)
-  }
 
   pay = async () => {
     const {data: {data, code}} = await getPayInfo({channel: 'wx_pub_qr', amount: 200, needsId: '222222'})
     if (code === 200) {
+      /* eslint-disable no-undef */
       pingpp.createPayment(data, function (result, err) {
         console.log(result)
         console.log('error', err)
@@ -168,12 +91,21 @@ class NeedOrderDetail extends Component {
     }
   }
 
+  showIMModal = (userBId) => () => {
+    this.setState({
+      IMModalVisible: true,
+      userB: `${userBId}`,
+    })
+  }
+
   render () {
     const {
       title,
+      userB,
       quotes,
       needsId,
       orderStatus,
+      IMModalVisible,
       selectedQuoteId,
     } = this.state
     return (
@@ -192,6 +124,7 @@ class NeedOrderDetail extends Component {
                               ave,
                               count,
                             },
+                            userId,
                             nickName,
                             hireTimes,
                             creatTime,
@@ -211,6 +144,7 @@ class NeedOrderDetail extends Component {
                 hireTimes={ hireTimes }
                 scoreCount={ count }
                 joinedTime={ creatTime }
+                showIMModal={ this.showIMModal(userId) }
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
                 buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status) }
@@ -220,8 +154,10 @@ class NeedOrderDetail extends Component {
         </main>
         { /*<QRCode value="http://sissi.pingxx.com/mock.php?ch_id=ch_9OeLWT90Gy9KOurfjHa9iznL&channel=wx_pub_qr"/>*/ }
         <IMModal
-          nickname='rennaiqian'
-          visible={ false }
+          userA={ this.props.user.userId }
+          userB={ 20 }
+          visible={ IMModalVisible }
+          nickname={ this.props.user.nickName }
         />
         <Footer/>
       </div>
@@ -230,7 +166,6 @@ class NeedOrderDetail extends Component {
 
   componentDidMount () {
     this.getNeedOrderDetail()
-    this.IMInit()
   }
 
 }

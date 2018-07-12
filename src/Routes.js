@@ -144,6 +144,11 @@ const getWithdraw = async (nextState, callback) => callback(
   (await import(/* webpackChunkName: "Withdraw" */'./pages/Withdraw/Withdraw.js')).page,
 )
 
+const getWechatPay = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "Pay" */'./pages/WechatPay/WechatPay.js')).page,
+)
+
 const history = syncHistoryWithStore(browserHistory, store)
 
 const requireAuth = async (nextState, replaceState, callback) => {
@@ -155,14 +160,12 @@ const requireAuth = async (nextState, replaceState, callback) => {
   if (userId) {
     const {data: {data, code}} = await getUserById({userId})
     if (code === 200) {
-      console.log('here')
       store.dispatch({type: ActionTypes.SETUSER, user: data})
       store.dispatch({type: ActionTypes.SETUSERID, userId: data.userId})
       callback()
       return
     }
   }
-  console.log('here 2')
   replaceState('/login')
   callback()
 }
@@ -219,6 +222,7 @@ const Routes = () => (
       <Route path="/clue-card" getComponent={ getClueCard }/>
       <Route path="/pay" getComponent={ getPay }/>
       <Route path="/withdraw" getComponent={ getWithdraw }/>
+      <Route path="/wechat-pay" getComponent={ getWechatPay }/>
     </Route>
   </Router>
 )

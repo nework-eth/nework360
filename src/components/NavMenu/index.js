@@ -166,7 +166,9 @@ class NavMenu extends Component {
     //     return
     // }
     if (action.startsWith('needs')) {
-      browserHistory.push({pathname: '/need-detail', needsId: action.split('--')})
+      console.log('action', action)
+      console.log('needsId', action.split('--'))
+      browserHistory.push({pathname: '/need-detail', state: {needsId: action.split('--')[1]}})
       return
     }
     if (action.startsWith('trans')) {
@@ -178,7 +180,7 @@ class NavMenu extends Component {
       return
     }
     if (action.startsWith('order')) {
-      browserHistory.push('/need-order-detail')
+      browserHistory.push({pathname: '/need-order-detail', state: {needsId: action.split('--')[1]}})
 
     }
   }
@@ -373,7 +375,7 @@ const MessageItem = function ({
       <div className="message-item-content">{ content }</div>
       <div className="message-item-operate">
         { status === 0 && <span className="message-item-operate-item" onClick={ ignoreMessage }>忽略</span> }
-        { status === 0 && < span className='message-item-operate-item' onClick={ seeDetails }>查看</span> }
+        < span className='message-item-operate-item' onClick={ seeDetails }>查看</span>
       </div>
     </div>
   </div>)
