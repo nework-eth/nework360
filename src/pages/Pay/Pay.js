@@ -56,14 +56,35 @@ class Pay extends Component {
         }
       }
     } else {
-      const {data: {code}} = await getPayInfo({
-        channel: this.state.selectedChannel,
-        amount: this.state.amount,
-        needsId: this.state.needsId,
-      })
-      if (code === 200) {
-        message.success('支付成功')
-        browserHistory.push('/list')
+      if (this.state.selectedChannel === 'balance') {
+        const {data: {code}} = await getPayInfo({
+          channel: this.state.selectedChannel,
+          amount: this.state.amount,
+          needsId: this.state.needsId,
+        })
+        if (code === 200) {
+          message.success('支付成功')
+          browserHistory.push('/list')
+        }
+      } else {
+        const {data: {data, code}} = await getPayInfo({
+          channel: this.state.selectedChannel,
+          amount: this.state.amount,
+          needsId: this.state.needsId,
+        })
+        if (code === 200) {
+          browserHistory.push(
+            {
+              pathname: '/wechat-pay',
+              state: {
+                QR: data.credential.wx_pub_qr,
+                orderId: this.state.orderId,
+                chargeId: data.id,
+                type: 'orderNeeds',
+              },
+            },
+          )
+        }
       }
     }
   }
@@ -125,12 +146,11 @@ class Pay extends Component {
 
   componentDidMount () {
     if (this.props.location.state.type === 'clue') {
-      console.log('clue')
       this.getClueCardPayInfo()
     } else {
-      console.log('else', this.props.location)
       this.setState({
         needsId: this.props.location.state.needsId,
+        orderId: this.props.location.state.needsId,
         amount: this.props.location.state.amount,
         userBName: this.props.location.state.userBName,
       })
