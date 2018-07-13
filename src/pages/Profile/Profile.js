@@ -176,10 +176,10 @@ class Profile extends Component {
             <p className="rate">{ ave }</p>
             <p className="evaluation">({ count }条评价)</p>
           </div>
-          <p className="introduce" style={ showAllIntroduce ? {height: 'auto'} : {} }>
+          { description && <p className="introduce" style={ showAllIntroduce ? {height: 'auto'} : {} }>
             { description }
-          </p>
-          { !showAllIntroduce && <a onClick={ this.showAllIntroduce }>查看更多介绍</a> }
+          </p> }
+          { description && !showAllIntroduce && <a onClick={ this.showAllIntroduce }>查看更多介绍</a> }
           <div className="information-container">
             <div><i className="iconfont icon-hire"/>{ isPartyB ? '被' : '已' }雇佣 { isPartyB ? hireTimes : bossTimes } 次
             </div>

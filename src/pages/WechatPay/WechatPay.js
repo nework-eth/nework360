@@ -1,17 +1,9 @@
-import { message } from 'antd'
+import { Button, message } from 'antd'
 import QRCode from 'qrcode.react'
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import { getPayResult } from '../../service/pay/pay'
-
-// function WechatPay ({location}) {
-//   return (
-//     <div>
-//       <h2>微信扫码支付</h2>
-//       { location.state && <QRCode value={ location.state.QR }/> }
-//     </div>
-//   )
-// }
+import './static/style/index.less'
 
 class WechatPay extends Component {
   polling = () => {
@@ -47,11 +39,17 @@ class WechatPay extends Component {
     }, 1000)
   }
 
+  handleGoBack = () => {
+    browserHistory.go(-1)
+  }
+
   render () {
     return (
-      <div>
+      <div className="wechat-pay-container">
         <h2>微信扫码支付</h2>
         { this.props.location.state && <QRCode value={ this.props.location.state.QR }/> }
+        <div><Button onClick={ this.handleGoBack }
+          style={ {width: '160px', height: '50px', marginTop: '20px'} }>返回</Button></div>
       </div>
     )
   }

@@ -98,6 +98,13 @@ class NeedOrderDetail extends Component {
     })
   }
 
+  hideIMModal = () => {
+    this.setState({
+      IMModalVisible: false,
+      userB: '',
+    })
+  }
+
   render () {
     const {
       title,
@@ -152,13 +159,13 @@ class NeedOrderDetail extends Component {
             )
           }
         </main>
-        { /*<QRCode value="http://sissi.pingxx.com/mock.php?ch_id=ch_9OeLWT90Gy9KOurfjHa9iznL&channel=wx_pub_qr"/>*/ }
-        <IMModal
+        { IMModalVisible && <IMModal
           userA={ this.props.user.userId }
           userB={ 20 }
           visible={ IMModalVisible }
           nickname={ this.props.user.nickName }
-        />
+          handleCancel={ this.hideIMModal }
+        /> }
         <Footer/>
       </div>
     )

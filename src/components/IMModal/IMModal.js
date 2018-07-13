@@ -1,6 +1,6 @@
 import { Button, Input, Modal } from 'antd'
 import React, { Component } from 'react'
-import { getIMMsg, insertMsg } from '../../service/im'
+import { getIMDialog, insertMsg } from '../../service/im'
 import './static/style/index.less'
 
 const {TextArea} = Input
@@ -108,28 +108,40 @@ class IMModal extends Component {
     // }, 1000)
   }
 
-  getIMMsg = async () => {
-    const {data: {code, data}} = await getIMMsg({
+  // getIMMsg = async () => {
+  //   const {data: {code, data}} = await getIMMsg({
+  //     sender: `${this.props.userB}`,
+  //     receiver: `${this.props.userA}`,
+  //   })
+  //   if (code === 200) {
+  //     this.setState({
+  //       msgList: data.reduce((pre, next) => [...pre, ...next.bodies], []),
+  //     })
+  //   }
+  // }
+
+  getIMDialog = async () => {
+    const {data: {code, data}} = await getIMDialog({
       sender: `${this.props.userB}`,
       receiver: `${this.props.userA}`,
     })
     if (code === 200) {
+      console.log(Object.values(data).reduce((pre, next) => [...pre, ...next], []))
       this.setState({
-        msgList: data.reduce((pre, next) => [...pre, ...next.bodies], []),
+        msgList: Object.values(data).reduce((pre, next) => [...pre, ...next], []),
       })
     }
   }
 
   insertMsg = async (msg) => {
     const {data: {code}} = await insertMsg({
-      bodies: msg,
+      bodies: JSON.stringify(msg),
       status: 0,
       sender: `${this.props.userA}`,
       receiver: `${this.props.userB}`,
-      createTime: Date.now(),
     })
     if (code === 200) {
-      this.getIMMsg()
+      this.getIMDialog()
     }
   }
 
@@ -141,12 +153,11 @@ class IMModal extends Component {
       to: `${this.props.userB}`,
       roomType: false,
       success: async (id, serverMsgId) => {
-        console.log('success')
         await this.insertMsg({
           type: 'text',
           msg: originMsg,
         })
-        this.getIMMsg()
+        this.getIMDialog()
       },
       fail (e) {
         console.log(e)
@@ -210,7 +221,7 @@ class IMModal extends Component {
           </div>
           <div className="im-content-wrapper">
             {
-              msgList.length && msgList.map(item => item.msg)
+              msgList.length && msgList.map(item => item.bodies.msg)
             }
           </div>
           <div className="im-input-wrapper">
@@ -229,7 +240,7 @@ class IMModal extends Component {
   }
 
   componentDidMount () {
-    this.getIMMsg()
+    this.getIMDialog()
     this.IMInit()
   }
 }
