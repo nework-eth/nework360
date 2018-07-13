@@ -294,9 +294,9 @@ class List extends Component {
                                      tip,
                                      quotes,
                                      status,
-                                     userId,
                                      needsId,
                                      quoteId,
+                                     userBId,
                                      nickname,
                                      upateTime,
                                      userBName,
@@ -313,7 +313,7 @@ class List extends Component {
                   jumpToPay={ this.jumpToPay({amount: amountFinal, needsId, userBName}) }
                   goNeedDetail={ this.goNeedDetail(needsId) }
                   selectedQuote={ quotes.find(item => item.quoteId === quoteId) || {} }
-                  showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickname) }
+                  showEvaluateModal={ this.showEvaluateModal(userBId, needsId, nickname) }
                   goNeedOrderDetail={ this.goNeedOrderDetail(needsId) }
                   showComplaintModal={ this.showComplaintModal }
                   handleChangeDemand={ this.handleChangeDemand(needsId, serviceId) }
