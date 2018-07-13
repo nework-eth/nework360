@@ -3,10 +3,10 @@ import React from 'react'
 import { getRate } from '../../utils'
 
 function NeedOrderDetailLIstItem ({
-                                    pay,
                                     score,
                                     amount,
                                     nickname,
+                                    jumpToPay,
                                     hireTimes,
                                     avatarSrc,
                                     scoreCount,
@@ -16,6 +16,7 @@ function NeedOrderDetailLIstItem ({
                                     selectPartyB,
                                     buttonStatus,
                                     handleEvaluate,
+                                    showEvaluateModal,
                                   }) {
   return (
     <div
@@ -56,10 +57,10 @@ function NeedOrderDetailLIstItem ({
           buttonStatus === 'cancel' && <Button onClick={ cancelOrder }>取消订单</Button>
         }
         {
-          buttonStatus === 'pay' && <Button onClick={ pay }>立即支付</Button>
+          buttonStatus === 'pay' && <Button onClick={ jumpToPay }>立即支付</Button>
         }
         {
-          buttonStatus === 'evaluate' && <Button type="primary" onClick={ handleEvaluate }>立即评价</Button>
+          buttonStatus === 'evaluate' && <Button type="primary" onClick={ showEvaluateModal }>立即评价</Button>
         }
       </div>
     </div>

@@ -2,8 +2,11 @@ import { message } from 'antd'
 import moment from 'moment'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { browserHistory } from 'react-router'
+import { EvaluateModal } from '../../components/EvaluateModal/EvaluateModal'
 import { view as Footer } from '../../components/Footer/index.js'
 import { IMModal } from '../../components/IMModal/IMModal'
+import { evaluate } from '../../service/list'
 import { cancelOrder, getNeedOrderDetail, getPayInfo, selectPartyB } from '../../service/needOrderDetail/index'
 import { getRate } from '../../utils'
 import { view as NeedOrderDetailListItem } from './NeedOrderDetailLIstItem'
@@ -48,11 +51,14 @@ class NeedOrderDetail extends Component {
   state = {
     data: '',
     userB: '',
+    title: '',
     quotes: [],
     needsId: this.props.location.state.needsId,
     orderStatus: '',
     IMModalVisible: false,
     selectedQuoteId: '',
+    evaluateNickname: '',
+    evaluateModalVisible: false,
   }
   getNeedOrderDetail = async () => {
     const {data: {data, code}} = await getNeedOrderDetail({needsId: this.state.needsId})
@@ -105,6 +111,41 @@ class NeedOrderDetail extends Component {
     })
   }
 
+  showEvaluateModal = (userId, needsId, evaluateNickname) => () => this.setState({
+    evaluateUserId: userId,
+    evaluateNeedsId: needsId,
+    evaluateNickname,
+    evaluateModalVisible: true,
+  })
+
+  handleEvaluateModalCancel = () => this.setState({
+    evaluateNickname: '',
+    evaluateModalVisible: false,
+  })
+
+  handleEvaluateModalSubmit = async (score, content) => {
+    if (!score) {
+      message.error('请选择评分')
+      return
+    }
+    const {data: {code}} = await evaluate({
+      userId: this.state.evaluateUserId,
+      needsId: this.state.evaluateNeedsId,
+      score,
+      content,
+    })
+    if (code === 200) {
+      message.success('评价成功')
+      this.getNeedOrderDetail()
+    }
+    this.handleEvaluateModalCancel()
+  }
+
+  jumpToPay = ({amount, needsId, userBName}) => () => browserHistory.push({
+    pathname: '/pay',
+    state: {amount, needsId, userBName},
+  })
+
   render () {
     const {
       title,
@@ -114,6 +155,8 @@ class NeedOrderDetail extends Component {
       orderStatus,
       IMModalVisible,
       selectedQuoteId,
+      evaluateNickname,
+      evaluateModalVisible,
     } = this.state
     return (
       <div className="order-detail-container">
@@ -142,11 +185,11 @@ class NeedOrderDetail extends Component {
                           quoteId,
                         }) =>
               <NeedOrderDetailListItem
-                pay={ this.pay }
                 key={ quoteId }
                 score={ getRate(ave) }
                 amount={ amount / 100 }
                 nickname={ nickName }
+                jumpToPay={ this.jumpToPay({amount, needsId, userBName: nickName}) }
                 avatarSrc={ photo }
                 hireTimes={ hireTimes }
                 scoreCount={ count }
@@ -155,17 +198,24 @@ class NeedOrderDetail extends Component {
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
                 buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status) }
+                showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickName) }
               />,
             )
           }
         </main>
         { IMModalVisible && <IMModal
           userA={ this.props.user.userId }
-          userB={ 20 }
+          userB={ userB }
           visible={ IMModalVisible }
           nickname={ this.props.user.nickName }
           handleCancel={ this.hideIMModal }
         /> }
+        <EvaluateModal
+          visible={ evaluateModalVisible }
+          nickname={ evaluateNickname }
+          handleCancel={ this.handleEvaluateModalCancel }
+          handleSubmit={ this.handleEvaluateModalSubmit }
+        />
         <Footer/>
       </div>
     )
