@@ -92,7 +92,10 @@ class NavMenu extends Component {
     }
   }
   getMessage = async () => {
-    const {data: {data, code, pageinfo}} = await getMessage({userId: 21})
+    const {data: {data, code, pageinfo}} = await getMessage({
+      userId: this.props.user.userId,
+      limit: this.state.messageLimit,
+    })
     if (code === 200) {
       this.setState({
         messageList: data,
@@ -101,7 +104,11 @@ class NavMenu extends Component {
     }
   }
   getUnreadMessage = async () => {
-    const {data: {data, code, pageinfo}} = await getMessage({userId: 21, status: 0})
+    const {data: {data, code, pageinfo}} = await getMessage({
+      userId: this.props.user.userId,
+      status: 0,
+      limit: this.state.unreadMessageLimit,
+    })
     if (code === 200) {
       this.setState({
         unreadMessageList: data,
@@ -133,6 +140,7 @@ class NavMenu extends Component {
       updateMessageStatus({id, status: -1})
     if (code === 200) {
       this.getMessage()
+      this.getUnreadMessage()
     }
   }
   ignoreAll = async () => {

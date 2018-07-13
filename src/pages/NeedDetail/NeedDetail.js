@@ -20,6 +20,7 @@ const mapState = (state) => ({
 class NeedDetail extends Component {
   state = {
     score: '',
+    userId: '',
     needsId: '',
     nickName: '',
     hasQuoted: true,
@@ -36,6 +37,7 @@ class NeedDetail extends Component {
     if (code === 200) {
       this.setState({
         score: data.user.score.ave,
+        userId: data.user.userId,
         nickName: data.user.nickName,
         avatarSrc: data.user.photo,
         scoreCount: data.user.score.count,
@@ -72,6 +74,7 @@ class NeedDetail extends Component {
     const {data: {code}} = await createQuote({needsId, amount, instruction})
     if (code === 200) {
       message.success('报价成功')
+      this.props.location.state = Object.assign({}, this.props.location.state, {amount})
       this.getNeedDetail()
       this.hideQuoteModal()
     }
@@ -93,10 +96,27 @@ class NeedDetail extends Component {
   handleTipModalCancel = () => this.setState({
     tipModalVisible: false,
   })
+  jumpToProfile = (userId) => () => {
+    browserHistory.push({
+      pathname: '/profile',
+      state: {
+        userId,
+      },
+    })
+  }
+
+  componentDidMount () {
+    this.setState({
+      needsId: this.props.location.state.needsId,
+    }, () => {
+      this.getNeedDetail()
+    })
+  }
 
   render () {
     const {
       score,
+      userId,
       needsId,
       nickName,
       hasQuoted,
@@ -117,6 +137,8 @@ class NeedDetail extends Component {
               alt="头像"
               width="50"
               height="50"
+              style={ {cursor: 'pointer'} }
+              onClick={ this.jumpToProfile(userId) }
             />
             <div>
               <div className={ `${classNameSpace}-profile-name` }>
@@ -162,14 +184,6 @@ class NeedDetail extends Component {
         </footer>
       </div>
     )
-  }
-
-  componentDidMount () {
-    this.setState({
-      needsId: this.props.location.state.needsId,
-    }, () => {
-      this.getNeedDetail()
-    })
   }
 
 }
