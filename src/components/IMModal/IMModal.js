@@ -12,6 +12,7 @@ class IMModal extends Component {
     msgList: [],
     rateValue: 0,
     textAreaValue: '',
+    complaintModalVisible: false,
   }
 
   IMInit = () => {
@@ -183,11 +184,13 @@ class IMModal extends Component {
   jumpToNeedDetail = () => browserHistory.push({
     pathname: '/need-detail',
     state: {
+      amount: this.props.amount,
       needsId: this.props.needsId,
       quoteId: this.props.quoteId,
-      amount: this.props.amount,
     },
   })
+  showComplaintModal = () => this.setState({complaintModalVisible: true})
+  handleComplaintModalCancel = () => this.setState({complaintModalVisible: false})
 
   render () {
     const {
@@ -199,6 +202,7 @@ class IMModal extends Component {
     const {
       msgList,
       textAreaValue,
+      complaintModalVisible,
     } = this.state
     return (
       <Modal
@@ -224,7 +228,9 @@ class IMModal extends Component {
         <div className="im-container">
           <div className="im-top-wrapper">
             <p>{ phoneNumber }</p>
-            <p><span onClick={ this.jumpToNeedDetail }>查看需求</span><span>投诉</span></p>
+            <p><span onClick={ this.jumpToNeedDetail }
+              style={ {color: '#008bf7', marginRight: '10px'} }>查看需求</span><span>|</span><span
+              style={ {marginLeft: '10px'} }>投诉</span></p>
           </div>
           <div className="im-content-wrapper">
             {

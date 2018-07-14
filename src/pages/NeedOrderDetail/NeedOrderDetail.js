@@ -55,6 +55,9 @@ class NeedOrderDetail extends Component {
     quotes: [],
     needsId: this.props.location.state.needsId,
     orderStatus: '',
+    IMModalAmount: '',
+    IMModalNeedsId: '',
+    IMModalQuoteId: '',
     IMModalVisible: false,
     selectedQuoteId: '',
     evaluateNickname: '',
@@ -66,6 +69,7 @@ class NeedOrderDetail extends Component {
     if (code === 200) {
       this.setState({
         data: data.orders[0],
+        title: data.orders[0].serviceName,
         quotes: data.orders[0].quotes,
         orderStatus: data.orders[0].status,
         selectedQuoteId: data.orders[0].quoteId,
@@ -98,18 +102,25 @@ class NeedOrderDetail extends Component {
     }
   }
 
-  showIMModal = (userBId, IMModalPhoneNumber) => () => {
+  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount) => () => {
     this.setState({
       userB: `${userBId}`,
+      IMModalAmount,
       IMModalVisible: true,
+      IMModalNeedsId,
+      IMModalQuoteId,
       IMModalPhoneNumber,
     })
   }
 
   hideIMModal = () => {
     this.setState({
-      IMModalVisible: false,
       userB: '',
+      IMModalAmount: '',
+      IMModalVisible: false,
+      IMModalNeedsId: '',
+      IMModalQuoteId: '',
+      IMModalPhoneNumber: '',
     })
   }
 
@@ -155,6 +166,9 @@ class NeedOrderDetail extends Component {
       quotes,
       needsId,
       orderStatus,
+      IMModalAmount,
+      IMModalNeedsId,
+      IMModalQuoteId,
       IMModalVisible,
       selectedQuoteId,
       evaluateNickname,
@@ -165,7 +179,7 @@ class NeedOrderDetail extends Component {
       <div className="order-detail-container">
         <main>
           <div className="order-detail-container-title-wrapper">
-            <h2>{ title || '深度保洁' }</h2>
+            <h2>{ title }</h2>
             <div className="date">
               { moment().format('YYYY年MM月DD日 HH:mm') }
             </div>
@@ -198,7 +212,7 @@ class NeedOrderDetail extends Component {
                 hireTimes={ hireTimes }
                 scoreCount={ count }
                 joinedTime={ creatTime }
-                showIMModal={ this.showIMModal(userId, phoneNum) }
+                showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount) }
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
                 buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status) }
@@ -212,6 +226,9 @@ class NeedOrderDetail extends Component {
           <IMModal
             userA={ this.props.user.userId }
             userB={ userB }
+            amount={ IMModalAmount }
+            needsId={ IMModalNeedsId }
+            quoteId={ IMModalQuoteId }
             visible={ IMModalVisible }
             nickname={ this.props.user.nickName }
             phoneNumber={ IMModalPhoneNumber }
