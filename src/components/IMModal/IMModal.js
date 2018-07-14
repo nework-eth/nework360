@@ -251,6 +251,7 @@ class IMModal extends Component {
         </div>
         <ComplaintModal
           visible={ complaintModalVisible }
+          handleCancel={ this.handleComplaintModalCancel }
         />
       </Modal>
     )
