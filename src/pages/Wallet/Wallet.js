@@ -37,22 +37,6 @@ function Content ({
               <Link href="/withdraw">提现</Link>
             </div>
           </div>
-          { /*<div className="balance-item">*/ }
-          { /*<p className="item-title">数字货币</p>*/ }
-          { /*<div className="balance-item-card balance-item-card-2">*/ }
-          { /*<img*/ }
-          { /*src="./images/balance-nkc.png"*/ }
-          { /*alt="nkc"*/ }
-          { /*width="40"*/ }
-          { /*height="40"*/ }
-          { /*/>*/ }
-          { /*<p className="title">*/ }
-          { /*{ nkc }*/ }
-          { /*</p>*/ }
-          { /*<p className="balance-type">NKC</p>*/ }
-          { /*<a href="/">提现</a>*/ }
-          { /*</div>*/ }
-          { /*</div>*/ }
           { isPartyB && <div className="balance-item">
             <p className="item-title">卡包</p>
             <div className="balance-item-card balance-item-card-3">

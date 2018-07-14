@@ -58,6 +58,7 @@ class NeedOrderDetail extends Component {
     IMModalVisible: false,
     selectedQuoteId: '',
     evaluateNickname: '',
+    IMModalPhoneNumber: '',
     evaluateModalVisible: false,
   }
   getNeedOrderDetail = async () => {
@@ -97,10 +98,11 @@ class NeedOrderDetail extends Component {
     }
   }
 
-  showIMModal = (userBId) => () => {
+  showIMModal = (userBId, IMModalPhoneNumber) => () => {
     this.setState({
-      IMModalVisible: true,
       userB: `${userBId}`,
+      IMModalVisible: true,
+      IMModalPhoneNumber,
     })
   }
 
@@ -156,6 +158,7 @@ class NeedOrderDetail extends Component {
       IMModalVisible,
       selectedQuoteId,
       evaluateNickname,
+      IMModalPhoneNumber,
       evaluateModalVisible,
     } = this.state
     return (
@@ -176,6 +179,7 @@ class NeedOrderDetail extends Component {
                             },
                             userId,
                             nickName,
+                            phoneNum,
                             hireTimes,
                             creatTime,
                           },
@@ -194,7 +198,7 @@ class NeedOrderDetail extends Component {
                 hireTimes={ hireTimes }
                 scoreCount={ count }
                 joinedTime={ creatTime }
-                showIMModal={ this.showIMModal(userId) }
+                showIMModal={ this.showIMModal(userId, phoneNum) }
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
                 buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status) }
@@ -203,13 +207,17 @@ class NeedOrderDetail extends Component {
             )
           }
         </main>
-        { IMModalVisible && <IMModal
-          userA={ this.props.user.userId }
-          userB={ userB }
-          visible={ IMModalVisible }
-          nickname={ this.props.user.nickName }
-          handleCancel={ this.hideIMModal }
-        /> }
+        {
+          IMModalVisible &&
+          <IMModal
+            userA={ this.props.user.userId }
+            userB={ userB }
+            visible={ IMModalVisible }
+            nickname={ this.props.user.nickName }
+            phoneNumber={ IMModalPhoneNumber }
+            handleCancel={ this.hideIMModal }
+          />
+        }
         <EvaluateModal
           visible={ evaluateModalVisible }
           nickname={ evaluateNickname }

@@ -1,10 +1,10 @@
 import { Button, Input, Modal } from 'antd'
 import React, { Component } from 'react'
+import { browserHistory } from 'react-router'
 import { getIMDialog, insertMsg } from '../../service/im'
 import './static/style/index.less'
 
 const {TextArea} = Input
-const classNameSpace = 'im'
 
 class IMModal extends Component {
   state = {
@@ -174,13 +174,20 @@ class IMModal extends Component {
   }
 
   handleSubmit = async () => {
-    // const msg = this.state.
     const msg = this.state.textAreaValue
     this.setState({
       textAreaValue: '',
     })
     this.sendMessage(msg)
   }
+  jumpToNeedDetail = () => browserHistory.push({
+    pathname: '/need-detail',
+    state: {
+      needsId: this.props.needsId,
+      quoteId: this.props.quoteId,
+      amount: this.props.amount,
+    },
+  })
 
   render () {
     const {
@@ -217,7 +224,7 @@ class IMModal extends Component {
         <div className="im-container">
           <div className="im-top-wrapper">
             <p>{ phoneNumber }</p>
-            <p><span onClick={ this.jumpToDemand }>查看需求</span><span>投诉</span></p>
+            <p><span onClick={ this.jumpToNeedDetail }>查看需求</span><span>投诉</span></p>
           </div>
           <div className="im-content-wrapper">
             {
