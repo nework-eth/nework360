@@ -71,10 +71,10 @@ class NeedDetail extends Component {
     if (res.data.cule < 5) {
       return this.showTipModal(res.data.cule)
     }
-    const {data: {code}} = await createQuote({needsId, amount, instruction})
+    const {data: {code}} = await createQuote({needsId, amount: amount * 100, instruction})
     if (code === 200) {
       message.success('报价成功')
-      this.props.location.state = Object.assign({}, this.props.location.state, {amount})
+      this.props.location.state = Object.assign({}, this.props.location.state, {amount: amount * 100})
       this.getNeedDetail()
       this.hideQuoteModal()
     }
