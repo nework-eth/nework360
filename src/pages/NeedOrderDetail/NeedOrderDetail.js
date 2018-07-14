@@ -59,6 +59,7 @@ class NeedOrderDetail extends Component {
     IMModalNeedsId: '',
     IMModalQuoteId: '',
     IMModalVisible: false,
+    IMModalNickname: '',
     selectedQuoteId: '',
     evaluateNickname: '',
     IMModalPhoneNumber: '',
@@ -102,13 +103,14 @@ class NeedOrderDetail extends Component {
     }
   }
 
-  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount) => () => {
+  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount, IMModalNickname) => () => {
     this.setState({
       userB: `${userBId}`,
       IMModalAmount,
       IMModalVisible: true,
       IMModalNeedsId,
       IMModalQuoteId,
+      IMModalNickname,
       IMModalPhoneNumber,
     })
   }
@@ -120,6 +122,7 @@ class NeedOrderDetail extends Component {
       IMModalVisible: false,
       IMModalNeedsId: '',
       IMModalQuoteId: '',
+      IMModalNickname: '',
       IMModalPhoneNumber: '',
     })
   }
@@ -171,6 +174,7 @@ class NeedOrderDetail extends Component {
       IMModalQuoteId,
       IMModalVisible,
       selectedQuoteId,
+      IMModalNickname,
       evaluateNickname,
       IMModalPhoneNumber,
       evaluateModalVisible,
@@ -212,7 +216,7 @@ class NeedOrderDetail extends Component {
                 hireTimes={ hireTimes }
                 scoreCount={ count }
                 joinedTime={ creatTime }
-                showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount) }
+                showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickName) }
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
                 buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status) }
@@ -230,7 +234,7 @@ class NeedOrderDetail extends Component {
             needsId={ IMModalNeedsId }
             quoteId={ IMModalQuoteId }
             visible={ IMModalVisible }
-            nickname={ this.props.user.nickName }
+            nickname={ IMModalNickname }
             phoneNumber={ IMModalPhoneNumber }
             handleCancel={ this.hideIMModal }
           />

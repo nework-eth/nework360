@@ -1,12 +1,48 @@
 import { Button, Input, Modal } from 'antd'
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { getIMDialog, insertMsg } from '../../service/im'
+import { getRelativeTime } from '../../utils'
 import { ComplaintModal } from '../ComplaintModal/ComplaintModal'
 import './static/style/index.less'
 
 const {TextArea} = Input
 
+const MessageItem = ({
+                       msg,
+                       type,
+                       time,
+                       nickname,
+                       avatarUrl,
+                     }) => {
+  if (type === 'left') {
+    return (
+      <div className="im-message-left-wrapper">
+        <img src={ avatarUrl } alt="头像" width="40" height="40"/>
+        <div>
+          <div className="im-message-top-info">
+            <div className="im-message-nickname">{ nickname }</div>
+            <div className="im-message-time">{ getRelativeTime(time) }</div>
+          </div>
+          <div className="im-message-content">{ msg }</div>
+        </div>
+      </div>
+    )
+  }
+  return (
+    <div className="im-message-right-wrapper">
+      <div className="im-message-time">{ time }</div>
+      <div className="im-message-content">{ msg }</div>
+    </div>
+  )
+}
+
+const mapState = (state) => ({
+  user: state.user,
+})
+
+@connect(mapState)
 class IMModal extends Component {
   state = {
     connect: '',
@@ -59,7 +95,7 @@ class IMModal extends Component {
         console.log('error', message)
       },          //失败回调
       onBlacklistUpdate: function (list) {       //黑名单变动
-                                                 // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
+        // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
         console.log(list)
       },
       onReceivedMessage: function (message) {},    //收到消息送达服务器回执
@@ -219,7 +255,7 @@ class IMModal extends Component {
           backgroundColor: '#edf1f4',
         } }
         bodyStyle={ {
-          height: 'calc(100vh - 70px)',
+          height: 'calc(100vh - 30px)',
           borderRadius: '4px',
           boxShadow: '0 0 10px 0 rgba(9,34,53,0.10)',
         } }
@@ -231,11 +267,20 @@ class IMModal extends Component {
             <p>{ phoneNumber }</p>
             <p><span onClick={ this.jumpToNeedDetail }
               style={ {color: '#008bf7', marginRight: '10px'} }>查看需求</span><span>|</span><span
-              style={ {marginLeft: '10px'} } onClick={ this.showComplaintModal }>投诉</span></p>
+              style={ {color: '#008bf7', marginLeft: '10px', cursor: 'pointer'} }
+              onClick={ this.showComplaintModal }>投诉</span></p>
           </div>
           <div className="im-content-wrapper">
             {
-              msgList.length && msgList.map(item => item.bodies.msg)
+              msgList.length > 0 && msgList.map(({
+                                                   bodies,
+                                                   receiver,
+                                                   createTime,
+                                                 }) => <MessageItem
+                type={ receiver === this.props.user.userId ? 'left' : 'right' }
+                time={ createTime }
+                msg={ bodies.msg }
+              />)
             }
           </div>
           <div className="im-input-wrapper">
