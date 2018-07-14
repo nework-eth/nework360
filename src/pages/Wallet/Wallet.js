@@ -98,8 +98,8 @@ function Content ({
       },
       {
         title: '账户',
-        dataIndex: 'userAName',
-        key: 'userAName',
+        dataIndex: 'userBName',
+        key: 'userBName',
         width: 100,
       },
       {
