@@ -2,6 +2,7 @@ import { Button, Input, Modal } from 'antd'
 import React, { Component } from 'react'
 import { browserHistory } from 'react-router'
 import { getIMDialog, insertMsg } from '../../service/im'
+import { ComplaintModal } from '../ComplaintModal/ComplaintModal'
 import './static/style/index.less'
 
 const {TextArea} = Input
@@ -230,7 +231,7 @@ class IMModal extends Component {
             <p>{ phoneNumber }</p>
             <p><span onClick={ this.jumpToNeedDetail }
               style={ {color: '#008bf7', marginRight: '10px'} }>查看需求</span><span>|</span><span
-              style={ {marginLeft: '10px'} }>投诉</span></p>
+              style={ {marginLeft: '10px'} } onClick={ this.showComplaintModal }>投诉</span></p>
           </div>
           <div className="im-content-wrapper">
             {
@@ -248,6 +249,9 @@ class IMModal extends Component {
             <Button onClick={ this.handleSubmit }>发送</Button>
           </div>
         </div>
+        <ComplaintModal
+          visible={ complaintModalVisible }
+        />
       </Modal>
     )
   }

@@ -44,7 +44,7 @@ class List extends Component {
     serviceOrderList: [],
     deleteModalVisible: false,
     evaluateModalVisible: false,
-    initiatePaymentQuoteId: '',
+    initiatePaymentNeedsId: '',
     complaintModalVisible: false,
     initiatePaymentModalVisible: false,
   }
@@ -149,14 +149,14 @@ class List extends Component {
     this.getServiceOrderList()
     this.handleEvaluateModalCancel()
   }
-  showInitiatePaymentModal = (quoteId) => () => {
+  showInitiatePaymentModal = (needsId) => () => {
     this.setState({
-      initiatePaymentQuoteId: quoteId,
+      initiatePaymentNeedsId: needsId,
       initiatePaymentModalVisible: true,
     })
   }
   handleInitiatePaymentModalCancel = () => this.setState({
-    initiatePaymentQuoteId: '',
+    initiatePaymentNeedsId: '',
     initiatePaymentModalVisible: false,
   })
   handleInitiatePaymentModalSubmit = async (amount) => {
@@ -164,7 +164,7 @@ class List extends Component {
       message.error('收款金额必须大于0')
       return
     }
-    const {data: {code}} = await initiatePayment({quoteId: this.state.initiatePaymentQuoteId, amount})
+    const {data: {code}} = await initiatePayment({needsId: this.state.initiatePaymentNeedsId, amount})
     if (code === 200) {
       message.success('收款成功')
     }
@@ -287,7 +287,7 @@ class List extends Component {
                   showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickname) }
                   cancelServiceOrder={ this.cancelServiceOrder(quoteId) }
                   withdrawServiceOrder={ this.withdrawServiceOrder(quoteId) }
-                  showInitiatePaymentModal={ this.showInitiatePaymentModal(quoteId) }
+                  showInitiatePaymentModal={ this.showInitiatePaymentModal(needsId) }
                 />,
               )
               : needOrderList.map(({

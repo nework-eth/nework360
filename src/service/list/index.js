@@ -11,6 +11,6 @@ export const deleteServiceOrder = params => axios('/tenderDemand/deleteQuote', {
 
 export const withdrawServiceOrder = params => axios('/tenderDemand/withdrawQuote', {params})
 
-export const initiatePayment = params => axios('/tenderDemand/withdrawQuote', {params})
+export const initiatePayment = params => axios('/tenderDemand/collect', {params})
 
 export const evaluate = data => axios.post('/evaluate/create', qs.stringify(data))
