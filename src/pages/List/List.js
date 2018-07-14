@@ -160,7 +160,7 @@ class List extends Component {
     initiatePaymentModalVisible: false,
   })
   handleInitiatePaymentModalSubmit = async (amount) => {
-    if (amount === 0) {
+    if (amount < 0) {
       message.error('收款金额必须大于0')
       return
     }

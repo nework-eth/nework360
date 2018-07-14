@@ -60,6 +60,10 @@ class NeedDetail extends Component {
       message.error('报价金额不能为空')
       return
     }
+    if (+amount < 0) {
+      message.error('报价金额不能小于0')
+      return
+    }
     if (Number.isNaN(+amount)) {
       message.error('报价金额必须为数字')
       return
