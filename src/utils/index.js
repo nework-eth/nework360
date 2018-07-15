@@ -19,6 +19,26 @@ export const getRelativeTime = (createTime) => {
   }
 }
 
+export const getRelativeMinutes = (createTime) => {
+  const fromTimeStamp = Date.parse(createTime)
+  const now = Date.now()
+  const relativeTime = now - fromTimeStamp
+  const seconds = Math.floor(relativeTime / 1000)
+  if (seconds < 60) {
+    return '刚刚'
+  }
+  const minutes = Math.floor(seconds / 60)
+  if (minutes < 60) {
+    return `${minutes}分钟前`
+  }
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) {
+    return `${hours}小时前`
+  }
+  const days = Math.floor(hours / 24)
+  return `${days}日前`
+}
+
 export const getRate = (originRate) => (Math.floor(originRate * 10 / 5)) * 0.5
 
 export const deleteCookie = (name) => {

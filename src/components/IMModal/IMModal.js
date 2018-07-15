@@ -1,9 +1,9 @@
-import { Button, Input, Modal } from 'antd'
+import { Icon, Input, Modal } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { getIMDialog, insertMsg } from '../../service/im'
-import { getRelativeTime } from '../../utils'
+import { getRelativeMinutes } from '../../utils'
 import { ComplaintModal } from '../ComplaintModal/ComplaintModal'
 import './static/style/index.less'
 
@@ -23,7 +23,7 @@ const MessageItem = ({
         <div>
           <div className="im-message-top-info">
             <div className="im-message-nickname">{ nickname }</div>
-            <div className="im-message-time">{ getRelativeTime(time) }</div>
+            <div className="im-message-time">{ getRelativeMinutes(time) }</div>
           </div>
           <div className="im-message-content">{ msg }</div>
         </div>
@@ -32,7 +32,7 @@ const MessageItem = ({
   }
   return (
     <div className="im-message-right-wrapper">
-      <div className="im-message-time">{ time }</div>
+      <div className="im-message-time">{ getRelativeMinutes(time) }</div>
       <div className="im-message-content">{ msg }</div>
     </div>
   )
@@ -164,9 +164,9 @@ class IMModal extends Component {
       receiver: `${this.props.userA}`,
     })
     if (code === 200) {
-      console.log(Object.values(data).reduce((pre, next) => [...pre, ...next], []))
       this.setState({
-        msgList: Object.values(data).reduce((pre, next) => [...pre, ...next], []),
+        msgList: Object.values(data).reduce((pre, next) => [...pre, ...next], [])
+                       .sort((cur, next) => Date.parse(cur.createTime) - Date.parse(next.createTime)),
       })
     }
   }
@@ -206,8 +206,12 @@ class IMModal extends Component {
   }
 
   handleTextAreaValueChange = (e) => {
+    let str = e.target.value
+    if (str.length > 500) {
+      str = str.slice(0, 500)
+    }
     this.setState({
-      textAreaValue: e.target.value,
+      textAreaValue: str,
     })
   }
 
@@ -255,7 +259,7 @@ class IMModal extends Component {
           backgroundColor: '#edf1f4',
         } }
         bodyStyle={ {
-          height: 'calc(100vh - 30px)',
+          height: 'calc(100vh - 72px)',
           borderRadius: '4px',
           boxShadow: '0 0 10px 0 rgba(9,34,53,0.10)',
         } }
@@ -273,25 +277,30 @@ class IMModal extends Component {
           <div className="im-content-wrapper">
             {
               msgList.length > 0 && msgList.map(({
+                                                   id,
                                                    bodies,
                                                    receiver,
                                                    createTime,
-                                                 }) => <MessageItem
-                type={ receiver === this.props.user.userId ? 'left' : 'right' }
-                time={ createTime }
-                msg={ bodies.msg }
-              />)
+                                                 }) =>
+                <MessageItem
+                  key={ id }
+                  type={ receiver === this.props.user.userId ? 'left' : 'right' }
+                  time={ createTime }
+                  msg={ bodies.msg }
+                />)
             }
           </div>
           <div className="im-input-wrapper">
             <TextArea
-              rows={ 6 }
+              rows={ 5 }
               value={ textAreaValue }
               style={ {padding: '13px 20px', resize: 'none', marginBottom: '20px'} }
               onChange={ this.handleTextAreaValueChange }
               placeholder="在这里输入您要发送的消息…"
             />
-            <Button onClick={ this.handleSubmit }>发送</Button>
+            <div className="icon-wrapper">
+              <Icon type="enter" onClick={ this.handleSubmit }/>
+            </div>
           </div>
         </div>
         <ComplaintModal

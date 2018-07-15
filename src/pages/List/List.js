@@ -6,6 +6,7 @@ import { ComplaintModal } from '../../components/ComplaintModal/ComplaintModal'
 import { DeleteModal } from '../../components/DeleteModal/DeleteModal'
 import { EvaluateModal } from '../../components/EvaluateModal/EvaluateModal'
 import { view as Footer } from '../../components/Footer/index.js'
+import { IMModal } from '../../components/IMModal/IMModal'
 import { InitiatePaymentModal } from '../../components/InitiatePaymentModal/InitiatePaymentModal'
 import {
   cancelServiceOrder,
@@ -31,17 +32,24 @@ const mapState = (state) => ({
 class List extends Component {
 
   state = {
+    userB: '',
     listType: 'service',
     needLimit: 10,
     needTotal: 0,
     serviceLimit: 10,
     serviceTotal: 0,
     needOrderList: [],
+    IMModalAmount: 0,
     deleteQuoteId: '',
+    IMModalVisible: false,
+    IMModalNeedsId: '',
+    IMModalQuoteId: '',
     evaluateUserId: '',
     evaluateNeedsId: '',
+    IMModalNickname: '',
     evaluateNickname: '',
     serviceOrderList: [],
+    IMModalPhoneNumber: '',
     deleteModalVisible: false,
     evaluateModalVisible: false,
     initiatePaymentNeedsId: '',
@@ -207,16 +215,46 @@ class List extends Component {
       )
     }
   }
+  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount, IMModalNickname) => () => {
+    this.setState({
+      userB: `${userBId}`,
+      IMModalAmount,
+      IMModalVisible: true,
+      IMModalNeedsId,
+      IMModalQuoteId,
+      IMModalNickname,
+      IMModalPhoneNumber,
+    })
+  }
+
+  hideIMModal = () => {
+    this.setState({
+      userB: '',
+      IMModalAmount: '',
+      IMModalVisible: false,
+      IMModalNeedsId: '',
+      IMModalQuoteId: '',
+      IMModalNickname: '',
+      IMModalPhoneNumber: '',
+    })
+  }
 
   render () {
     const {
+      userB,
       listType,
       needLimit,
       serviceLimit,
       deleteQuoteId,
       needOrderList,
+      IMModalAmount,
+      IMModalVisible,
+      IMModalNeedsId,
+      IMModalQuoteId,
+      IMModalNickname,
       serviceOrderList,
       evaluateNickname,
+      IMModalPhoneNumber,
       deleteModalVisible,
       evaluateModalVisible,
       complaintModalVisible,
@@ -250,6 +288,7 @@ class List extends Component {
                                           userId,
                                           // 注意是creatTime
                                           creatTime: userCreateTime,
+                                          phoneNum,
                                         },
                                         status: {
                                           status,
@@ -277,6 +316,7 @@ class List extends Component {
                   joinedTime={ getRelativeTime(userCreateTime) }
                   updateTime={ formatDate(updateTime) }
                   quoteNumber={ quoteNumber }
+                  showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickname) }
                   description={ instruction }
                   serviceName={ serviceName }
                   selectedUser={ selectedUser }
@@ -344,6 +384,17 @@ class List extends Component {
           handleCancel={ this.handleDeleteModalCancel }
           handleSubmit={ this.handleDeleteModalSubmit }
         />
+        { IMModalVisible && <IMModal
+          userA={ this.props.user.userId }
+          userB={ userB }
+          amount={ IMModalAmount }
+          needsId={ IMModalNeedsId }
+          quoteId={ IMModalQuoteId }
+          visible={ IMModalVisible }
+          nickname={ IMModalNickname }
+          phoneNumber={ IMModalPhoneNumber }
+          handleCancel={ this.hideIMModal }
+        /> }
       </main>
       <Footer/>
     </div>)
