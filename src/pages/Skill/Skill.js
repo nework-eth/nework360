@@ -329,7 +329,7 @@ class SkillPage extends Component {
       cityOptions,
       // selectedCity,
       selectedCity: undefined,
-      cityId: (cityData.find(item => item.chinese === selectedCity)).districtId,
+      // cityId: (cityData.find(item => item.chinese === selectedCity)).districtId,
       location: '',
       specAddr: '',
     })

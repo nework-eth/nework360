@@ -1,7 +1,9 @@
 .post-demand-container {
-  display: flex;
-  flex-flow: column;
-  min-height: calc(100vh - 70px);
+  .content-wrapper {
+    display: flex;
+    flex-flow: column;
+    min-height: calc(100vh - 70px);
+  }
   main {
     flex: 1;
     padding: 0 calc(50vw - 350px);
@@ -76,6 +78,51 @@
   .post-demand-footer-container {
     padding: 25px calc(50vw - 350px);
     display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100px;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+    .ant-btn {
+      width: 160px;
+      height: 50px;
+    }
+    p {
+      color: #008bf7;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      i {
+        font-size: 20px;
+        margin-right: 10px;
+        vertical-align: middle;
+      }
+    }
+  }
+  .service-location-container {
+    .select-container {
+      display: flex;
+      .skill-select-item {
+        width: 220px;
+        margin-right: 20px;
+        &:nth-of-type(3n+3) {
+          margin-right: 0;
+        }
+      }
+      .select-wrapper {
+        p {
+          margin-bottom: 10px;
+          font-weight: bold;
+        }
+      }
+    }
+    .ant-select {
+      width: 100%;
+    }
+  }
+  .footer {
+    padding: 25px calc(50vw - 350px);
+    display: flex;
+    flex-flow: row-reverse;
     justify-content: space-between;
     align-items: center;
     height: 100px;
