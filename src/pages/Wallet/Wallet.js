@@ -251,7 +251,11 @@ class Wallet extends Component {
   handleClick = ({key}) => {
     this.setState({
       selectedItem: key,
+      clueCardRecordList: [],
+      transactionRecordList: [],
     })
+    this.getUserClueCardRecord()
+    this.getUserTransactionRecord()
   }
   getUserAccount = async () => {
     const {data: {data, code}} = await getUserAccount({userId: this.props.user.userId})
