@@ -285,10 +285,11 @@ class IMModal extends Component {
                                                    createTime,
                                                  }) =>
                 <MessageItem
+                  msg={ bodies.msg }
                   key={ id }
                   type={ receiver === this.props.user.userId ? 'left' : 'right' }
                   time={ createTime }
-                  msg={ bodies.msg }
+                  avatarUrl={ this.props.avatarUrl }
                 />)
             }
           </div>

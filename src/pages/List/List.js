@@ -216,10 +216,11 @@ class List extends Component {
       )
     }
   }
-  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount, IMModalNickname) => () => {
+  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount, IMModalNickname, IMModalAvatar) => () => {
     this.setState({
       userB: `${userBId}`,
       IMModalAmount,
+      IMModalAvatar,
       IMModalVisible: true,
       IMModalNeedsId,
       IMModalQuoteId,
@@ -232,6 +233,7 @@ class List extends Component {
     this.setState({
       userB: '',
       IMModalAmount: '',
+      IMModalAvatar: '',
       IMModalVisible: false,
       IMModalNeedsId: '',
       IMModalQuoteId: '',
@@ -318,7 +320,7 @@ class List extends Component {
                   joinedTime={ getRelativeTime(userCreateTime) }
                   updateTime={ formatDate(updateTime) }
                   quoteNumber={ quoteNumber }
-                  showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickname) }
+                  showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickname, photo) }
                   description={ instruction }
                   serviceName={ serviceName }
                   selectedUser={ selectedUser }
