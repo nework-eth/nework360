@@ -47,13 +47,13 @@ function InputPosition ({
           </Select>
         </div>
         <div>
-          <p>省份/洲</p>
+          <p>省份/州</p>
           <Select
             className="skill-select-item"
             value={ selectedProvince }
             onChange={ handleProvinceChange }
             disabled={ !selectedCountry }
-            placeholder="请选择省份/洲"
+            placeholder="请选择省份/州"
           >
             {
               provinceOptions.map(province =>
