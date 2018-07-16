@@ -79,7 +79,7 @@ class IMModal extends Component {
       },         //连接关闭回调
       onTextMessage: (message) => {
         console.log(message)
-        this.insertMsg(message)
+        this.getIMDialog()
       },    //收到文本消息
       onEmojiMessage: function (message) {},   //收到表情消息
       onPictureMessage: function (message) {}, //收到图片消息
