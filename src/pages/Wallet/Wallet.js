@@ -79,6 +79,18 @@ function Content ({
         dataIndex: 'type',
         key: 'type',
         width: 100,
+        render (value) {
+          switch (value) {
+            case 'pay':
+              return '支付'
+            case 'receipt':
+              return '收款'
+            case 'CNY':
+              return '提现'
+            default:
+              return ''
+          }
+        },
       },
       {
         title: '账户',
@@ -97,6 +109,14 @@ function Content ({
               return '支付成功'
             case 'receipt_success':
               return '收款成功'
+            case 'succ':
+              return '提现成功'
+            case 'fail':
+              return '提现失败'
+            case 'wait':
+              return '提现中'
+            case 'reject':
+              return '提现拒绝'
             default:
               return ''
           }

@@ -55,6 +55,7 @@ class NeedOrderDetail extends Component {
     quotes: [],
     needsId: this.props.location.state.needsId,
     orderStatus: '',
+    IMModalAvatar: '',
     IMModalAmount: '',
     IMModalNeedsId: '',
     IMModalQuoteId: '',
@@ -103,10 +104,11 @@ class NeedOrderDetail extends Component {
     }
   }
 
-  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount, IMModalNickname) => () => {
+  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount, IMModalNickname, IMModalAvatar) => () => {
     this.setState({
       userB: `${userBId}`,
       IMModalAmount,
+      IMModalAvatar,
       IMModalVisible: true,
       IMModalNeedsId,
       IMModalQuoteId,
@@ -119,6 +121,7 @@ class NeedOrderDetail extends Component {
     this.setState({
       userB: '',
       IMModalAmount: '',
+      IMModalAvatar: '',
       IMModalVisible: false,
       IMModalNeedsId: '',
       IMModalQuoteId: '',
@@ -169,6 +172,7 @@ class NeedOrderDetail extends Component {
       quotes,
       needsId,
       orderStatus,
+      IMModalAvatar,
       IMModalAmount,
       IMModalNeedsId,
       IMModalQuoteId,
@@ -216,7 +220,7 @@ class NeedOrderDetail extends Component {
                 hireTimes={ hireTimes }
                 scoreCount={ count }
                 joinedTime={ creatTime }
-                showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickName) }
+                showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickName, photo) }
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
                 buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status) }
@@ -235,6 +239,7 @@ class NeedOrderDetail extends Component {
             quoteId={ IMModalQuoteId }
             visible={ IMModalVisible }
             nickname={ IMModalNickname }
+            avatarUrl={ IMModalAvatar }
             phoneNumber={ IMModalPhoneNumber }
             handleCancel={ this.hideIMModal }
           />
