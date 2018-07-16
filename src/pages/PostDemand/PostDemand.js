@@ -301,86 +301,60 @@ class PostDemand extends Component {
       matchResultList,
     } = this.state
     return (<div className="post-demand-container">
-      {
-        this.props.user.latitude ? <div>
-          <main>
-            <h2 style={ {margin: '50px 0'} }>
-              <i
-                className="iconfont icon-logo"
-                style={ {fontSize: '30px', lineHeight: '40px'} }
-              />
-            </h2>
-            <Progress
-              percent={ progressPercent }
-              showInfo={ false }
-              style={ {height: '5px'} }
-            />
-            { !showMatchResult ?
-              <div className="template-wrapper">
-                {
-                  pages[pageIndex] && pages[pageIndex].map(item =>
-                    <Template
-                      { ...item }
-                      key={ item.id }
-                      value={ data[pageIndex][item.index].resultValue }
-                      addMoreDay={ this.addMoreDay({pageNum: pageIndex, index: item.index}) }
-                      handleChange={ this.handleChange({pageNum: pageIndex, index: item.index}) }
-                      locationOptions={ locationOptions }
-                      handleDateChange={ this.handleDateChange({pageNum: pageIndex, index: item.index}) }
-                      handleLocationChange={ this.handleLocationChange({pageNum: pageIndex, index: item.index}) }
-                      handleSpecAddressChange={ this.handleSpecAddressChange({pageNum: pageIndex, index: item.index}) }
-                    />)
-                }
-              </div>
-              : <div className="match-result-container">
-                <h2>已为您匹配到{ matchResultList.length }位{ serviceName }服务人员请耐心等待报价...</h2>
-                <div className="match-result-card-item-wrapper">
-                  {
-                    matchResultList.map(({userBasicInfoVO}) =>
-                      <MatchResultCardItem
-                        key={ userBasicInfoVO.userId }
-                        avatarSrc={ userBasicInfoVO.avatar }
-                        nickname={ userBasicInfoVO.nickname }
-                        handleClick={ this.jumpToProfile(userBasicInfoVO.userId) }
-                      />,
-                    )
-                  }
-                </div>
-              </div>
+      <main>
+        <h2 style={ {margin: '50px 0'} }>
+          <i
+            className="iconfont icon-logo"
+            style={ {fontSize: '30px', lineHeight: '40px'} }
+          />
+        </h2>
+        <Progress
+          percent={ progressPercent }
+          showInfo={ false }
+          style={ {height: '5px'} }
+        />
+        { !showMatchResult ?
+          <div className="template-wrapper">
+            {
+              pages[pageIndex] && pages[pageIndex].map(item =>
+                <Template
+                  { ...item }
+                  key={ item.id }
+                  value={ data[pageIndex][item.index].resultValue }
+                  addMoreDay={ this.addMoreDay({pageNum: pageIndex, index: item.index}) }
+                  handleChange={ this.handleChange({pageNum: pageIndex, index: item.index}) }
+                  locationOptions={ locationOptions }
+                  handleDateChange={ this.handleDateChange({pageNum: pageIndex, index: item.index}) }
+                  handleLocationChange={ this.handleLocationChange({pageNum: pageIndex, index: item.index}) }
+                  handleSpecAddressChange={ this.handleSpecAddressChange({pageNum: pageIndex, index: item.index}) }
+                />)
             }
-          </main>
-          <Footer
-            complete={ showMatchResult }
-            pageData={ data[pageIndex] }
-            pageIndex={ pageIndex }
-            goLastPage={ this.goLastPage }
-            handleGoNextButtonClick={ this.handleGoNextButtonClick }
-            handleCompleteButtonClick={ this.handleCompleteButtonClick }
-          />
-        </div> : <div>
-          <main>
-            <h2 style={ {margin: '50px 0'} }>
-              <i
-                className="iconfont icon-logo"
-                style={ {fontSize: '30px', lineHeight: '40px'} }
-              />
-            </h2>
-            <div className="template-content">
-              <h2>请选择您需要服务的位置</h2>
-              <div className="form-item-wrapper">
-              </div>
+          </div>
+          : <div className="match-result-container">
+            <h2>已为您匹配到{ matchResultList.length }位{ serviceName }服务人员请耐心等待报价...</h2>
+            <div className="match-result-card-item-wrapper">
+              {
+                matchResultList.map(({userBasicInfoVO}) =>
+                  <MatchResultCardItem
+                    key={ userBasicInfoVO.userId }
+                    avatarSrc={ userBasicInfoVO.avatar }
+                    nickname={ userBasicInfoVO.nickname }
+                    handleClick={ this.jumpToProfile(userBasicInfoVO.userId) }
+                  />,
+                )
+              }
             </div>
-          </main>
-          <Footer
-            // complete={ showMatchResult }
-            // pageData={ data[pageIndex] }
-            // pageIndex={ pageIndex }
-            // goLastPage={ this.goLastPage }
-            // handleGoNextButtonClick={ this.handleGoNextButtonClick }
-            // handleCompleteButtonClick={ this.handleCompleteButtonClick }
-          />
-        </div>
-      }
+          </div>
+        }
+      </main>
+      <Footer
+        complete={ showMatchResult }
+        pageData={ data[pageIndex] }
+        pageIndex={ pageIndex }
+        goLastPage={ this.goLastPage }
+        handleGoNextButtonClick={ this.handleGoNextButtonClick }
+        handleCompleteButtonClick={ this.handleCompleteButtonClick }
+      />
     </div>)
   }
 
