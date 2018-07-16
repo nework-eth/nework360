@@ -132,7 +132,10 @@ class SkillPage extends Component {
           updateImageSrc={ this.updateImageSrc }
         />
       case 6:
-        return <PartlyComplete/>
+        return <PartlyComplete
+          status={ this.props.user.checkStatus }
+          username={ this.props.user.nickname }
+        />
       case 7:
         return <SelectCertificate
           countryOptions={ this.state.countryOptions }
@@ -259,6 +262,10 @@ class SkillPage extends Component {
         this.props.setUser(res.data.data)
         return
       case 6:
+        if (this.props.user.checkStatus >= 1) {
+          browserHistory.push('/')
+          return
+        }
         this.goNextStep()
         return
       case 7:
@@ -717,7 +724,7 @@ class SkillPage extends Component {
             }
           >
             {
-              step !== 9
+              step !== 9 && (step !== 6 || this.props.checkStatus < 1)
                 ? '下一步'
                 : '完成'
             }
