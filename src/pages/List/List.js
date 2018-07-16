@@ -38,6 +38,7 @@ class List extends Component {
     needTotal: 0,
     serviceLimit: 10,
     serviceTotal: 0,
+    IMModalAvatar: '',
     needOrderList: [],
     IMModalAmount: 0,
     deleteQuoteId: '',
@@ -247,6 +248,7 @@ class List extends Component {
       serviceLimit,
       deleteQuoteId,
       needOrderList,
+      IMModalAvatar,
       IMModalAmount,
       IMModalVisible,
       IMModalNeedsId,
@@ -392,6 +394,7 @@ class List extends Component {
           quoteId={ IMModalQuoteId }
           visible={ IMModalVisible }
           nickname={ IMModalNickname }
+          avatarUrl={ IMModalAvatar }
           phoneNumber={ IMModalPhoneNumber }
           handleCancel={ this.hideIMModal }
         /> }

@@ -32,8 +32,10 @@ const MessageItem = ({
   }
   return (
     <div className="im-message-right-wrapper">
-      <div className="im-message-time">{ getRelativeMinutes(time) }</div>
-      <div className="im-message-content">{ msg }</div>
+      <div>
+        <div className="im-message-time">{ getRelativeMinutes(time) }</div>
+        <div className="im-message-content">{ msg }</div>
+      </div>
     </div>
   )
 }

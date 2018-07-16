@@ -20,7 +20,7 @@ function ServiceListItem ({
                             status,
                             userId,
                             nickname,
-                            avatarSrc,
+                            avatarUrl,
                             scoreCount,
                             updateTime,
                             joinedTime,
@@ -52,7 +52,7 @@ function ServiceListItem ({
         <div className='left'>
           <div className="left-avatar-wrapper">
             <img
-              src={ avatarSrc || './images/headshot-default.png' }
+              src={ avatarUrl || './images/headshot-default.png' }
               alt="头像"
               width="50"
               height="50"
