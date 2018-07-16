@@ -193,6 +193,12 @@ function Content ({
         dataIndex: 'accountName',
         key: 'accountName',
         width: 100,
+        render (value) {
+          if (value === 'system') {
+            return '平台账户'
+          }
+          return value
+        },
       },
       {
         title: '交易状态',
