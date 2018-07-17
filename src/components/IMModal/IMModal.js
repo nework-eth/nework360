@@ -166,10 +166,16 @@ class IMModal extends Component {
       receiver: `${this.props.userA}`,
     })
     if (code === 200) {
-      this.setState({
-        msgList: Object.values(data).reduce((pre, next) => [...pre, ...next], [])
-                       .sort((cur, next) => Date.parse(cur.createTime) - Date.parse(next.createTime)),
-      })
+      this.setState(
+        {
+          msgList: Object.values(data).reduce((pre, next) => [...pre, ...next], [])
+                         .sort((cur, next) => Date.parse(cur.createTime) - Date.parse(next.createTime)),
+        },
+        () => {
+          const container = document.querySelector('#imContentContainer')
+          container.scrollTop = container.scrollHeight
+        },
+      )
     }
   }
 
@@ -276,7 +282,7 @@ class IMModal extends Component {
               style={ {color: '#008bf7', marginLeft: '10px', cursor: 'pointer'} }
               onClick={ this.showComplaintModal }>投诉</span></p>
           </div>
-          <div className="im-content-wrapper">
+          <div className="im-content-wrapper" id="imContentContainer">
             {
               msgList.length > 0 && msgList.map(({
                                                    id,
@@ -299,6 +305,7 @@ class IMModal extends Component {
               value={ textAreaValue }
               style={ {padding: '13px 20px', resize: 'none', marginBottom: '20px'} }
               onChange={ this.handleTextAreaValueChange }
+              onPressEnter={ this.handleSubmit }
               placeholder="在这里输入您要发送的消息…"
             />
             <div className="icon-wrapper">

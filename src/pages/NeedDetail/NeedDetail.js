@@ -176,7 +176,7 @@ class NeedDetail extends Component {
           handleConfirm={ this.handleConfirm }
           handleCancel={ this.handleTipModalCancel }
         />
-        <footer>
+        { +userId !== +this.props.user.userId && <footer>
           <div>{ hasQuoted && this.props.location.state && this.props.location.state.amount && <div>
             <p className="quote-amount">¥ { (this.props.location.state.amount / 100).toFixed(2) }</p>
             <p className="quote-amount-tip">您的报价</p>
@@ -185,7 +185,7 @@ class NeedDetail extends Component {
             ? <Button type="primary" onClick={ this.showQuoteModal }>立即报价</Button>
             : <Button onClick={ this.withdrawQuote }>取消报价</Button>
           }
-        </footer>
+        </footer> }
       </div>
     )
   }
