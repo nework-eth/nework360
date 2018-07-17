@@ -75,7 +75,7 @@ function NeedListItem ({
                   height="50"
                 />
               }
-              <span>已选择 { selectedQuote.nickName } 服务，等待服务</span>
+              <span>已选择 { selectedQuote.user && selectedQuote.user.nickname } 服务，等待服务</span>
             </div>
           }
           {
