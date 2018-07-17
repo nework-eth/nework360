@@ -28,7 +28,6 @@ class WechatPay extends Component {
           if (status === 'fail') {
             message.error('购买失败')
             clearInterval(timer)
-
           }
         }
       } catch (e) {

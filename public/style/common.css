@@ -54,14 +54,14 @@ input {
     border: #9ca6ae;
 }
 
-::-moz-placeholder {
+input::-moz-placeholder {
     color: #9ca6ae;
 }
 
-::-webkit-input-placeholder {
+input::-webkit-input-placeholder {
     color: #9ca6ae;
 }
 
-:-ms-input-placeholder {
+input:-ms-input-placeholder {
     color: #9ca6ae;
 }

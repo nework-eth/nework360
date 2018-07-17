@@ -1,25 +1,43 @@
 import { Button, Input, message } from 'antd'
+import QRCode from 'qrcode.react'
 import React, { Component } from 'react'
 import { Link } from 'react-router'
 
-import { withdraw } from '../../service/withdraw/withdraw'
+import { getVerifyStatus, getWxQR, withdraw } from '../../service/withdraw/withdraw'
 import './static/style/index.less'
 
 class Pay extends Component {
 
   state = {
+    QRUrl: '',
     amount: 0,
+    showQRCode: false,
     showResult: false,
+    hasVerified: false,
   }
+
   handleAmountChange = (e) => {
     this.setState({
       amount: e.target.value,
     })
   }
-
-  componentDidMount () {
+  getVerifyStatus = async () => {
+    const {data: {code, status}} = await getVerifyStatus()
+    if (code === 200) {
+      this.setState({
+        hasVerified: status === 'yes',
+      })
+    }
   }
-
+  getWxQR = async () => {
+    const {data: {code, url}} = await getWxQR()
+    if (code === 200) {
+      this.setState({
+        QRUrl: url,
+        showQRCode: true,
+      })
+    }
+  }
   submitWithdraw = async () => {
     const amount = this.state.amount
     if (!amount) {
@@ -38,9 +56,18 @@ class Pay extends Component {
       })
     }
   }
+  verify = () => {
+    this.getWxQR()
+  }
 
   render () {
-    const {amount, showResult} = this.state
+    const {
+      QRUrl,
+      amount,
+      showQRCode,
+      showResult,
+      hasVerified,
+    } = this.state
     if (showResult) {
       return (
         <div className="withdraw-result">
@@ -58,6 +85,7 @@ class Pay extends Component {
         <Input
           placeholder="请输入提现金额（元），默认保留2位小数"
           value={ amount }
+          disabled={ !hasVerified }
           onChange={ this.handleAmountChange }
         />
         <div className="virtual-row"><span
@@ -66,10 +94,20 @@ class Pay extends Component {
         <div className="virtual-row"><span
           className="virtual-title">手续费：</span><span>{ (amount * 0.006).toFixed(2) } 元</span><span
           className="tip">手续费为提现金额的0.6%</span></div>
-        <div className="virtual-row"><span className="virtual-title">提现到：</span><span>微信账户</span></div>
-        <Button onClick={ this.submitWithdraw }>提交申请</Button>
+        <div className="virtual-row"><span className="virtual-title">提现到：</span>
+          <i className="iconfont icon-wechat"/>
+          <span>  微信账户</span><span>（{
+            hasVerified ? '已授权' : <span className="verify-now" onClick={ this.verify }>立即授权</span>
+          }）</span>
+        </div>
+        { showQRCode && <div className="qr-wrapper"><QRCode value={ QRUrl }/></div> }
+        <Button onClick={ this.submitWithdraw } disabled={ !hasVerified }>提交申请</Button>
       </div>
     )
+  }
+
+  componentDidMount () {
+    this.getVerifyStatus()
   }
 
 }
