@@ -49,6 +49,7 @@ class Pay extends Component {
             message.success('认证成功')
             clearInterval(timer)
             this.setState({
+              showQRCode: false,
               hasVerified: true,
             })
             return
