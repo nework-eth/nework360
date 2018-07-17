@@ -224,7 +224,7 @@ class IMModal extends Component {
       message.error('IM已断开')
     })
     connect.on('message', (obj) => {
-      console.log(obj)
+      console.log('message', obj)
       this.getIMDialog()
     })
     this.setState({
@@ -241,9 +241,8 @@ class IMModal extends Component {
       from: this.props.userA,
       to: this.props.userB,
       msg: {type: 'text', msg},
-    }, () => {
-      this.insertMsg(msg)
     })
+    this.insertMsg(msg)
   }
 
   handleTextAreaValueChange = (e) => {

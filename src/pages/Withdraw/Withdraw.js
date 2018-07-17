@@ -25,7 +25,7 @@ class Pay extends Component {
     const {data: {code, status}} = await getVerifyStatus()
     if (code === 200) {
       this.setState({
-        hasVerified: status === 'yes',
+        hasVerified: status === 'succ',
       })
     }
   }
@@ -37,7 +37,35 @@ class Pay extends Component {
         showQRCode: true,
       })
     }
+    this.polling()
   }
+
+  polling = () => {
+    let timer = setInterval(async () => {
+      try {
+        const {data: {code, status}} = await getVerifyStatus()
+        if (code === 200) {
+          if (status === 'succ') {
+            message.success('认证成功')
+            clearInterval(timer)
+            this.setState({
+              hasVerified: true,
+            })
+            return
+          }
+          if (status === 'fail') {
+            message.error('人称失败')
+            clearInterval(timer)
+          }
+        }
+      } catch (e) {
+        console.log(e)
+        message.error('认证出错')
+        clearInterval(timer)
+      }
+    }, 1000)
+  }
+
   submitWithdraw = async () => {
     const amount = this.state.amount
     if (!amount) {
