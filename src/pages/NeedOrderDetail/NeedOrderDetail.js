@@ -77,6 +77,8 @@ class NeedOrderDetail extends Component {
     selectedQuoteId: '',
     evaluateNickname: '',
     IMModalPhoneNumber: '',
+    IMModalServiceName: '',
+    IMModalInstruction: '',
     evaluateModalVisible: false,
   }
 
@@ -124,7 +126,17 @@ class NeedOrderDetail extends Component {
     }
   }
 
-  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount, IMModalNickname, IMModalAvatar) => () => {
+  showIMModal = (
+    userBId,
+    IMModalPhoneNumber,
+    IMModalNeedsId,
+    IMModalQuoteId,
+    IMModalAmount,
+    IMModalNickname,
+    IMModalAvatar,
+    IMModalServiceName,
+    IMModalInstruction,
+  ) => () => {
     this.setState({
       userB: `${userBId}`,
       IMModalAmount,
@@ -134,6 +146,8 @@ class NeedOrderDetail extends Component {
       IMModalQuoteId,
       IMModalNickname,
       IMModalPhoneNumber,
+      IMModalServiceName,
+      IMModalInstruction,
     })
   }
 
@@ -147,6 +161,8 @@ class NeedOrderDetail extends Component {
       IMModalQuoteId: '',
       IMModalNickname: '',
       IMModalPhoneNumber: '',
+      IMModalServiceName: '',
+      IMModalInstruction: '',
     })
   }
 
@@ -225,6 +241,8 @@ class NeedOrderDetail extends Component {
       IMModalNickname,
       evaluateNickname,
       IMModalPhoneNumber,
+      IMModalServiceName,
+      IMModalInstruction,
       evaluateModalVisible,
     } = this.state
     return (
@@ -250,6 +268,7 @@ class NeedOrderDetail extends Component {
                           status,
                           amount,
                           quoteId,
+                          instruction,
                         }, index) =>
               <NeedOrderDetailListItem
                 key={ quoteId }
@@ -262,7 +281,7 @@ class NeedOrderDetail extends Component {
                 scoreCount={ score ? score.count : 0 }
                 joinedTime={ creatTime }
                 badgeStatus={ badgeStatusArr[index] }
-                showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickName, photo) }
+                showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickName, photo, this.state.title, instruction) }
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
                 buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status, hasEvaluated) }
@@ -284,6 +303,8 @@ class NeedOrderDetail extends Component {
             avatarUrl={ IMModalAvatar }
             phoneNumber={ IMModalPhoneNumber }
             handleCancel={ this.hideIMModal }
+            serviceName={ IMModalServiceName }
+            instruction={ IMModalInstruction }
           />
         }
         <EvaluateModal

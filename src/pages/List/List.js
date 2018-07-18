@@ -54,6 +54,8 @@ class List extends Component {
     evaluateNickname: '',
     serviceOrderList: [],
     IMModalPhoneNumber: '',
+    IMModalServiceName: '',
+    IMModalInstruction: '',
     deleteModalVisible: false,
     evaluateModalVisible: false,
     serviceBadgeStatusArr: [],
@@ -221,7 +223,17 @@ class List extends Component {
       )
     }
   }
-  showIMModal = (userBId, IMModalPhoneNumber, IMModalNeedsId, IMModalQuoteId, IMModalAmount, IMModalNickname, IMModalAvatar) => () => {
+  showIMModal = (
+    userBId,
+    IMModalPhoneNumber,
+    IMModalNeedsId,
+    IMModalQuoteId,
+    IMModalAmount,
+    IMModalNickname,
+    IMModalAvatar,
+    IMModalServiceName,
+    IMModalInstruction,
+  ) => () => {
     this.setState({
       userB: `${userBId}`,
       IMModalAmount,
@@ -231,6 +243,8 @@ class List extends Component {
       IMModalQuoteId,
       IMModalNickname,
       IMModalPhoneNumber,
+      IMModalServiceName,
+      IMModalInstruction,
     })
   }
 
@@ -244,6 +258,8 @@ class List extends Component {
       IMModalQuoteId: '',
       IMModalNickname: '',
       IMModalPhoneNumber: '',
+      IMModalServiceName: '',
+      IMModalInstruction: '',
     })
   }
   polling = async () => {
@@ -278,6 +294,8 @@ class List extends Component {
       IMModalNickname,
       serviceOrderList,
       evaluateNickname,
+      IMModalServiceName,
+      IMModalInstruction,
       IMModalPhoneNumber,
       deleteModalVisible,
       evaluateModalVisible,
@@ -341,7 +359,17 @@ class List extends Component {
                   joinedTime={ getRelativeTime(userCreateTime) }
                   updateTime={ formatDate(updateTime) }
                   quoteNumber={ quoteNumber }
-                  showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickname, photo) }
+                  showIMModal={ this.showIMModal(
+                    userId,
+                    phoneNum,
+                    needsId,
+                    quoteId,
+                    amount,
+                    nickname,
+                    photo,
+                    serviceName,
+                    instruction,
+                  ) }
                   description={ instruction }
                   serviceName={ serviceName }
                   badgeStatus={ serviceBadgeStatusArr[index] }
@@ -421,6 +449,8 @@ class List extends Component {
           avatarUrl={ IMModalAvatar }
           phoneNumber={ IMModalPhoneNumber }
           handleCancel={ this.hideIMModal }
+          serviceName={ IMModalServiceName }
+          instruction={ IMModalInstruction }
         /> }
       </main>
       <Footer/>

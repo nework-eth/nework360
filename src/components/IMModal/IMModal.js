@@ -221,10 +221,8 @@ class IMModal extends Component {
       },
     })
     connect.on('disconnect', () => {
-      message.error('IM已断开')
     })
     connect.on('message', (obj) => {
-      console.log('message', obj)
       this.getIMDialog()
     })
     this.setState({
@@ -356,7 +354,15 @@ class IMModal extends Component {
 
   componentDidMount () {
     this.IMInit()
-    this.getIMDialog()
+    this.getIMDialog().then(() => {
+      if (!this.state.msgList.length) {
+        this.insertMsg(
+          `${this.props.serviceName} ¥ ${this.props.amount / 100}
+          
+          ${this.props.instruction}`,
+        ).then(this.getIMDialog())
+      }
+    })
   }
 }
 
