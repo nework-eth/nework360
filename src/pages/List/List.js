@@ -251,7 +251,6 @@ class List extends Component {
     }
     const timerId = setInterval(async () => {
       const result = await Promise.all(this.state.serviceUserIdArr.map(userId => getUserOnlineStatus({userId})))
-      console.log(result.map(item => item.data.data.online))
       this.setState({
         serviceBadgeStatusArr: result.map(item => item.data.data.online),
       })
