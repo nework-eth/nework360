@@ -184,7 +184,7 @@ class NeedOrderDetail extends Component {
     pathname: '/pay',
     state: {amount, needsId, userBName},
   })
-  polling = () => {
+  polling = async () => {
     if (this.state.timerId) {
       return
     }
@@ -194,6 +194,10 @@ class NeedOrderDetail extends Component {
         badgeStatusArr: result.map(item => item.data.data.online),
       })
     }, 10000)
+    const result = await Promise.all(this.state.userIdArr.map(userId => getUserOnlineStatus({userId})))
+    this.setState({
+      badgeStatusArr: result.map(item => item.data.data.online),
+    })
     this.setState({
       timerId,
     })

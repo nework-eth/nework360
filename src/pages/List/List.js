@@ -34,6 +34,7 @@ class List extends Component {
 
   state = {
     userB: '',
+    timerId: '',
     listType: 'need',
     needLimit: 10,
     needTotal: 0,
@@ -245,7 +246,7 @@ class List extends Component {
       IMModalPhoneNumber: '',
     })
   }
-  polling = () => {
+  polling = async () => {
     if (this.state.timerId) {
       return
     }
@@ -255,6 +256,10 @@ class List extends Component {
         serviceBadgeStatusArr: result.map(item => item.data.data.online),
       })
     }, 10000)
+    const result = await Promise.all(this.state.serviceUserIdArr.map(userId => getUserOnlineStatus({userId})))
+    this.setState({
+      serviceBadgeStatusArr: result.map(item => item.data.data.online),
+    })
     this.setState({
       timerId,
     })
@@ -428,6 +433,15 @@ class List extends Component {
     if (this.props.location.state && this.props.location.state.listType) {
       this.setState({
         listType: this.props.location.state.listType,
+      })
+    }
+  }
+
+  componentWillUnmount () {
+    if (this.state.timerId) {
+      clearInterval(this.state.timerId)
+      this.setState({
+        timerId: '',
       })
     }
   }
