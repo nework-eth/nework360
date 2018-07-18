@@ -1,4 +1,4 @@
-import { Button, Rate } from 'antd'
+import { Badge, Button, Rate } from 'antd'
 import React from 'react'
 import { getRate } from '../../utils'
 
@@ -11,6 +11,7 @@ function NeedOrderDetailLIstItem ({
                                     avatarSrc,
                                     scoreCount,
                                     joinedTime,
+                                    badgeStatus,
                                     showIMModal,
                                     cancelOrder,
                                     selectPartyB,
@@ -24,7 +25,9 @@ function NeedOrderDetailLIstItem ({
       <i className="iconfont icon-selected"/>
       <div className="top-part">
         <div className="avatar-wrapper">
-          <img src={ avatarSrc || './images/headshot-default.png' } alt="头像" width={ 50 } height={ 50 }/>
+          <Badge dot={ badgeStatus }>
+            <img src={ avatarSrc || './images/headshot-default.png' } alt="头像" width={ 50 } height={ 50 }/>
+          </Badge>
           <span className="online-communicate" onClick={ showIMModal }><i
             className="iconfont icon-message"/> 在线沟通</span>
         </div>
@@ -33,7 +36,7 @@ function NeedOrderDetailLIstItem ({
       <h3>
         { nickname }
       </h3>
-      <div className="middle">
+      { scoreCount && <div className="middle">
         <Rate
           allowHalf
           disabled
@@ -42,7 +45,7 @@ function NeedOrderDetailLIstItem ({
         />
         <p className="rate">{ score }</p>
         <p className="evaluation">（{ scoreCount }条评价）</p>
-      </div>
+      </div> }
       <div className="bottom">
         <div className="info-wrapper">
           <div><i className="iconfont icon-hire"/>被雇佣{ hireTimes }次</div>

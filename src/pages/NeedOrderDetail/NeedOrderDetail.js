@@ -7,7 +7,13 @@ import { EvaluateModal } from '../../components/EvaluateModal/EvaluateModal'
 import { view as Footer } from '../../components/Footer/index.js'
 import { IMModal } from '../../components/IMModal/IMModal'
 import { evaluate } from '../../service/list'
-import { cancelOrder, getNeedOrderDetail, getPayInfo, selectPartyB } from '../../service/needOrderDetail/index'
+import {
+  cancelOrder,
+  getNeedOrderDetail,
+  getPayInfo,
+  getUserOnlineStatus,
+  selectPartyB,
+} from '../../service/needOrderDetail/index'
 import { getRate } from '../../utils'
 import { view as NeedOrderDetailListItem } from './NeedOrderDetailLIstItem'
 import './static/style/index.less'
@@ -56,11 +62,14 @@ class NeedOrderDetail extends Component {
     userB: '',
     title: '',
     quotes: [],
+    timerId: '',
     needsId: this.props.location.state.needsId,
+    userIdArr: [],
     orderStatus: '',
     hasEvaluated: '',
     IMModalAvatar: '',
     IMModalAmount: '',
+    badgeStatusArr: [],
     IMModalNeedsId: '',
     IMModalQuoteId: '',
     IMModalVisible: false,
@@ -70,6 +79,7 @@ class NeedOrderDetail extends Component {
     IMModalPhoneNumber: '',
     evaluateModalVisible: false,
   }
+
   getNeedOrderDetail = async () => {
     const {data: {data, code}} = await getNeedOrderDetail({needsId: this.state.needsId})
     if (code === 200) {
@@ -77,12 +87,15 @@ class NeedOrderDetail extends Component {
         data: data.orders[0],
         title: data.orders[0].serviceName,
         quotes: data.orders[0].quotes,
+        userIdArr: data.orders[0].quotes.map(({user: {userId}}) => userId),
         orderStatus: data.orders[0].status,
         hasEvaluated: data.orders[0].evaluate === 'yes',
         selectedQuoteId: data.orders[0].quoteId,
       })
+      this.polling()
     }
   }
+
   selectPartyB = (needsId, quoteId) => async () => {
     const {data: {code}} = await selectPartyB({needsId, quoteId})
     if (code === 200) {
@@ -90,6 +103,7 @@ class NeedOrderDetail extends Component {
       this.getNeedOrderDetail()
     }
   }
+
   cancelOrder = async () => {
     const {data: {code}} = await cancelOrder({needsId: this.state.needsId})
     if (code === 200) {
@@ -170,6 +184,24 @@ class NeedOrderDetail extends Component {
     pathname: '/pay',
     state: {amount, needsId, userBName},
   })
+  polling = () => {
+    if (this.state.timerId) {
+      return
+    }
+    const timerId = setInterval(async () => {
+      const result = await Promise.all(this.state.userIdArr.map(userId => getUserOnlineStatus({userId})))
+      this.setState({
+        badgeStatusArr: result.map(item => item.data.data.online),
+      })
+    }, 10000)
+    this.setState({
+      timerId,
+    })
+  }
+
+  componentDidMount () {
+    this.getNeedOrderDetail()
+  }
 
   render () {
     const {
@@ -181,6 +213,7 @@ class NeedOrderDetail extends Component {
       hasEvaluated,
       IMModalAvatar,
       IMModalAmount,
+      badgeStatusArr,
       IMModalNeedsId,
       IMModalQuoteId,
       IMModalVisible,
@@ -202,10 +235,7 @@ class NeedOrderDetail extends Component {
           {
             quotes.map(({
                           user: {
-                            score: {
-                              ave,
-                              count,
-                            },
+                            score,
                             userId,
                             nickName,
                             phoneNum,
@@ -216,17 +246,18 @@ class NeedOrderDetail extends Component {
                           status,
                           amount,
                           quoteId,
-                        }) =>
+                        }, index) =>
               <NeedOrderDetailListItem
                 key={ quoteId }
-                score={ getRate(ave) }
+                score={ getRate(score ? score.ave : 0) }
                 amount={ amount / 100 }
                 nickname={ nickName }
                 jumpToPay={ this.jumpToPay({amount, needsId, userBName: nickName}) }
                 avatarSrc={ photo }
                 hireTimes={ hireTimes }
-                scoreCount={ count }
+                scoreCount={ score ? score.count : 0 }
                 joinedTime={ creatTime }
+                badgeStatus={ badgeStatusArr[index] }
                 showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickName, photo) }
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
@@ -262,8 +293,13 @@ class NeedOrderDetail extends Component {
     )
   }
 
-  componentDidMount () {
-    this.getNeedOrderDetail()
+  componentWillUnmount () {
+    if (this.state.timerId) {
+      clearInterval(this.state.timerId)
+      this.setState({
+        timerId: '',
+      })
+    }
   }
 
 }

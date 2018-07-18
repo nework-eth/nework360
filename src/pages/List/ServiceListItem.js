@@ -1,4 +1,4 @@
-import { Button, Rate } from 'antd'
+import { Badge, Button, Rate } from 'antd'
 import React from 'react'
 import { browserHistory } from 'react-router'
 import { getRate } from '../../utils'
@@ -28,6 +28,7 @@ function ServiceListItem ({
                             showIMModal,
                             description,
                             serviceName,
+                            badgeStatus,
                             hasEvaluated,
                             selectedUser,
                             initiatePayment,
@@ -52,14 +53,16 @@ function ServiceListItem ({
       <div className={ `${classNameSpace}-content-wrapper` }>
         <div className='left'>
           <div className="left-avatar-wrapper">
-            <img
-              src={ avatarUrl || './images/headshot-default.png' }
-              alt="头像"
-              width="50"
-              height="50"
-              style={ {cursor: 'pointer'} }
-              onClick={ jumpToProfile(userId) }
-            />
+            <Badge dot={ badgeStatus }>
+              <img
+                src={ avatarUrl || './images/headshot-default.png' }
+                alt="头像"
+                width="50"
+                height="50"
+                style={ {cursor: 'pointer'} }
+                onClick={ jumpToProfile(userId) }
+              />
+            </Badge>
             <div onClick={ showIMModal } style={ {color: '#008bf7', cursor: 'pointer'} }
               className={ `${classNameSpace}-message-wrapper` }><i
               className="iconfont icon-message"/><span>在线沟通</span></div>

@@ -17,6 +17,7 @@ import {
   initiatePayment,
   withdrawServiceOrder,
 } from '../../service/list'
+import { getUserOnlineStatus } from '../../service/needOrderDetail'
 import { getRelativeTime } from '../../utils'
 import { view as NeedListItem } from './NeedListItem'
 import { view as ServiceListItem } from './ServiceListItem'
@@ -48,11 +49,13 @@ class List extends Component {
     evaluateUserId: '',
     evaluateNeedsId: '',
     IMModalNickname: '',
+    serviceUserIdArr: [],
     evaluateNickname: '',
     serviceOrderList: [],
     IMModalPhoneNumber: '',
     deleteModalVisible: false,
     evaluateModalVisible: false,
+    serviceBadgeStatusArr: [],
     initiatePaymentNeedsId: '',
     complaintModalVisible: false,
     initiatePaymentModalVisible: false,
@@ -77,8 +80,9 @@ class List extends Component {
     const {data: {data, code, pageinfo}} = await getServiceOrderList({limit: this.state.serviceLimit})
     if (code === 200) {
       this.setState({
-        serviceOrderList: data.quotes,
         serviceTotal: pageinfo.totalCount,
+        serviceOrderList: data.quotes,
+        serviceUserIdArr: data.quotes.map(({user: {userId}}) => userId),
       })
     }
   }
@@ -241,6 +245,21 @@ class List extends Component {
       IMModalPhoneNumber: '',
     })
   }
+  polling = () => {
+    if (this.state.timerId) {
+      return
+    }
+    const timerId = setInterval(async () => {
+      const result = await Promise.all(this.state.serviceUserIdArr.map(userId => getUserOnlineStatus({userId})))
+      console.log(result.map(item => item.data.data.online))
+      this.setState({
+        serviceBadgeStatusArr: result.map(item => item.data.data.online),
+      })
+    }, 10000)
+    this.setState({
+      timerId,
+    })
+  }
 
   render () {
     const {
@@ -258,6 +277,7 @@ class List extends Component {
       IMModalPhoneNumber,
       deleteModalVisible,
       evaluateModalVisible,
+      serviceBadgeStatusArr,
       complaintModalVisible,
       initiatePaymentModalVisible,
     } = this.state
@@ -303,7 +323,7 @@ class List extends Component {
                                         updateTime,
                                         serviceName,
                                         instruction,
-                                      }) =>
+                                      }, index) =>
                 <ServiceListItem
                   key={ quoteId }
                   score={ score ? score.ave : '' }
@@ -320,6 +340,7 @@ class List extends Component {
                   showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickname, photo) }
                   description={ instruction }
                   serviceName={ serviceName }
+                  badgeStatus={ serviceBadgeStatusArr[index] }
                   selectedUser={ selectedUser }
                   hasEvaluated={ hasEvaluated === 'yes' }
                   showDeleteModal={ this.showDeleteModal(quoteId) }
@@ -404,7 +425,7 @@ class List extends Component {
 
   componentDidMount () {
     this.getNeedOrderList()
-    this.getServiceOrderList()
+    this.getServiceOrderList().then(() => this.polling())
     if (this.props.location.state && this.props.location.state.listType) {
       this.setState({
         listType: this.props.location.state.listType,
