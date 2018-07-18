@@ -60,7 +60,9 @@ function ServiceListItem ({
               style={ {cursor: 'pointer'} }
               onClick={ jumpToProfile(userId) }
             />
-            <div onClick={ showIMModal } style={ {color: '#008bf7', cursor: 'pointer'} }>在线沟通</div>
+            <div onClick={ showIMModal } style={ {color: '#008bf7', cursor: 'pointer'} }
+              className={ `${classNameSpace}-message-wrapper` }><i
+              className="iconfont icon-message"/><span>在线沟通</span></div>
           </div>
           <div className="name">
             { nickname }

@@ -71,12 +71,19 @@
         display: flex;
         justify-content: space-between;
         .avatar-wrapper {
+          display: flex;
+          align-items: center;
           img {
             border-radius: 50%;
             margin-right: 30px;
           }
           .online-communicate {
             color: #008bf7;
+            display: flex;
+            align-items: center;
+            i {
+              margin-right: 10px;
+            }
           }
         }
         .amount {
@@ -97,5 +104,8 @@
         background: linear-gradient(-135deg, #008bf7 30px, #fff 0);
       }
     }
+  }
+  .icon-message {
+    font-size: 18px;
   }
 }

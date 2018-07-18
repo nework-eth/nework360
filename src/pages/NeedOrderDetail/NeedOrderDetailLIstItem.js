@@ -25,7 +25,8 @@ function NeedOrderDetailLIstItem ({
       <div className="top-part">
         <div className="avatar-wrapper">
           <img src={ avatarSrc || './images/headshot-default.png' } alt="头像" width={ 50 } height={ 50 }/>
-          <span className="online-communicate" onClick={ showIMModal }>在线沟通</span>
+          <span className="online-communicate" onClick={ showIMModal }><i
+            className="iconfont icon-message"/> 在线沟通</span>
         </div>
         <div className="amount">{ `¥ ${amount}` }</div>
       </div>
