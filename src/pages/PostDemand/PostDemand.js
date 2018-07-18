@@ -346,7 +346,6 @@ class PostDemand extends Component {
     })
   }
   handleProvinceChange = (value) => {
-    console.log(this.state.tree[this.state.selectedCountry][value])
     const cityData = this.state.tree[this.state.selectedCountry][value]
     const cityOptions = cityData.map(item => item.chinese)
     this.setState({

@@ -692,7 +692,6 @@ class EditData extends Component {
       this.placeSearch = new AMap.Autocomplete({city: this.state.data.city, cityLimit: true})
       keyword && this.placeSearch.search(keyword, (status, result) => {
         if (status === 'complete' && result.info === 'OK') {
-          console.log(result.tips)
           this.setState({
             locationOptions: result.tips,
           })

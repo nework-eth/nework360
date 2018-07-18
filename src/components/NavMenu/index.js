@@ -174,8 +174,6 @@ class NavMenu extends Component {
     //     return
     // }
     if (action.startsWith('needs')) {
-      console.log('action', action)
-      console.log('needsId', action.split('--'))
       browserHistory.push({pathname: '/need-detail', state: {needsId: action.split('--')[1]}})
       await updateMessageStatus({id, status: -1})
       this.getMessage()

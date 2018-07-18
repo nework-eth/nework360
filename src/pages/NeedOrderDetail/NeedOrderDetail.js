@@ -98,8 +98,9 @@ class NeedOrderDetail extends Component {
     if (code === 200) {
       /* eslint-disable no-undef */
       pingpp.createPayment(data, function (result, err) {
-        console.log(result)
-        console.log('error', err)
+        if (err) {
+          console.log('error', err)
+        }
       })
     }
   }

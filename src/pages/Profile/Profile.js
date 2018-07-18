@@ -92,7 +92,6 @@ class Profile extends Component {
           center: [data.longitude, data.latitude],
           zoom: 13,
         })
-        console.log(data.location)
         const marker = new AMap.Marker({
           position: new AMap.LngLat(data.longitude, data.latitude),
           title: data.locaiton,

@@ -112,7 +112,6 @@ class Page extends Component {
     }), () => {
       if (this.state.messageButton.value === '获取验证码') {
         const {validateStatus, errorMsg} = this.validatePhoneNumber(this.state.phoneNumber.value)
-        console.log(validateStatus, errorMsg)
         if (validateStatus === 'success') {
           this.setState((preState) => ({
             messageButton: {

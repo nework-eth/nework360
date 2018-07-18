@@ -40,6 +40,17 @@
             border-radius: 50%;
             position: relative;
           }
+          .need-list-avatar-container {
+            display: flex;
+            align-items: center;
+            .need-list-avatar-wrapper {
+              display: flex;
+              flex-flow: row-reverse;
+              img:not(:last-of-type) {
+                margin-left: -10px;
+              }
+            }
+          }
         }
         .need-list-item-operate {
           color: #008bf7;

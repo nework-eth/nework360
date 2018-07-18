@@ -48,20 +48,22 @@ function NeedListItem ({
             statusMap[status] === '等待报价' && <span>服务人员估算服务费用中，请耐心等待...</span>
           }
           {
-            statusMap[status] === '等待选择服务' && <div>
-              {
-                quotes.map(({photo, userId}) =>
-                  <img
-                    key={ userId }
-                    src={ photo || './images/headshot-default.png' }
-                    alt="头像"
-                    width="50"
-                    height="50"
-                    style={ {cursor: 'pointer'} }
-                    onClick={ jumpToProfile(userId) }
-                  />,
-                )
-              }
+            statusMap[status] === '等待选择服务' && <div className="need-list-avatar-container">
+              <div className="need-list-avatar-wrapper">
+                {
+                  quotes.reverse().map(({photo, userId}) =>
+                    <img
+                      key={ userId }
+                      src={ photo || './images/headshot-default.png' }
+                      alt="头像"
+                      width="50"
+                      height="50"
+                      style={ {cursor: 'pointer'} }
+                      onClick={ jumpToProfile(userId) }
+                    />,
+                  )
+                }
+              </div>
               <span style={ {marginLeft: '20px'} }>{ quotes.length }人报价，等待服务人员</span>
             </div>
           }

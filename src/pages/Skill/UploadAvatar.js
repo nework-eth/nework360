@@ -51,12 +51,10 @@ class UploadAvatar extends Component {
               beforeUpload={ this.beforeUpload }
               onChange={ (info) => {
                 if (info.file.status !== 'uploading') {
-                  console.log(info.file, info.fileList)
                 }
                 if (info.file.status === 'done') {
                   if (info.file.response.code === 200) {
                     updateImageSrc(info.file.response.data.path, 'avatar').then(res => {
-                      console.log('res', res)
                       if (res.data.code !== 200) {
                         message.error(res.data.desc)
                         return

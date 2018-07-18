@@ -33,7 +33,7 @@ class List extends Component {
 
   state = {
     userB: '',
-    listType: 'service',
+    listType: 'need',
     needLimit: 10,
     needTotal: 0,
     serviceLimit: 10,
@@ -246,9 +246,6 @@ class List extends Component {
     const {
       userB,
       listType,
-      needLimit,
-      serviceLimit,
-      deleteQuoteId,
       needOrderList,
       IMModalAvatar,
       IMModalAmount,
