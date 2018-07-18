@@ -62,6 +62,9 @@ function NeedOrderDetailLIstItem ({
         {
           buttonStatus === 'evaluate' && <Button type="primary" onClick={ showEvaluateModal }>立即评价</Button>
         }
+        {
+          buttonStatus === 'evaluated' && <p>已评价</p>
+        }
       </div>
     </div>
   )

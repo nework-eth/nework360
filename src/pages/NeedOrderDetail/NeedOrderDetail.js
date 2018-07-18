@@ -20,7 +20,7 @@ const statusMap = {
   2310: '支付成功',
 }
 
-const generateButtonStatus = (orderStatus, selectedQuoteId, quotedId, quoteStatus) => {
+const generateButtonStatus = (orderStatus, selectedQuoteId, quotedId, quoteStatus, hasEvaluated) => {
   if (quoteStatus === 2) {
     return 'disabled'
   }
@@ -29,6 +29,9 @@ const generateButtonStatus = (orderStatus, selectedQuoteId, quotedId, quoteStatu
   }
   if (selectedQuoteId !== quotedId) {
     return 'disabled'
+  }
+  if (hasEvaluated) {
+    return 'evaluated'
   }
   if (statusMap[orderStatus] === '等待服务') {
     return 'cancel'
@@ -55,6 +58,7 @@ class NeedOrderDetail extends Component {
     quotes: [],
     needsId: this.props.location.state.needsId,
     orderStatus: '',
+    hasEvaluated: '',
     IMModalAvatar: '',
     IMModalAmount: '',
     IMModalNeedsId: '',
@@ -74,6 +78,7 @@ class NeedOrderDetail extends Component {
         title: data.orders[0].serviceName,
         quotes: data.orders[0].quotes,
         orderStatus: data.orders[0].status,
+        hasEvaluated: data.orders[0].evaluate === 'yes',
         selectedQuoteId: data.orders[0].quoteId,
       })
     }
@@ -173,6 +178,7 @@ class NeedOrderDetail extends Component {
       quotes,
       needsId,
       orderStatus,
+      hasEvaluated,
       IMModalAvatar,
       IMModalAmount,
       IMModalNeedsId,
@@ -224,7 +230,7 @@ class NeedOrderDetail extends Component {
                 showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickName, photo) }
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
-                buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status) }
+                buttonStatus={ generateButtonStatus(orderStatus, selectedQuoteId, quoteId, status, hasEvaluated) }
                 showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickName) }
               />,
             )
