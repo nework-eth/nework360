@@ -9,7 +9,7 @@ import './static/style/index.less'
 class Pay extends Component {
 
   state = {
-    count: 0,
+    count: 1,
     amount: 1,
     needsId: '',
     orderId: '',
@@ -100,6 +100,7 @@ class Pay extends Component {
 
   render () {
     const {
+      count,
       amount,
       needsId,
       orderId,
@@ -115,7 +116,7 @@ class Pay extends Component {
             <div className="list-row"><span
               className="virtual-title">商品名：</span><span>{ this.props.location.state.type === 'clue' ? '线索卡' : '服务' }</span>
             </div>
-            <div className="list-row"><span className="virtual-title">数量：</span><span>1</span></div>
+            <div className="list-row"><span className="virtual-title">数量：</span><span>{ count }</span></div>
           </div>
           <div className="list-container">
             <div className="list-row"><span className="virtual-title">支付金额：</span><span>{ amount / 100 }元</span></div>
@@ -146,7 +147,13 @@ class Pay extends Component {
 
   componentDidMount () {
     if (this.props.location.state.type === 'clue') {
-      this.getClueCardPayInfo()
+      this.setState(
+        {
+          count: this.props.location.state.count,
+        },
+        () => {
+          this.getClueCardPayInfo()
+        })
     } else {
       this.setState({
         needsId: this.props.location.state.needsId,
