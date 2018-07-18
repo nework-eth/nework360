@@ -62,7 +62,7 @@ function NeedListItem ({
                   />,
                 )
               }
-              <span>{ quotes.length }人报价，等待服务人员</span>
+              <span style={ {marginLeft: '20px'} }>{ quotes.length }人报价，等待服务人员</span>
             </div>
           }
           {
@@ -75,7 +75,8 @@ function NeedListItem ({
                   height="50"
                 />
               }
-              <span>已选择 { selectedQuote.user && selectedQuote.user.nickname } 服务，等待服务</span>
+              <span
+                style={ {marginLeft: '20px'} }>已选择 { selectedQuote.user && selectedQuote.user.nickname } 服务，等待服务</span>
             </div>
           }
           {
@@ -88,7 +89,7 @@ function NeedListItem ({
                   height="50"
                 />
               }
-              <span>服务完成，待支付 { selectedQuote.amount / 100 } 元</span>
+              <span style={ {marginLeft: '20px'} }>服务完成，待支付 { selectedQuote.amount / 100 } 元</span>
             </div>
           }
           {
@@ -101,7 +102,7 @@ function NeedListItem ({
                   height="50"
                 />
               }
-              <span>支付完成，已支付 { selectedQuote.amount / 100 } 元</span>
+              <span style={ {marginLeft: '20px'} }>支付完成，已支付 { selectedQuote.amount / 100 } 元</span>
             </div>
           }
         </div>
