@@ -60,7 +60,7 @@ class NeedDetail extends Component {
       message.error('报价金额不能为空')
       return
     }
-    if (+amount < 0) {
+    if (+amount <= 0) {
       message.error('报价金额不能小于0')
       return
     }

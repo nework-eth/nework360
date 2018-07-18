@@ -195,6 +195,13 @@ class NavMenu extends Component {
       browserHistory.push({pathname: '/need-order-detail', state: {needsId: action.split('--')[1]}})
       await updateMessageStatus({id, status: -1})
       this.getMessage()
+      return
+    }
+    if (action.startsWith('im')) {
+      browserHistory.push({pathname: '/list'})
+      await updateMessageStatus({id, status: -1})
+      this.getMessage()
+
     }
   }
   changeMessageListType = (type) => () => this.setState({
@@ -211,6 +218,28 @@ class NavMenu extends Component {
     this.setState((preState) => ({
       messagePanelVisible: !preState.messagePanelVisible,
     }))
+  }
+  deleteAll = () => {
+
+  }
+
+  componentDidMount () {
+    if (!(cookie.parse(document.cookie)).cityName) {
+      this.getCityByIp()
+    }
+    this.getMessage()
+    this.getUnreadMessage()
+    setTimeout(() => {
+      document.addEventListener('click', e => {
+        const messagePanel = document.querySelector('.message-panel-container')
+        const messageArea = document.querySelector('.message-li')
+        if (!contains(messageArea, e.target) && !contains(messagePanel, e.target)) {
+          this.setState({
+            messagePanelVisible: false,
+          })
+        }
+      })
+    })
   }
 
   render () {
@@ -313,7 +342,11 @@ class NavMenu extends Component {
                 <span>全部消息</span>
               </div>
             </div>
-            <div className="ignore-all-operate" onClick={ this.ignoreAll }>全部忽略</div>
+            {
+              selectedType === 'unread'
+                ? <div className="ignore-all-operate" onClick={ this.ignoreAll }>全部忽略</div>
+                : <div className="ignore-all-operate" onClick={ this.deleteAll }>全部删除</div>
+            }
           </div>
           { this.selectedMessageList().map(({
                                               id,
@@ -349,25 +382,6 @@ class NavMenu extends Component {
         </div> }
       </div>
     )
-  }
-
-  componentDidMount () {
-    if (!(cookie.parse(document.cookie)).cityName) {
-      this.getCityByIp()
-    }
-    this.getMessage()
-    this.getUnreadMessage()
-    setTimeout(() => {
-      document.addEventListener('click', e => {
-        const messagePanel = document.querySelector('.message-panel-container')
-        const messageArea = document.querySelector('.message-li')
-        if (!contains(messageArea, e.target) && !contains(messagePanel, e.target)) {
-          this.setState({
-            messagePanelVisible: false,
-          })
-        }
-      })
-    })
   }
 }
 
