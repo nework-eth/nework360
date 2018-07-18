@@ -29,6 +29,7 @@ function ServiceListItem ({
                             description,
                             serviceName,
                             hasEvaluated,
+                            selectedUser,
                             initiatePayment,
                             showDeleteModal,
                             jumpToNeedDetail,
@@ -92,6 +93,7 @@ function ServiceListItem ({
             nickname,
             quoteNumber,
             hasEvaluated,
+            selectedUser,
             showDeleteModal,
             initiatePayment,
             showEvaluateModal,
@@ -164,7 +166,7 @@ function OperatePanel ({
         width="50"
         height="50"
       />
-      <p>已选择{ selectedUser }服务</p>
+      <p>已选择 { selectedUser } 服务</p>
       <p className="recall" onClick={ withdrawServiceOrder }>撤回报价</p>
     </div>)
   }
