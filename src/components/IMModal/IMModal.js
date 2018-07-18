@@ -240,7 +240,7 @@ class IMModal extends Component {
     connect.emit('message', {
       from: this.props.userA,
       to: this.props.userB,
-      msg: {type: 'text', msg},
+      msg: JSON.stringify({type: 'text', msg}),
     })
     this.insertMsg(msg)
   }
