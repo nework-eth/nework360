@@ -64,7 +64,7 @@ function NeedListItem ({
                   )
                 }
               </div>
-              <span style={ {marginLeft: '20px'} }>{ quotes.length }人报价，等待服务人员</span>
+              <span style={ {marginLeft: '20px'} }>{ quotes.length }人报价，等待选择服务人员</span>
             </div>
           }
           {

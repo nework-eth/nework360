@@ -121,7 +121,8 @@ const statusMap = {
   'paywait': '等待支付',
   'orderSucc': '订单完成',
   'servicewait': '未选中',
-  'collectSucc': '订单完成',
+  'collectSucc': '收款成功',
+  'back': '未选中退款',
 }
 
 function OperatePanel ({
@@ -175,6 +176,18 @@ function OperatePanel ({
       <p className="recall" onClick={ withdrawServiceOrder }>撤回报价</p>
     </div>)
   }
+  if (statusMap[status] === '未选中退款') {
+    return (<div className="right">
+      <img
+        src="./images/order-fail.png"
+        alt="订单失败"
+        width="50"
+        height="50"
+      />
+      <p>已选择 { selectedUser } 服务</p>
+      <p>支付 5 张线索卡已自动退回线索卡账户</p>
+    </div>)
+  }
   if (statusMap[status] === '等待支付') {
     return (<div className="right">
       <img
@@ -189,7 +202,7 @@ function OperatePanel ({
       <p>¥ { amount }</p>
     </div>)
   }
-  if (statusMap[status] === '订单完成') {
+  if (statusMap[status] === '收款成功') {
     return (<div className="right">
       <p className="payed">已成功收款¥ { amount }</p>
       {

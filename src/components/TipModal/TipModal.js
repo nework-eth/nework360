@@ -33,7 +33,7 @@ function TipModal ({visible, handleConfirm, handleCancel, count}) {
             height: '50px',
           } }
         >
-          删除
+          去购买
         </Button>
         <Button
           onClick={ handleCancel }

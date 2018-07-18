@@ -6,7 +6,7 @@ import { browserHistory, Link } from 'react-router'
 import { bindActionCreators, combineReducers } from 'redux'
 import { signOut } from '../../service/auth'
 import { getCityByIp } from '../../service/homepage'
-import { getMessage, updateMessageStatus } from '../../service/navMenu'
+import { deleteAllMessage, getMessage, updateMessageStatus } from '../../service/navMenu'
 import store from '../../Store'
 import { contains, deleteCookie } from '../../utils'
 import { setCityId, setCityName, setCountryId, setUser } from './actions'
@@ -64,12 +64,12 @@ class NavMenu extends Component {
 
   state = {
     messageList: [],
-    messageLimit: 10,
+    messageLimit: 5,
     selectedType: 'unread',
     messageCount: 0,
     unreadMessageCount: 0,
     unreadMessageList: [],
-    unreadMessageLimit: 10,
+    unreadMessageLimit: 5,
     messagePanelVisible: false,
   }
 
@@ -117,19 +117,18 @@ class NavMenu extends Component {
     }
   }
   loadMore = () => {
-    if (this.selectedType === 'unread') {
+    if (this.state.selectedType === 'unread') {
       this.setState(
         (preState) => ({
-          unreadMessageLimit: preState.unreadMessageLimit + 10,
+          unreadMessageLimit: preState.unreadMessageLimit + 5,
         }),
-        () => this.getUnreadMessage()
-        ,
+        () => this.getUnreadMessage(),
       )
     }
-    if (this.selectedType === 'all') {
+    if (this.state.selectedType === 'all') {
       this.setState(
         (preState) => ({
-          messageLimit: preState.messageLimit + 10,
+          messageLimit: preState.messageLimit + 5,
         }),
         () => this.getMessage(),
       )
@@ -219,8 +218,13 @@ class NavMenu extends Component {
       messagePanelVisible: !preState.messagePanelVisible,
     }))
   }
-  deleteAll = () => {
-
+  deleteAll = async () => {
+    const {data: {code}} = await deleteAllMessage({userId: this.props.userId})
+    if (code === 200) {
+      message.success('删除成功')
+      this.getMessage()
+      this.getUnreadMessage()
+    }
   }
 
   componentDidMount () {
@@ -348,24 +352,27 @@ class NavMenu extends Component {
                 : <div className="ignore-all-operate" onClick={ this.deleteAll }>全部删除</div>
             }
           </div>
-          { this.selectedMessageList().map(({
-                                              id,
-                                              action,
-                                              status,
-                                              msgType,
-                                              seeDetails,
-                                              msgContent,
-                                              createTime,
-                                            }) =>
-            <MessageItem
-              key={ id }
-              type={ msgType }
-              status={ status }
-              content={ msgContent }
-              seeDetails={ this.seeDetails(action, id) }
-              updateTime={ createTime }
-              ignoreMessage={ this.ignoreMessage(id) }
-            />) }
+          <div className="message-item-container-wrapper">
+            { this.selectedMessageList().map(({
+                                                id,
+                                                action,
+                                                status,
+                                                msgType,
+                                                seeDetails,
+                                                msgContent,
+                                                createTime,
+                                              }) =>
+              <MessageItem
+                key={ id }
+                type={ msgType }
+                status={ status }
+                content={ msgContent }
+                seeDetails={ this.seeDetails(action, id) }
+                updateTime={ createTime }
+                ignoreMessage={ this.ignoreMessage(id) }
+              />)
+            }
+          </div>
           { selectedType === 'unread' && (this.selectedMessageList()).length < unreadMessageCount &&
           <div className="message-panel-footer">
             <span onClick={ this.loadMore } className="virtual-button"><i
