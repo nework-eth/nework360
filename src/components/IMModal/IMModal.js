@@ -181,7 +181,7 @@ class IMModal extends Component {
 
   insertMsg = async (msg) => {
     const {data: {code}} = await insertMsg({
-      bodies: JSON.stringify(msg),
+      bodies: JSON.stringify({type: 'text', msg}),
       status: 0,
       sender: `${this.props.userA}`,
       receiver: `${this.props.userB}`,
