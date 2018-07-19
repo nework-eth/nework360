@@ -8,6 +8,7 @@ import './static/style/index.less'
 class WechatPay extends Component {
   state = {
     result: '',
+    timerId: '',
   }
 
   polling = () => {
@@ -24,6 +25,7 @@ class WechatPay extends Component {
             clearInterval(timer)
             this.setState({
               result: 'succ',
+              timerId: '',
             })
             return
           }
@@ -32,8 +34,8 @@ class WechatPay extends Component {
             clearInterval(timer)
             this.setState({
               result: 'fail',
+              timerId: '',
             })
-
           }
         }
       } catch (e) {
@@ -42,6 +44,9 @@ class WechatPay extends Component {
         clearInterval(timer)
       }
     }, 1000)
+    this.setState({
+      timerId: timer,
+    })
   }
 
   handleGoBack = () => {

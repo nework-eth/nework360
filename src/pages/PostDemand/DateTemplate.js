@@ -1,4 +1,5 @@
 import { Button } from 'antd'
+import moment from 'moment'
 import React from 'react'
 import { DayPickerSingleDateController } from 'react-dates'
 import 'react-dates/initialize'
@@ -22,6 +23,7 @@ function DateTemplate ({
           monthFormat="YYYY[年]M[月]"
           onDateChange={ (value) => {handleDateChange(value, index)} }
           enableOutsideDays
+          isDayBlocked={ (value) => !moment().isBefore(value) }
           date={ valueItem }
         />
       </div>) }
