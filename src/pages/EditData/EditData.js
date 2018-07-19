@@ -283,6 +283,8 @@ class EditData extends Component {
     pwdErrorMsg: '',
     newPwdErrorMsg: '',
     nwePwdRepeatErrorMsg: '',
+    emailDisabledTime: 0,
+    messageCodeDisabledTime: 0,
   }
 
   getCityTree = async () => {
@@ -478,6 +480,7 @@ class EditData extends Component {
     })
     if (code === 200) {
       message.success('已发送验证码')
+      this.startMessageCodeTimer()
     }
   }
 
@@ -493,6 +496,7 @@ class EditData extends Component {
     const {data: {code}} = await getMailCode({email: this.state.data.email})
     if (code === 200) {
       message.success('已发送验证码')
+      this.startEmailTimer()
     }
   }
 
@@ -733,6 +737,50 @@ class EditData extends Component {
     browserHistory.push({pathname: '/skill', state: {auth: true}})
   }
 
+  startEmailTimer = () => {
+    if (this.emailTimer) {
+      return
+    }
+    this.setState({
+      emailDisabledTime: 60,
+    }, () => {
+      this.emailTimer = this.emailTimerReduce(() => this.emailTimer = null)
+    })
+  }
+
+  emailTimerReduce = (cb) => {
+    if (this.state.emailDisabledTime) {
+      this.setState((preState) => ({
+        emailDisabledTime: preState.emailDisabledTime - 1,
+      }))
+      setTimeout(() => this.emailTimerReduce(cb), 1000)
+      return
+    }
+    cb()
+  }
+
+  startMessageCodeTimer = () => {
+    if (this.messageCodeTimer) {
+      return
+    }
+    this.setState({
+      messageCodeDisabledTime: 60,
+    }, () => {
+      this.messageCodeTimer = this.messageCodeTimerReduce(() => this.messageCodeTimer = null)
+    })
+  }
+
+  messageCodeTimerReduce = (cb) => {
+    if (this.state.messageCodeDisabledTime) {
+      this.state((preState) => ({
+        messageCodeDisabledTime: preState.messageCodeDisabledTime - 1,
+      }))
+      setTimeout(() => this.messageCodeTimerReduce(cb), 1000)
+      return
+    }
+    cb()
+  }
+
   render () {
     const {
       selectedItem,
@@ -765,6 +813,8 @@ class EditData extends Component {
       pwdErrorMsg,
       newPwdErrorMsg,
       newPwdRepeatErrorMsg,
+      emailDisabledTime,
+      messageCodeDisabledTime,
     } = this.state
     return (
       <div className="edit-data-container">
@@ -850,6 +900,8 @@ class EditData extends Component {
             handleMailCodeChange={ this.handleMailCodeChange }
             verifyEmail={ this.verifyEmail }
             handleSave={ this.handleSave }
+            emailDisabledTime={ emailDisabledTime }
+            messageCodeDisabledTime={ messageCodeDisabledTime }
           />
         </Modal>
         <Modal

@@ -544,6 +544,7 @@ class SkillPage extends Component {
       // }
       const {data: {data}} = await getServiceList({
         dist: this.state.selectedCity,
+        limit: -1,
       })
       this.setState({
         serviceList: data,

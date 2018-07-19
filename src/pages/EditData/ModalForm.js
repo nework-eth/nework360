@@ -4,7 +4,7 @@ import React from 'react'
 const ModalForm = (
   {
     modalType,
-    data: { phoneNumber, email },
+    data: {phoneNumber, email},
     phoneCode,
     handleModalCancel,
     getPhoneCode,
@@ -16,6 +16,8 @@ const ModalForm = (
     verifyEmail,
     handleSave,
     mailCode,
+    emailDisabledTime,
+    messageCodeDisabledTime,
   },
 ) => {
   switch (modalType) {
@@ -38,8 +40,9 @@ const ModalForm = (
             <Button
               className="message-button"
               onClick={ getPhoneCode }
+              disabled={ messageCodeDisabledTime }
             >
-              获取验证码
+              { messageCodeDisabledTime ? `${messageCodeDisabledTime}S` : '获取验证码' }
             </Button>
           </div>
         </div>
@@ -67,8 +70,9 @@ const ModalForm = (
             <Button
               className="message-button"
               onClick={ getMailCode }
+              disabled={ emailDisabledTime }
             >
-              获取验证码
+              { emailDisabledTime ? `${emailDisabledTime}S` : '获取验证码' }
             </Button>
           </div>
         </div>
