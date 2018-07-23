@@ -5,10 +5,12 @@ import { connect } from 'react-redux'
 import { browserHistory, Link } from 'react-router'
 import { bindActionCreators, combineReducers } from 'redux'
 import { signOut } from '../../service/auth'
+import { getUserById } from '../../service/editData'
 import { getCityByIp } from '../../service/homepage'
 import { deleteAllMessage, getMessage, updateMessageStatus } from '../../service/navMenu'
 import store from '../../Store'
 import { contains, deleteCookie } from '../../utils'
+import { IMModal } from '../IMModal/IMModal'
 import { setCityId, setCityName, setCountryId, setUser } from './actions'
 import { positionReducer, userReducer } from './reducer'
 import './static/style/index.less'
@@ -63,10 +65,15 @@ const mapDispatch = (dispatch) => bindActionCreators({
 class NavMenu extends Component {
 
   state = {
+    userB: '',
     messageList: [],
     messageLimit: 5,
     selectedType: 'unread',
     messageCount: 0,
+    IMModalAvatar: '',
+    IMModalVisible: false,
+    IMModalNickname: '',
+    IMModalPhoneNumber: '',
     unreadMessageCount: 0,
     unreadMessageList: [],
     unreadMessageLimit: 5,
@@ -197,10 +204,21 @@ class NavMenu extends Component {
       return
     }
     if (action.startsWith('im')) {
-      browserHistory.push({pathname: '/list'})
+      const userBId = action.split('--')[1]
+      const {data: {code, data}} = await getUserById({userId: userBId})
+      if (code !== 200) {
+        return
+      }
+      this.setState({
+        userB: userBId,
+        IMModalAvatar: data.avatar,
+        IMModalVisible: true,
+        IMModalNickname: data.nickname,
+        IMModalPhoneNumber: data.phoneNumber,
+        messagePanelVisible: false,
+      })
       await updateMessageStatus({id, status: -1})
       this.getMessage()
-
     }
   }
   changeMessageListType = (type) => () => this.setState({
@@ -246,11 +264,31 @@ class NavMenu extends Component {
     })
   }
 
+  hideIMModal = () => {
+    this.setState({
+      userB: '',
+      IMModalAmount: '',
+      IMModalAvatar: '',
+      IMModalVisible: false,
+      IMModalNeedsId: '',
+      IMModalQuoteId: '',
+      IMModalNickname: '',
+      IMModalPhoneNumber: '',
+      IMModalServiceName: '',
+      IMModalInstruction: '',
+    })
+  }
+
   render () {
     const {cityName} = this.props
     const {
+      userB,
       messageCount,
       selectedType,
+      IMModalAvatar,
+      IMModalVisible,
+      IMModalNickname,
+      IMModalPhoneNumber,
       unreadMessageCount,
       messagePanelVisible,
     } = this.state
@@ -387,6 +425,15 @@ class NavMenu extends Component {
             </div>
           }
         </div> }
+        { IMModalVisible && <IMModal
+          userA={ this.props.user.userId }
+          userB={ userB }
+          visible={ IMModalVisible }
+          nickname={ IMModalNickname }
+          avatarUrl={ IMModalAvatar }
+          phoneNumber={ IMModalPhoneNumber }
+          handleCancel={ this.hideIMModal }
+        /> }
       </div>
     )
   }
