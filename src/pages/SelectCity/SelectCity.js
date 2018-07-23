@@ -224,6 +224,9 @@ class SelectCity extends Component {
     document.cookie = `cityId=${cityId}`
     browserHistory.push('/')
   }
+  handleLetterClick = (letter) => () => {
+    document.querySelector(`#letter${letter}`).scrollIntoView(false)
+  }
 
   render () {
     const {
@@ -342,7 +345,8 @@ class SelectCity extends Component {
                   textDecoration: 'none',
                 } }
                 key={ letter.toUpperCase() }
-                href={ `/select-city#letter${letter.toUpperCase()}` }
+                // href={ `/select-city#letter${letter.toUpperCase()}` }
+                onClick={ this.handleLetterClick(letter.toUpperCase()) }
               >
                 { letter.toUpperCase() }
               </a>,

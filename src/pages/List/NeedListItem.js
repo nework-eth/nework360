@@ -24,6 +24,7 @@ function NeedListItem ({
                          quotes,
                          status,
                          jumpToPay,
+                         hasEvaluated,
                          goNeedDetail,
                          selectedQuote,
                          showEvaluateModal,
@@ -123,9 +124,10 @@ function NeedListItem ({
           }
           {
             statusMap[status] === '支付成功' && (
-              <div><span onClick={ showComplaintModal } style={ {paddingRight: '20px'} }>投诉</span><span>|</span><span
+              <div><span onClick={ showComplaintModal }
+                style={ {paddingRight: '20px'} }>投诉</span>{ !hasEvaluated && <span>|</span> }{ !hasEvaluated && <span
                 onClick={ showEvaluateModal }
-                style={ {paddingLeft: '20px', paddingRight: '20px'} }>评价</span><span>|</span><span
+                style={ {paddingLeft: '20px', paddingRight: '20px'} }>评价</span> }<span>|</span><span
                 style={ {paddingLeft: '20px'} } onClick={ goNeedOrderDetail }>查看详情</span>
               </div>)
           }

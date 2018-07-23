@@ -163,6 +163,7 @@ class List extends Component {
       message.success('评价成功')
     }
     this.getServiceOrderList()
+    this.getNeedOrderList()
     this.handleEvaluateModalCancel()
   }
   showInitiatePaymentModal = (needsId) => () => {
@@ -392,6 +393,7 @@ class List extends Component {
                                      quoteId,
                                      userBId,
                                      nickname,
+                                     evaluate,
                                      upateTime,
                                      userBName,
                                      serviceId,
@@ -404,6 +406,7 @@ class List extends Component {
                   title={ serviceName }
                   quotes={ quotes }
                   status={ status }
+                  hasEvaluated={ evaluate === 'yes' }
                   jumpToPay={ this.jumpToPay({amount: amountFinal, needsId, userBName}) }
                   goNeedDetail={ this.goNeedDetail(needsId) }
                   selectedQuote={ quotes.find(item => item.quoteId === quoteId) || {} }
