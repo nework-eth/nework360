@@ -413,19 +413,23 @@ class EditData extends Component {
       message.error('姓名不能为空')
       return
     }
-    const {data: {code}} = await updateUser({
-      userId: this.props.user.userId,
-      nickname: this.state.data.nickname,
-      district: this.state.data.city ? (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId) : '',
-      serviceTime: this.state.data.serviceTime.join(','),
-      description: this.state.data.description,
-      location: this.state.data.location,
-      specAddr: this.state.data.specAddr,
-    })
-    if (code === 200) {
-      message.success('更新资料成功')
-      this.afterUpdate()
-    }
+    this.geoCoder([async () => {
+      const {data: {code}} = await updateUser({
+        userId: this.props.user.userId,
+        nickname: this.state.data.nickname,
+        district: this.state.data.city ? (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId) : '',
+        serviceTime: this.state.data.serviceTime.join(','),
+        description: this.state.data.description,
+        location: this.state.data.location,
+        specAddr: this.state.data.specAddr,
+        latitude: this.state.data.latitude,
+        longitude: this.state.data.longitude,
+      })
+      if (code === 200) {
+        message.success('更新资料成功')
+        this.afterUpdate()
+      }
+    }])
   }
 
   handleShowAddSkillModal = () => {
@@ -710,7 +714,9 @@ class EditData extends Component {
       try {
         /* eslint-disable no-undef */
         AMap.plugin('AMap.Autocomplete', () => {
-          resolve()
+          AMap.plugin('AMap.Geocoder', () => {
+            resolve()
+          })
         })
       } catch (e) {
         reject(e)
@@ -1021,6 +1027,32 @@ class EditData extends Component {
                  }
                },
              )
+    })
+  }
+
+  geoCoder = (cbArr) => {
+    this.mapApi.then(() => {
+      /* eslint-disable no-undef */
+      const geocoder = new AMap.Geocoder({
+        city: this.state.selectedCity,
+      })
+      //地理编码,返回地理编码结果
+      geocoder.getLocation(`${this.state.data.location}`, (status, result) => {
+        if (status === 'complete' && result.info === 'OK' && result.geocodes.length === 1) {
+          this.setState({
+            data: {
+              ...this.state.data,
+              latitude: result.geocodes[0].location.lat,
+              longitude: result.geocodes[0].location.lng,
+            },
+            emailDisabled: true,
+          }, () => {
+            cbArr.forEach(item => item())
+          })
+          return
+        }
+        message.error('地址位置不够精确，请确保你所添加的信息是正确的')
+      })
     })
   }
 
