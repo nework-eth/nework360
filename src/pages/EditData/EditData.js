@@ -285,6 +285,7 @@ class EditData extends Component {
     nwePwdRepeatErrorMsg: '',
     emailDisabledTime: 0,
     messageCodeDisabledTime: 0,
+    emailDisabled: true,
   }
 
   getCityTree = async () => {
@@ -781,6 +782,27 @@ class EditData extends Component {
     cb()
   }
 
+  handleEmailChange = (e) => {
+    if (!e.target.value) {
+      this.setState({
+        data: {...this.state.data, email: e.target.value},
+        emailDisabled: true,
+      })
+      return
+    }
+    if (!e.target.value.includes('@')) {
+      this.setState({
+        data: {...this.state.data, email: e.target.value},
+        emailDisabled: true,
+      })
+      return
+    }
+    this.setState({
+      data: {...this.state.data, email: e.target.value},
+      emailDisabled: false,
+    })
+  }
+
   render () {
     const {
       selectedItem,
@@ -813,6 +835,7 @@ class EditData extends Component {
       pwdErrorMsg,
       newPwdErrorMsg,
       newPwdRepeatErrorMsg,
+      emailDisabled,
       emailDisabledTime,
       messageCodeDisabledTime,
     } = this.state
@@ -900,6 +923,8 @@ class EditData extends Component {
             handleMailCodeChange={ this.handleMailCodeChange }
             verifyEmail={ this.verifyEmail }
             handleSave={ this.handleSave }
+            handleEmailChange={ this.handleEmailChange }
+            emailDisabled={ emailDisabled }
             emailDisabledTime={ emailDisabledTime }
             messageCodeDisabledTime={ messageCodeDisabledTime }
           />

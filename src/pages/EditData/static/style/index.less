@@ -195,9 +195,12 @@
         width: 30%;
         height: 50px;
         color: #008bf7;
+        border: 1px solid #9ca6ae;
         border-bottom-left-radius: 0;
         border-top-left-radius: 0;
         cursor: pointer;
+      }
+      .message-button:not([disabled]) {
         &:hover, &:active, &:focus {
           background: #fff;
           border-left-color: #008bf7;
@@ -221,6 +224,13 @@
         background-color: #fff;
       }
     }
+  }
+  .error-tip {
+    margin-top: 7px;
+    color: #f70000;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: normal;
   }
 }
 

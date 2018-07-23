@@ -556,7 +556,6 @@ class SkillPage extends Component {
         secondServiceList: data.filter(item => item.level === 's'),
       })
     } catch (e) {
-      console.log(e)
       message.error(e)
     }
   }

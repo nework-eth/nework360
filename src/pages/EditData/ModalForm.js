@@ -16,7 +16,9 @@ const ModalForm = (
     verifyEmail,
     handleSave,
     mailCode,
+    handleEmailChange,
     emailDisabledTime,
+    emailDisabled,
     messageCodeDisabledTime,
   },
 ) => {
@@ -55,7 +57,8 @@ const ModalForm = (
       return (<div className="edit-data-modal-form-container">
         <div className="form-item">
           <p>邮箱地址</p>
-          <Input value={ email } onChange={ handleInput('email') }/>
+          <Input value={ email } onChange={ handleEmailChange }/>
+          { email && emailDisabled && <p className="error-tip">请输入正确格式的邮箱地址</p> }
         </div>
         <div className="form-item">
           <p>邮箱验证码</p>
@@ -70,7 +73,7 @@ const ModalForm = (
             <Button
               className="message-button"
               onClick={ getMailCode }
-              disabled={ emailDisabledTime }
+              disabled={ emailDisabledTime || emailDisabled }
             >
               { emailDisabledTime ? `${emailDisabledTime}S` : '获取验证码' }
             </Button>
