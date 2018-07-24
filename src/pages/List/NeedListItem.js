@@ -79,7 +79,7 @@ function NeedListItem ({
                 />
               }
               <span
-                style={ {marginLeft: '20px'} }>已选择 { selectedQuote.user && selectedQuote.user.nickname } 服务，等待服务</span>
+                style={ {marginLeft: '20px'} }>已选择 { selectedQuote.user && selectedQuote.user.nickName } 服务，等待服务</span>
             </div>
           }
           {
