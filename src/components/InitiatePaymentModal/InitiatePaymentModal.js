@@ -14,7 +14,7 @@ class InitiatePaymentModal extends Component {
     } = this.props
     return (
       <Modal
-        title={ <h2>投诉</h2> }
+        title={ <h2>收款</h2> }
         visible={ visible }
         style={ {
           top: 'calc(50% - 205px)',
@@ -50,7 +50,7 @@ class InitiatePaymentModal extends Component {
                 height: '50px',
                 marginRight: '20px',
               } }
-              onClick={ () => handleSubmit(this.state.value) }
+              onClick={ () => handleSubmit(this.state.value * 100) }
             >
               发起收款
             </Button>
