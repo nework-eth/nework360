@@ -116,7 +116,7 @@ function Content ({
             case 'submit':
               return '提现申请'
             case 'wait':
-              return '请打款'
+              return '待打款'
             case 'reject':
               return '提现拒绝'
             default:

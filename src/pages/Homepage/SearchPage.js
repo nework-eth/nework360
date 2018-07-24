@@ -32,7 +32,12 @@ class SearchPage extends Component {
     }
   }
   getSearchResult = async (serviceName) => {
-    const {data: {data, code}} = await getListServiceByParam({level: 's', serviceName, limit: 5})
+    const {data: {data, code}} = await getListServiceByParam({
+      level: 's',
+      serviceName,
+      limit: 5,
+      dist: this.props.cityName,
+    })
     if (code === 200) {
       this.setState({
         searchResult: data,
