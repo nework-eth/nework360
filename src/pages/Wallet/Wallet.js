@@ -113,8 +113,10 @@ function Content ({
               return '提现成功'
             case 'fail':
               return '提现失败'
+            case 'submit':
+              return '提现申请'
             case 'wait':
-              return '提现中'
+              return '请打款'
             case 'reject':
               return '提现拒绝'
             default:
