@@ -52,7 +52,7 @@ function NeedListItem ({
             statusMap[status] === '等待选择服务' && <div className="need-list-avatar-container">
               <div className="need-list-avatar-wrapper">
                 {
-                  quotes.reverse().map(({photo, userId}) =>
+                  quotes.map(({photo, userId}) =>
                     <img
                       key={ userId }
                       src={ photo || './images/headshot-default.png' }
