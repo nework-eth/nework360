@@ -404,7 +404,7 @@ class List extends Component {
                   key={ needsId }
                   date={ formatDate(upateTime) }
                   title={ serviceName }
-                  quotes={ quotes.reverse() }
+                  quotes={ quotes }
                   status={ status }
                   hasEvaluated={ evaluate === 'yes' }
                   jumpToPay={ this.jumpToPay({amount: amountFinal, needsId, userBName}) }
