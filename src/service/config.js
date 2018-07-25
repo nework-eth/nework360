@@ -1,8 +1,8 @@
 import { message } from 'antd'
 import axios from 'axios'
 import { browserHistory } from 'react-router'
-import * as ActionTypes from './components/NavMenu/actionTypes'
-import store from './Store'
+import * as ActionTypes from '../components/NavMenu/actionTypes'
+import store from '../Store'
 
 axios.defaults.baseURL = 'http://nework-web.rdc.waibaodashi.com'
 
