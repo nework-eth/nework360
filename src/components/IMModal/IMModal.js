@@ -309,7 +309,7 @@ class IMModal extends Component {
           <div className="im-top-wrapper">
             <p>{ phoneNumber }</p>
             <p><span onClick={ this.jumpToNeedDetail }
-              style={ {color: '#008bf7', marginRight: '10px'} }>查看需求</span><span>|</span><span
+              style={ {color: '#008bf7', marginRight: '10px', cursor: 'pointer'} }>查看需求</span><span>|</span><span
               style={ {color: '#008bf7', marginLeft: '10px', cursor: 'pointer'} }
               onClick={ this.showComplaintModal }>投诉</span></p>
           </div>
