@@ -86,7 +86,7 @@ function ServiceListItem ({
           </div>
         </div>
         <div className='middle'>
-          <div className="price">¥ { amount }</div>
+          <div className="price">¥ { amount / 100 }</div>
           <div className="tip">我的报价金额</div>
           <p className="information">
             { description }

@@ -24,6 +24,7 @@ function NeedListItem ({
                          quotes,
                          status,
                          jumpToPay,
+                         amountFinal,
                          hasEvaluated,
                          goNeedDetail,
                          selectedQuote,
@@ -92,7 +93,7 @@ function NeedListItem ({
                   height="50"
                 />
               }
-              <span style={ {marginLeft: '20px'} }>服务完成，待支付 { selectedQuote.amount / 100 } 元</span>
+              <span style={ {marginLeft: '20px'} }>服务完成，待支付 { amountFinal / 100 } 元</span>
             </div>
           }
           {
@@ -105,7 +106,7 @@ function NeedListItem ({
                   height="50"
                 />
               }
-              <span style={ {marginLeft: '20px'} }>支付完成，已支付 { selectedQuote.amount / 100 } 元</span>
+              <span style={ {marginLeft: '20px'} }>支付完成，已支付 { amountFinal / 100 } 元</span>
             </div>
           }
         </div>

@@ -408,6 +408,7 @@ class List extends Component {
                   title={ serviceName }
                   quotes={ quotes }
                   status={ status }
+                  amountFinal={ amountFinal }
                   hasEvaluated={ evaluate === 'yes' }
                   jumpToPay={ this.jumpToPay({amount: amountFinal, needsId, userBName}) }
                   goNeedDetail={ this.goNeedDetail(needsId) }
