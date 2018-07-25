@@ -339,6 +339,7 @@ class List extends Component {
                                           count: quoteNumber,
                                           userB: selectedUser,
                                           evaluate: hasEvaluated,
+                                          amountFinal,
                                         },
                                         amount,
                                         needsId,
@@ -352,7 +353,7 @@ class List extends Component {
                   score={ score ? score.ave : '' }
                   status={ status }
                   userId={ userId }
-                  amount={ amount / 100 }
+                  amount={ amount }
                   quoteId={ quoteId }
                   nickname={ nickname }
                   avatarUrl={ photo }
@@ -360,6 +361,7 @@ class List extends Component {
                   joinedTime={ getRelativeTime(userCreateTime) }
                   updateTime={ formatDate(updateTime) }
                   quoteNumber={ quoteNumber }
+                  amountFinal={ amountFinal }
                   showIMModal={ this.showIMModal(
                     userId,
                     phoneNum,

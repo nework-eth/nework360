@@ -29,6 +29,7 @@ function ServiceListItem ({
                             description,
                             serviceName,
                             badgeStatus,
+                            amountFinal,
                             hasEvaluated,
                             selectedUser,
                             initiatePayment,
@@ -96,6 +97,7 @@ function ServiceListItem ({
             status,
             amount,
             nickname,
+            amountFinal,
             quoteNumber,
             hasEvaluated,
             selectedUser,
@@ -128,6 +130,7 @@ const statusMap = {
 function OperatePanel ({
                          status,
                          amount,
+                         amountFinal,
                          quoteNumber,
                          selectedUser,
                          hasEvaluated,
@@ -199,12 +202,12 @@ function OperatePanel ({
       <p>
         等待支付
       </p>
-      <p>¥ { amount }</p>
+      <p>¥ { amountFinal / 100 || amount / 100 }</p>
     </div>)
   }
   if (statusMap[status] === '收款成功') {
     return (<div className="right">
-      <p className="payed">已成功收款¥ { amount }</p>
+      <p className="payed">已成功收款¥ { amountFinal / 100 || amount / 100 }</p>
       {
         hasEvaluated
           ? <Button type="primary" disabled>已评价</Button>
