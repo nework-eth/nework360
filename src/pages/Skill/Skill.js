@@ -600,20 +600,9 @@ class SkillPage extends Component {
     const {data: {data, code}} = await getUserById({userId: this.props.userId})
     if (code === 200) {
       this.setState({
-        selectedCountry: data.country,
-        selectedProvince: data.province,
-        selectedCity: data.city,
-        location: data.location,
-        specAddr: data.specAddr,
-        description: data.description,
-        avatarSrc: data.avatar,
-        photoSrc: data.photo,
         passportSrc: data.passportPic,
         idCardPositiveSrc: data.idCardPositive,
         idCardNegativeSrc: data.idCardNegative,
-        serviceTimeList: data.serviceTime.split(','),
-        latitude: data.latitude,
-        longitude: data.longitude,
       })
     }
   }

@@ -380,7 +380,7 @@ function EditDataForm ({
         <p className="auth-title">身份证或护照</p>
         <p>实名验证帮助用户之间建立信任，让每个人更安心地使用我们的服务。</p>
         <p>请放心，其他顾客和服务商不会看到您的身份信息。</p>
-        { user.checkStatus
+        { user.checkStatus && user.checkStatus !== -1
           ? user.checkStatus === 2 ? <div className="check-status">
               <div className="circle"><i className="iconfont icon-selected"/></div>
               <span>您已实名认证</span>
