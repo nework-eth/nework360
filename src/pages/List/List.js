@@ -340,6 +340,7 @@ class List extends Component {
                                           userB: selectedUser,
                                           evaluate: hasEvaluated,
                                           amountFinal,
+                                          culeNum: clueNumber,
                                         },
                                         amount,
                                         needsId,
@@ -357,6 +358,7 @@ class List extends Component {
                   quoteId={ quoteId }
                   nickname={ nickname }
                   avatarUrl={ photo }
+                  clueNumber={ clueNumber }
                   scoreCount={ score ? score.count : 0 }
                   joinedTime={ getRelativeTime(userCreateTime) }
                   updateTime={ formatDate(updateTime) }

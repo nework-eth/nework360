@@ -20,7 +20,7 @@ export const getRelativeTime = (createTime) => {
 }
 
 export const getRelativeMinutes = (createTime) => {
-  const fromTimeStamp = Date.parse(createTime)
+  const fromTimeStamp = createTime
   const now = Date.now()
   const relativeTime = now - fromTimeStamp
   const seconds = Math.floor(relativeTime / 1000)

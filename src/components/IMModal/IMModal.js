@@ -169,7 +169,7 @@ class IMModal extends Component {
       this.setState(
         {
           msgList: Object.values(data).reduce((pre, next) => [...pre, ...next], [])
-                         .sort((cur, next) => Date.parse(cur.createTime) - Date.parse(next.createTime)),
+                         .sort((cur, next) => cur.createTime - next.createTime),
         },
         () => {
           const container = document.querySelector('#imContentContainer')
@@ -221,26 +221,28 @@ class IMModal extends Component {
       },
     })
     connect.on('disconnect', () => {
+      console.log('disconnect')
     })
     connect.on('message', (obj) => {
-      this.getIMDialog()
+      console.log('message')
+      setTimeout(() => this.getIMDialog(), 100)
     })
     this.setState({
       connect,
     })
   }
 
-  sendMessage = (msg) => {
+  sendMessage = async (msg) => {
     if (!this.state.connect) {
       return
     }
     const connect = this.state.connect
+    await this.insertMsg(msg)
     connect.emit('message', {
       from: this.props.userA,
       to: this.props.userB,
-      msg: JSON.stringify({type: 'text', msg}),
+      msg: {type: 'text', msg},
     })
-    this.insertMsg(msg)
   }
 
   handleTextAreaValueChange = (e) => {
@@ -326,7 +328,7 @@ class IMModal extends Component {
                   key={ id }
                   type={ receiver === this.props.user.userId ? 'left' : 'right' }
                   time={ createTime }
-                  avatarUrl={ this.props.avatarUrl }
+                  avatarUrl={ this.props.avatarUrl || './images/headshot-default.png' }
                 />)
             }
           </div>

@@ -6,6 +6,7 @@ const {TextArea} = Input
 class QuoteModal extends Component {
   state = {
     value: '',
+    clueNumber: 0,
     textAreaValue: '',
   }
 
@@ -102,6 +103,11 @@ class QuoteModal extends Component {
       </Modal>
     )
   }
+
+  componentDidMount () {
+
+  }
+
 }
 
 export { QuoteModal }

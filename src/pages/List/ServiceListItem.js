@@ -21,6 +21,7 @@ function ServiceListItem ({
                             userId,
                             nickname,
                             avatarUrl,
+                            clueNumber,
                             scoreCount,
                             updateTime,
                             joinedTime,
@@ -97,6 +98,7 @@ function ServiceListItem ({
             status,
             amount,
             nickname,
+            clueNumber,
             amountFinal,
             quoteNumber,
             hasEvaluated,
@@ -130,6 +132,7 @@ const statusMap = {
 function OperatePanel ({
                          status,
                          amount,
+                         clueNumber,
                          amountFinal,
                          quoteNumber,
                          selectedUser,
@@ -188,7 +191,7 @@ function OperatePanel ({
         height="50"
       />
       <p>已选择 { selectedUser } 服务</p>
-      <p>支付 5 张线索卡已自动退回线索卡账户</p>
+      <p>支付 { clueNumber } 张线索卡已自动退回线索卡账户</p>
     </div>)
   }
   if (statusMap[status] === '等待支付') {

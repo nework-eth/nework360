@@ -23,6 +23,7 @@ class NeedDetail extends Component {
     userId: '',
     needsId: '',
     nickName: '',
+    canCancel: false,
     hasQuoted: true,
     avatarSrc: '',
     scoreCount: '',
@@ -39,6 +40,7 @@ class NeedDetail extends Component {
         score: data.user.score.ave,
         userId: data.user.userId,
         nickName: data.user.nickName,
+        canCancel: data.cancel === 'yes',
         avatarSrc: data.user.photo,
         scoreCount: data.user.score.count,
         serviceName: data.serviceName,
@@ -125,6 +127,7 @@ class NeedDetail extends Component {
       nickName,
       hasQuoted,
       avatarSrc,
+      canCancel,
       scoreCount,
       serviceName,
       clueCardCount,
@@ -167,6 +170,7 @@ class NeedDetail extends Component {
         </main>
         <QuoteModal
           visible={ quoteModalVisible }
+          needsId={ needsId }
           handleSubmit={ this.handleQuoteModalSubmit(needsId) }
           handleCancel={ this.hideQuoteModal }
         />
@@ -181,9 +185,14 @@ class NeedDetail extends Component {
             <p className="quote-amount">¥ { (this.props.location.state.amount / 100).toFixed(2) }</p>
             <p className="quote-amount-tip">您的报价</p>
           </div> }</div>
-          { !hasQuoted
-            ? <Button type="primary" onClick={ this.showQuoteModal }>立即报价</Button>
-            : <Button onClick={ this.withdrawQuote }>取消报价</Button>
+          {
+            !hasQuoted && <Button type="primary" onClick={ this.showQuoteModal }>立即报价</Button>
+          }
+          {
+            canCancel && <Button onClick={ this.withdrawQuote }>取消报价</Button>
+          }
+          {
+            hasQuoted && !canCancel && <Button disabled>已取消报价</Button>
           }
         </footer> }
       </div>
