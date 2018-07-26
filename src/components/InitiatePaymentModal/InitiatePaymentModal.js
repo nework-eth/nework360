@@ -52,7 +52,7 @@ class InitiatePaymentModal extends Component {
               } }
               onClick={ () => handleSubmit(this.state.value * 100) }
             >
-              发起收款
+              发起收款（元）
             </Button>
             <Button
               style={ {

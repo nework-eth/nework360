@@ -120,9 +120,9 @@ class List extends Component {
       this.getServiceOrderList()
     }
   }
-  jumpToNeedDetail = (needsId, quoteId, amount) => () => browserHistory.push({
+  jumpToNeedDetail = (needsId, quoteId, amount, amountFinal) => () => browserHistory.push({
     pathname: '/need-detail',
-    state: {needsId, quoteId, amount},
+    state: {needsId, quoteId, amount, amountFinal},
   })
   showComplaintModal = () => this.setState({complaintModalVisible: true})
   showDeleteModal = (quoteId) => () => this.setState({deleteModalVisible: true, deleteQuoteId: quoteId})
@@ -381,7 +381,7 @@ class List extends Component {
                   selectedUser={ selectedUser }
                   hasEvaluated={ hasEvaluated === 'yes' }
                   showDeleteModal={ this.showDeleteModal(quoteId) }
-                  jumpToNeedDetail={ this.jumpToNeedDetail(needsId, quoteId, amount) }
+                  jumpToNeedDetail={ this.jumpToNeedDetail(needsId, quoteId, amount, amountFinal) }
                   initiatePayment={ this.initiatePayment(quoteId, amount) }
                   showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickname) }
                   cancelServiceOrder={ this.cancelServiceOrder(quoteId) }
