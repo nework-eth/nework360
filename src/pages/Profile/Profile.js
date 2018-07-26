@@ -1,5 +1,6 @@
 import { Button, Carousel, Rate } from 'antd'
 import 'moment/locale/zh-cn'
+import moment from 'moment/moment'
 import React, { Component } from 'react'
 import { DayPickerRangeController } from 'react-dates'
 import 'react-dates/initialize'
@@ -217,6 +218,7 @@ class Profile extends Component {
                 hideKeyboardShortcutsPanel
                 monthFormat="YYYY[年]M[月]"
                 isDayHighlighted={ isDayHighlighted(serviceTime.split(',')) }
+                isDayBlocked={ (value) => !moment().isBefore(value) }
               />
               <div id="mapContainer"/>
             </div>
