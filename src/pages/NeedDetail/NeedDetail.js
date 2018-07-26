@@ -20,10 +20,10 @@ const mapState = (state) => ({
 class NeedDetail extends Component {
   state = {
     score: '',
+    cancel: '',
     userId: '',
     needsId: '',
     nickName: '',
-    canCancel: false,
     hasQuoted: true,
     avatarSrc: '',
     scoreCount: '',
@@ -38,9 +38,9 @@ class NeedDetail extends Component {
     if (code === 200) {
       this.setState({
         score: data.user.score.ave,
+        cancel: data.cancel,
         userId: data.user.userId,
         nickName: data.user.nickName,
-        canCancel: data.cancel === 'yes',
         avatarSrc: data.user.photo,
         scoreCount: data.user.score.count,
         serviceName: data.serviceName,
@@ -122,12 +122,12 @@ class NeedDetail extends Component {
   render () {
     const {
       score,
+      cancel,
       userId,
       needsId,
       nickName,
       hasQuoted,
       avatarSrc,
-      canCancel,
       scoreCount,
       serviceName,
       clueCardCount,
@@ -189,10 +189,10 @@ class NeedDetail extends Component {
             !hasQuoted && <Button type="primary" onClick={ this.showQuoteModal }>立即报价</Button>
           }
           {
-            canCancel && <Button onClick={ this.withdrawQuote }>取消报价</Button>
+            cancel === 'yes' && <Button onClick={ this.withdrawQuote }>取消报价</Button>
           }
           {
-            hasQuoted && !canCancel && <Button disabled>已取消报价</Button>
+            cancel === 'already' && <Button disabled>已取消报价</Button>
           }
         </footer> }
       </div>
