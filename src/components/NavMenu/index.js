@@ -1,4 +1,4 @@
-import { Dropdown, Menu, message } from 'antd'
+import { Badge, Dropdown, Menu, message } from 'antd'
 import cookie from 'cookie'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -7,7 +7,7 @@ import { bindActionCreators, combineReducers } from 'redux'
 import { signOut } from '../../service/auth'
 import { getUserById } from '../../service/editData'
 import { getCityByIp } from '../../service/homepage'
-import { deleteAllMessage, getMessage, updateMessageStatus } from '../../service/navMenu'
+import { deleteAllMessage, getMessage, ignoreAllMsg, updateMessageStatus } from '../../service/navMenu'
 import store from '../../Store'
 import { contains, deleteCookie } from '../../utils'
 import { IMModal } from '../IMModal/IMModal'
@@ -150,8 +150,8 @@ class NavMenu extends Component {
     }
   }
   ignoreAll = async () => {
-    const resultArr = await Promise.all(this.selectedMessageList().map(({id}) => updateMessageStatus({id, status: -1})))
-    if (resultArr.every(({data: {code}}) => code === 200)) {
+    const {data: {code}} = await ignoreAllMsg({userId: this.props.userId})
+    if (code === 200) {
       message.success('已忽略全部消息')
       this.getMessage()
       this.getUnreadMessage()
@@ -231,6 +231,10 @@ class NavMenu extends Component {
     }
     this.getMessage()
     this.getUnreadMessage()
+    this.timer = setInterval(() => {
+      this.getMessage()
+      this.getUnreadMessage()
+    }, 10000)
     setTimeout(() => {
       document.addEventListener('click', e => {
         const messagePanel = document.querySelector('.message-panel-container')
@@ -241,7 +245,12 @@ class NavMenu extends Component {
           })
         }
       })
-    })
+    }, 1000)
+  }
+
+  componentWillUnmount () {
+    clearInterval(this.timer)
+    this.timer = null
   }
 
   hideIMModal = () => {
@@ -268,6 +277,7 @@ class NavMenu extends Component {
       IMModalAvatar,
       IMModalVisible,
       IMModalNickname,
+      unreadMessageList,
       IMModalPhoneNumber,
       unreadMessageCount,
       messagePanelVisible,
@@ -298,7 +308,7 @@ class NavMenu extends Component {
                     <Link to="/list" style={ userLinkStyle }>我的订单</Link>
                   </li>
                   <li className="li-item user-li-item message-li" onClick={ this.toggleMessagePanelVisible }>
-                    <span className="message-span">消息中心</span>
+                    <Badge dot={ unreadMessageList.length }><span className="message-span">消息中心</span></Badge>
                   </li>
                   <li className="li-item user-li-item">
                     <Dropdown overlay={

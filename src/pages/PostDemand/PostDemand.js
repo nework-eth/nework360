@@ -239,7 +239,7 @@ class PostDemand extends Component {
     } else {
       const {data: {code, needsId}} = await createDemand(
         {
-          pages: this.state.data,
+          pages: filterNullDate(this.state.data),
         },
         {
           districtId: this.props.position.cityId,
