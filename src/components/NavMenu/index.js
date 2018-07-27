@@ -308,7 +308,7 @@ class NavMenu extends Component {
                     <Link to="/list" style={ userLinkStyle }>我的订单</Link>
                   </li>
                   <li className="li-item user-li-item message-li" onClick={ this.toggleMessagePanelVisible }>
-                    <Badge dot={ unreadMessageList.length }><span className="message-span">消息中心</span></Badge>
+                    <Badge dot={ !!unreadMessageList.length }><span className="message-span">消息中心</span></Badge>
                   </li>
                   <li className="li-item user-li-item">
                     <Dropdown overlay={

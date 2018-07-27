@@ -21,8 +21,8 @@ function DateTemplate ({
           numberOfMonths={ 1 }
           hideKeyboardShortcutsPanel
           monthFormat="YYYY[年]M[月]"
-          onDateChange={ (value) => {handleDateChange(value, index)} }
-          isDayBlocked={ (value) => !moment({hour: 0, minute: 0}).isBefore(value) }
+          onDateChange={ (value) => handleDateChange(value, index) }
+          isDayBlocked={ (value) => !moment().isBefore(value) }
           date={ valueItem }
         />
       </div>) }

@@ -449,7 +449,6 @@ class PostDemand extends Component {
       specAddr,
       location,
       pageIndex,
-      serviceId,
       cityOptions,
       serviceName,
       selectedCity,
