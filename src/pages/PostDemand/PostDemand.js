@@ -57,6 +57,18 @@ const generateResult = (pages) => pages.map(page => page.map(item => ({
   resultValue: generateInitValue(item.templateItemType),
 })))
 
+const filterNullDate = (pages) => pages.map(page => page.map(item => ({
+  ...item,
+  resultValue: filterNull(item.templateItemType, item.resultValue),
+})))
+
+const filterNull = (type, value) => {
+  if (type === 'time') {
+    return value.filter(item => item !== null)
+  }
+  return value
+}
+
 const generateInitValue = (type) => {
   switch (type) {
     case 'select':
@@ -207,7 +219,7 @@ class PostDemand extends Component {
     if (this.props.location.state && this.props.location.state.update) {
       const {data: {code}} = await updateDemand(
         {
-          pages: this.state.data,
+          pages: filterNullDate(this.state.data),
         },
         {
           needsId: this.props.location.state.needsId,

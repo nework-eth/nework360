@@ -22,8 +22,7 @@ function DateTemplate ({
           hideKeyboardShortcutsPanel
           monthFormat="YYYY[年]M[月]"
           onDateChange={ (value) => {handleDateChange(value, index)} }
-          enableOutsideDays
-          isDayBlocked={ (value) => !moment().isBefore(value) }
+          isDayBlocked={ (value) => !moment({hour: 0, minute: 0}).isBefore(value) }
           date={ valueItem }
         />
       </div>) }
