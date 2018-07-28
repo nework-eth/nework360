@@ -1,4 +1,4 @@
-import { Button, Input, message, Progress, Select } from 'antd'
+import { Button, message, Progress, Select } from 'antd'
 import moment from 'moment'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
@@ -230,9 +230,7 @@ class PostDemand extends Component {
       )
       if (code === 200) {
         message.success('更新需求成功')
-        await this.getMatchResult()
         this.setState({
-          showMatchResult: true,
           progressPercent: 100,
         })
       }
@@ -338,71 +336,14 @@ class PostDemand extends Component {
       cityData: tree['中国']['北京'],
     })
   }
-  handleCountryChange = (value) => {
-    const provinceOptions = Object.keys(this.state.tree[value])
-    const selectedProvince = provinceOptions[0]
-    console.log(provinceOptions)
-    const cityData = this.state.tree[value][selectedProvince]
-    const cityOptions = cityData.map(item => item.chinese)
-    const selectedCity = cityOptions[0]
-    this.setState({
-      selectedCountry: value,
-      provinceOptions,
-      selectedProvince: undefined,
-      cityData,
-      cityOptions,
-      selectedCity: undefined,
-      cityId: (cityData.find(item => item.chinese === selectedCity)).districtId,
-      location: '',
-      specAddr: '',
-    })
-  }
-  handleProvinceChange = (value) => {
-    const cityData = this.state.tree[this.state.selectedCountry][value]
-    const cityOptions = cityData.map(item => item.chinese)
-    this.setState({
-      selectedProvince: value,
-      cityData,
-      cityOptions,
-      selectedCity: undefined,
-      cityId: (cityData.find(item => item.chinese === cityOptions[0])).districtId,
-      location: '',
-      specAddr: '',
-    })
-  }
-  handleCityChange = (value) => {
-    this.setState({
-      selectedCity: value,
-      cityId: (this.state.cityData.find(item => item.chinese === value)).districtId,
-      location: '',
-      specAddr: '',
-    })
-  }
-  handleSpecAddrChange = (e) => {
-    let str = e.target.value
-    if (str.length > 100) {
-      str = str.slice(0, 100)
-      this.setState({
-        specAddrTooLong: true,
-      })
-    } else if (this.state.specAddrTooLong) {
-      this.setState({
-        specAddrTooLong: false,
-      })
-    }
-    this.setState({
-      specAddr: str,
-    })
-  }
   handleServiceLocationChange = (value) => {
-    // console.log('change')
     this.getLocationOptions(value)
     this.setState({
       location: value,
     })
   }
   handleSubmit = () => {
-    this.geoCoder([this.updateUserPosition])
+    this.geoCoder([this.updateUserPosition, this.goNextPage])
   }
   updateUserPosition = async () => {
     const {data: {code}} = await updateUser({
@@ -425,10 +366,10 @@ class PostDemand extends Component {
     this.mapApi.then(() => {
       /* eslint-disable no-undef */
       const geocoder = new AMap.Geocoder({
-        city: this.state.selectedCity,
+        city: this.props.location.cityName,
       })
       //地理编码,返回地理编码结果
-      geocoder.getLocation(`${this.state.location} ${this.state.specAddr}`, (status, result) => {
+      geocoder.getLocation(this.state.location, (status, result) => {
         if (status === 'complete' && result.info === 'OK' && result.geocodes.length === 1) {
           this.setState({
             latitude: result.geocodes[0].location.lat,
@@ -446,194 +387,118 @@ class PostDemand extends Component {
     const {
       data,
       pages,
-      specAddr,
       location,
       pageIndex,
-      cityOptions,
       serviceName,
-      selectedCity,
-      countryOptions,
-      provinceOptions,
-      selectedCountry,
       locationOptions,
       progressPercent,
       showMatchResult,
       matchResultList,
-      specAddrTooLong,
-      selectedProvince,
     } = this.state
     return (<div className="post-demand-container">
       {
-        this.props.user.latitude ? <div className="content-wrapper">
-          <main>
-            <h2 style={ {margin: '50px 0'} }>
-              <i
-                className="iconfont icon-logo"
-                style={ {fontSize: '30px', lineHeight: '40px'} }
+        this.props.user.latitude
+          ? <div className="content-wrapper">
+            <main>
+              <h2 style={ {margin: '50px 0'} }>
+                <i
+                  className="iconfont icon-logo"
+                  style={ {fontSize: '30px', lineHeight: '40px'} }
+                />
+              </h2>
+              <Progress
+                percent={ progressPercent }
+                showInfo={ false }
+                style={ {height: '5px'} }
               />
-            </h2>
-            <Progress
-              percent={ progressPercent }
-              showInfo={ false }
-              style={ {height: '5px'} }
-            />
-            { !showMatchResult ?
-              <div className="template-wrapper">
-                {
-                  pages[pageIndex] && pages[pageIndex].map(item =>
-                    <Template
-                      { ...item }
-                      key={ item.id }
-                      value={ data[pageIndex][item.index].resultValue }
-                      addMoreDay={ this.addMoreDay({pageNum: pageIndex, index: item.index}) }
-                      handleChange={ this.handleChange({pageNum: pageIndex, index: item.index}) }
-                      locationOptions={ locationOptions }
-                      handleDateChange={ this.handleDateChange({pageNum: pageIndex, index: item.index}) }
-                      handleLocationChange={ this.handleLocationChange({pageNum: pageIndex, index: item.index}) }
-                      handleSpecAddressChange={ this.handleSpecAddressChange({pageNum: pageIndex, index: item.index}) }
-                    />)
-                }
-              </div>
-              : <div className="match-result-container">
-                <h2>已为您匹配到{ matchResultList.length }位{ serviceName }服务人员请耐心等待报价...</h2>
-                <div className="match-result-card-item-wrapper">
+              { !showMatchResult ?
+                <div className="template-wrapper">
                   {
-                    matchResultList.map(({userBasicInfoVO}) =>
-                      <MatchResultCardItem
-                        key={ userBasicInfoVO.userId }
-                        avatarSrc={ userBasicInfoVO.avatar }
-                        nickname={ userBasicInfoVO.nickname }
-                        handleClick={ this.jumpToProfile(userBasicInfoVO.userId) }
-                      />,
-                    )
+                    pages[pageIndex] && pages[pageIndex].map(item =>
+                      <Template
+                        { ...item }
+                        key={ item.id }
+                        value={ data[pageIndex][item.index].resultValue }
+                        addMoreDay={ this.addMoreDay({pageNum: pageIndex, index: item.index}) }
+                        handleChange={ this.handleChange({pageNum: pageIndex, index: item.index}) }
+                        locationOptions={ locationOptions }
+                        handleDateChange={ this.handleDateChange({pageNum: pageIndex, index: item.index}) }
+                        handleLocationChange={ this.handleLocationChange({pageNum: pageIndex, index: item.index}) }
+                        handleSpecAddressChange={ this.handleSpecAddressChange({pageNum: pageIndex, index: item.index}) }
+                      />)
                   }
                 </div>
-              </div>
-            }
-          </main>
-          <Footer
-            complete={ showMatchResult }
-            pageData={ data[pageIndex] }
-            pageIndex={ pageIndex }
-            goLastPage={ this.goLastPage }
-            handleGoNextButtonClick={ this.handleGoNextButtonClick }
-            handleCompleteButtonClick={ this.handleCompleteButtonClick }
-          />
-        </div> : <div className="content-wrapper">
-          <main>
-            <h2 style={ {margin: '50px 0'} }>
-              <i
-                className="iconfont icon-logo"
-                style={ {fontSize: '30px', lineHeight: '40px'} }
-              />
-            </h2>
-            <div className="service-location-container">
-              <h2 style={ {
-                marginBottom: '50px',
-              } }>请选择您需要服务的位置</h2>
-              <div className="select-container">
-                <div className="select-wrapper">
-                  <p>国家或地区</p>
-                  <Select
-                    className="skill-select-item"
-                    value={ selectedCountry }
-                    onChange={ this.handleCountryChange }
-                    placeholder="请选择国家"
-                  >
+                : <div className="match-result-container">
+                  <h2>已为您匹配到{ matchResultList.length }位{ serviceName }服务人员请耐心等待报价...</h2>
+                  <div className="match-result-card-item-wrapper">
                     {
-                      countryOptions.map(country =>
-                        <Option
-                          value={ country }
-                          key={ country }
-                        >
-                          { country }
-                        </Option>,
+                      matchResultList.map(({userBasicInfoVO}) =>
+                        <MatchResultCardItem
+                          key={ userBasicInfoVO.userId }
+                          avatarSrc={ userBasicInfoVO.avatar }
+                          nickname={ userBasicInfoVO.nickname }
+                          handleClick={ this.jumpToProfile(userBasicInfoVO.userId) }
+                        />,
                       )
                     }
-                  </Select>
+                  </div>
                 </div>
-                <div className="select-wrapper">
-                  <p>省份/洲</p>
-                  <Select
-                    className="skill-select-item"
-                    value={ selectedProvince }
-                    onChange={ this.handleProvinceChange }
-                    disabled={ !selectedCountry }
-                    placeholder="请选择省份/州"
-                  >
-                    {
-                      provinceOptions.map(province =>
-                        <Option
-                          value={ province }
-                          key={ province }
-                        >
-                          { province }
-                        </Option>,
-                      )
-                    }
-                  </Select>
-                </div>
-                <div className="select-wrapper">
-                  <p>城市</p>
-                  <Select
-                    className="skill-select-item"
-                    value={ selectedCity }
-                    onChange={ this.handleCityChange }
-                    disabled={ !selectedProvince }
-                    placeholder="请选择城市"
-                  >
-                    {
-                      cityOptions.map(city =>
-                        <Option
-                          value={ city }
-                          key={ city }
-                        >
-                          { city }
-                        </Option>,
-                      )
-                    }
-                  </Select>
-                </div>
-              </div>
-              <p style={ {
-                marginTop: '20px',
-                fontWeight: 'bold',
-                marginBottom: '10px',
-              } }>小区或街道名</p>
-              <Select
-                mode="combobox"
-                value={ location }
-                placeholder="如不清楚可输入名称来搜索"
-                defaultActiveFirstOption={ false }
-                showArrow={ false }
-                onChange={ this.handleServiceLocationChange }
-                className="place-select"
-              >
-                { locationOptions.map(({name, address, district, adcode}) =>
-                  <Option
-                    value={ `${district} ${address} ${name}` }
-                    key={ `${adcode}${address}` }
-                  >
-                    { `${district} ${address} ${name}` }</Option>,
-                ) }
-              </Select>
-              <p style={ {
-                marginTop: '20px',
-                fontWeight: 'bold',
-                marginBottom: '10px',
-              } }>具体地址</p>
-              <Input
-                value={ specAddr }
-                onChange={ this.handleSpecAddrChange }
-                placeholder="请输入具体地址"
-              />
-              { specAddrTooLong && <div className="error-tip">无法继续输入</div> }
-            </div>
-          </main>
-          <div className="footer">
-            <Button type="primary" onClick={ this.handleSubmit }>下一步</Button>
+              }
+            </main>
+            <Footer
+              complete={ progressPercent === 100 }
+              pageData={ data[pageIndex] }
+              pageIndex={ pageIndex }
+              goLastPage={ this.goLastPage }
+              handleGoNextButtonClick={ this.handleGoNextButtonClick }
+              handleCompleteButtonClick={ this.handleCompleteButtonClick }
+            />
           </div>
-        </div>
+          : <div className="content-wrapper">
+            <main>
+              <h2 style={ {margin: '50px 0'} }>
+                <i
+                  className="iconfont icon-logo"
+                  style={ {fontSize: '30px', lineHeight: '40px'} }
+                />
+              </h2>
+              <Progress
+                percent={ progressPercent }
+                showInfo={ false }
+                style={ {height: '5px'} }
+              />
+              <div className="service-location-container">
+                <h2 style={ {
+                  margin: '50px 0',
+                } }>请输入您需要服务的位置</h2>
+                <p style={ {
+                  marginTop: '20px',
+                  fontWeight: 'bold',
+                  marginBottom: '10px',
+                } }>小区或街道名</p>
+                <Select
+                  mode="combobox"
+                  value={ location }
+                  placeholder="如不清楚可输入名称来搜索"
+                  defaultActiveFirstOption={ false }
+                  showArrow={ false }
+                  onChange={ this.handleServiceLocationChange }
+                  className="place-select"
+                >
+                  { locationOptions.map(({name, address, district, adcode}) =>
+                    <Option
+                      value={ `${district} ${address} ${name}` }
+                      key={ `${adcode}${address}` }
+                    >
+                      { `${district} ${address} ${name}` }</Option>,
+                  ) }
+                </Select>
+              </div>
+            </main>
+            <div className="footer">
+              <Button type="primary" onClick={ this.handleSubmit }>下一步</Button>
+            </div>
+          </div>
       }
     </div>)
   }

@@ -79,6 +79,7 @@ class List extends Component {
       message.error('网络连接失败，请检查网络后重试')
     }
   }
+
   getServiceOrderList = async () => {
     const {data: {data, code, pageinfo}} = await getServiceOrderList({limit: this.state.serviceLimit})
     if (code === 200) {
@@ -89,16 +90,20 @@ class List extends Component {
       })
     }
   }
+
   changeListType = (listType) => () => this.setState({
     listType: listType,
   })
+
   goNeedOrderDetail = (needsId) => () => browserHistory.push({
     pathname: '/need-order-detail',
     state: {needsId: needsId},
   })
+
   goNeedDetail = (needsId) => () => {
     browserHistory.push({pathname: '/need-detail', state: {needsId: needsId}})
   }
+
   cancelServiceOrder = (quoteId) => async () => {
     const {data: {code}} = await cancelServiceOrder({quoteId})
     if (code === 200) {
@@ -106,6 +111,7 @@ class List extends Component {
       this.getServiceOrderList()
     }
   }
+
   withdrawServiceOrder = (quoteId) => async () => {
     const {data: {code}} = await withdrawServiceOrder({quoteId})
     if (code === 200) {
@@ -113,6 +119,7 @@ class List extends Component {
       this.getServiceOrderList()
     }
   }
+
   initiatePayment = (quoteId, amount) => async () => {
     const {data: {code}} = await initiatePayment({quoteId, amount})
     if (code === 200) {
@@ -120,13 +127,18 @@ class List extends Component {
       this.getServiceOrderList()
     }
   }
+
   jumpToNeedDetail = (needsId, quoteId, amount, amountFinal) => () => browserHistory.push({
     pathname: '/need-detail',
     state: {needsId, quoteId, amount, amountFinal},
   })
+
   showComplaintModal = () => this.setState({complaintModalVisible: true})
+
   showDeleteModal = (quoteId) => () => this.setState({deleteModalVisible: true, deleteQuoteId: quoteId})
+
   handleDeleteModalCancel = () => this.setState({deleteQuoteId: '', deleteModalVisible: false})
+
   handleDeleteModalSubmit = async () => {
     const {data: {code}} = await deleteServiceOrder({quoteId: this.state.deleteQuoteId})
     if (code === 200) {
@@ -135,19 +147,23 @@ class List extends Component {
       this.handleDeleteModalCancel()
     }
   }
+
   handleComplaintModalCancel = () => this.setState({complaintModalVisible: false})
+
   showEvaluateModal = (userId, needsId, nickname) => () => this.setState({
     evaluateUserId: userId,
     evaluateNeedsId: needsId,
     evaluateNickname: nickname,
     evaluateModalVisible: true,
   })
+
   handleEvaluateModalCancel = () => this.setState({
     evaluateUserId: '',
     evaluateNeedsId: '',
     evaluateNickname: '',
     evaluateModalVisible: false,
   })
+
   handleEvaluateModalSubmit = async (score, content) => {
     if (!score) {
       message.error('请选择评分')
