@@ -117,11 +117,6 @@ class Profile extends Component {
       })
     }
   }
-  showAllIntroduce = () => {
-    this.setState({
-      showAllIntroduce: true,
-    })
-  }
   jumpToEditData = () => {
     browserHistory.push('/editData')
   }
