@@ -121,7 +121,10 @@ function NeedListItem ({
             statusMap[status] === '等待服务' && <div><span onClick={ goNeedOrderDetail }>查看详情</span></div>
           }
           {
-            statusMap[status] === '等待支付' && <div><span onClick={ jumpToPay }>立即支付</span></div>
+            statusMap[status] === '等待支付' &&
+            <div><span style={ {paddingRight: '20px'} } onClick={ goNeedOrderDetail }>查看详情</span><span
+              style={ {color: '#edf1f4'} }>|</span><span
+              style={ {paddingLeft: '20px'} } onClick={ jumpToPay }>立即支付</span></div>
           }
           {
             statusMap[status] === '支付成功' && (

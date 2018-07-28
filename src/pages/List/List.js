@@ -120,14 +120,6 @@ class List extends Component {
     }
   }
 
-  initiatePayment = (quoteId, amount) => async () => {
-    const {data: {code}} = await initiatePayment({quoteId, amount})
-    if (code === 200) {
-      message.success('发起收款成功')
-      this.getServiceOrderList()
-    }
-  }
-
   jumpToNeedDetail = (needsId, quoteId, amount, amountFinal) => () => browserHistory.push({
     pathname: '/need-detail',
     state: {needsId, quoteId, amount, amountFinal},
@@ -199,7 +191,7 @@ class List extends Component {
     }
     const {data: {code}} = await initiatePayment({needsId: this.state.initiatePaymentNeedsId, amount})
     if (code === 200) {
-      message.success('收款成功')
+      message.success('发起收款成功')
     }
     this.getServiceOrderList()
     this.handleInitiatePaymentModalCancel()
@@ -398,7 +390,6 @@ class List extends Component {
                   hasEvaluated={ hasEvaluated === 'yes' }
                   showDeleteModal={ this.showDeleteModal(quoteId) }
                   jumpToNeedDetail={ this.jumpToNeedDetail(needsId, quoteId, amount, amountFinal) }
-                  initiatePayment={ this.initiatePayment(quoteId, amount) }
                   showEvaluateModal={ this.showEvaluateModal(userId, needsId, nickname) }
                   cancelServiceOrder={ this.cancelServiceOrder(quoteId) }
                   withdrawServiceOrder={ this.withdrawServiceOrder(quoteId) }

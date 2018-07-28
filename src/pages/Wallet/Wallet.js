@@ -87,6 +87,8 @@ function Content ({
               return '收款'
             case 'CNY':
               return '提现'
+            case 'cule':
+              return '线索卡'
             default:
               return ''
           }
@@ -119,6 +121,8 @@ function Content ({
               return '待打款'
             case 'reject':
               return '提现拒绝'
+            case 'pay_fail':
+              return '支付失败'
             default:
               return ''
           }

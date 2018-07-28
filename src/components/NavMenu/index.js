@@ -226,7 +226,7 @@ class NavMenu extends Component {
   }
 
   componentDidMount () {
-    if (!(cookie.parse(document.cookie)).cityName) {
+    if (!(cookie.parse(document.cookie)).cityId) {
       this.getCityByIp()
     }
     this.getMessage()

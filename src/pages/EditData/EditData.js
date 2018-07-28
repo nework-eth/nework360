@@ -324,6 +324,9 @@ class EditData extends Component {
     this.setState({
       selectedItem: key,
     })
+    if (key === '我的技能') {
+      this.getServiceTree()
+    }
   }
 
   getSkillByUserId = async () => {
@@ -1015,7 +1018,6 @@ class EditData extends Component {
       userId: this.props.user.userId,
     }, () => {
       this.getSkillByUserId()
-      this.getServiceTree()
       this.afterUpdate()
       this.mapInit()
       Promise.all([this.getCityTree(), this.getUserById()])

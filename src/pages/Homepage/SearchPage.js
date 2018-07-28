@@ -55,10 +55,12 @@ class SearchPage extends Component {
       })
     }
   }
+
   handleFirstServiceChange = (firstService) => browserHistory.push({
     pathname: '/service-list',
     state: {selectedFirstService: firstService},
   })
+
   getNearServiceList = async () => {
     const {data: {data}} = await getListServiceByDist({
       dist: this.props.cityName,
@@ -68,12 +70,14 @@ class SearchPage extends Component {
       nearServiceList: data,
     })
   }
+
   getFirstServiceList = async () => {
     getListServiceByParam({
       dist: this.props.cityName,
       level: 'f',
     })
   }
+
   handleSearchTipClick = (serviceName, serviceTypeId) => () => {
     this.setState({
       searchValue: serviceName,
@@ -81,6 +85,7 @@ class SearchPage extends Component {
       selectedServiceTypeId: serviceTypeId,
     })
   }
+
   handleSearchButtonClick = () => {
     const searchItem = this.state.searchResult.find(({serviceTypeName}) => serviceTypeName === this.state.searchValue)
     if (searchItem) {
