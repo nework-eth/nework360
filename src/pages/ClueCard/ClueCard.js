@@ -53,6 +53,8 @@ class ClueCard extends Component {
     })
   }
 
+  goBack = () => browserHistory.go(-1)
+
   render () {
     const {
       clueCardCount,
@@ -62,7 +64,10 @@ class ClueCard extends Component {
     return (
       <div className={ `${classNameSpace}-container` }>
         <main>
-          <h2>购买线索卡</h2>
+          <div className="clue-card-title-wrapper">
+            <h2>购买线索卡</h2>
+            <Button onClick={ this.goBack }>返回</Button>
+          </div>
           <div className={ `${classNameSpace}-model-wrapper` }>
             <p>剩余 { remainClueCard } 张</p>
           </div>
@@ -82,7 +87,7 @@ class ClueCard extends Component {
             价格
           </p>
           <div className={ `${classNameSpace}-price` }>
-            ¥ { (+clueCardPrice / 100).toFixed(2).split('.')[0] }<span
+            ¥ { (+clueCardPrice * clueCardCount / 100).toFixed(2).split('.')[0] }<span
             className={ `${classNameSpace}-price-decimal` }>.{ (clueCardPrice / 100).toFixed(2).split('.')[1] }</span>
           </div>
           <Button

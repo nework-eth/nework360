@@ -229,11 +229,15 @@ class NavMenu extends Component {
     if (!(cookie.parse(document.cookie)).cityId) {
       this.getCityByIp()
     }
-    this.getMessage()
-    this.getUnreadMessage()
-    this.timer = setInterval(() => {
+    if (this.props.userId) {
       this.getMessage()
       this.getUnreadMessage()
+    }
+    this.timer = setInterval(() => {
+      if (this.props.userId) {
+        this.getMessage()
+        this.getUnreadMessage()
+      }
     }, 10000)
     setTimeout(() => {
       document.addEventListener('click', e => {

@@ -133,7 +133,7 @@ class SkillPage extends Component {
         />
       case 6:
         return <PartlyComplete
-          status={ this.props.user.checkStatus }
+          checkStatus={ this.props.user.checkStatus }
           username={ this.props.user.nickname }
         />
       case 7:
@@ -624,6 +624,7 @@ class SkillPage extends Component {
         progressPercent: 8 * 10 + 10,
       })
     }
+    console.log(this.props.user.checkStatus)
     this.getUserById()
     this.getCityTree()
     this.mapInit()

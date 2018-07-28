@@ -98,18 +98,22 @@ class Pay extends Component {
     }
   }
 
+  goBack = () => browserHistory.go(-1)
+
   render () {
     const {
       count,
       amount,
-      needsId,
       orderId,
       userBName,
       selectedChannel,
     } = this.state
     return (
       <div className="pay-container">
-        <h2>支付订单</h2>
+        <div className="pay-container-title-wrapper">
+          <h2>支付订单</h2>
+          <Button onClick={ this.goBack }>返回</Button>
+        </div>
         <div className="pay-content-container">
           <div className="list-container">
             <div className="list-row"><span className="virtual-title">订单号：</span><span>{ orderId }</span></div>

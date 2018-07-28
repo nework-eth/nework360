@@ -87,7 +87,7 @@ class Profile extends Component {
     const {data: {data, code}} = await getUserById({userId: this.state.userId})
     if (code === 200) {
       this.setState({data})
-      try {
+      if (data.latitude) {
         /* eslint-disable no-undef */
         const map = new AMap.Map('mapContainer', {
           center: [data.longitude, data.latitude],
@@ -98,8 +98,6 @@ class Profile extends Component {
           title: data.locaiton,
         })
         map.add(marker)
-      } catch (e) {
-        console.log(e)
       }
     }
   }

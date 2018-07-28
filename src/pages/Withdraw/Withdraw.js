@@ -1,7 +1,7 @@
 import { Button, Input, message } from 'antd'
 import QRCode from 'qrcode.react'
 import React, { Component } from 'react'
-import { Link } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 
 import { getVerifyStatus, getWxQR, withdraw } from '../../service/withdraw/withdraw'
 import './static/style/index.less'
@@ -89,6 +89,8 @@ class Pay extends Component {
     this.getWxQR()
   }
 
+  goBack = () => browserHistory.go(-1)
+
   render () {
     const {
       QRUrl,
@@ -109,7 +111,10 @@ class Pay extends Component {
     }
     return (
       <div className="withdraw-container">
-        <h2>申请提现</h2>
+        <div className="withdraw-container-title-wrapper">
+          <h2>申请提现</h2>
+          <Button onClick={ this.goBack }>返回</Button>
+        </div>
         <div className="virtual-title">提现金额（元）</div>
         <Input
           placeholder="请输入提现金额（元），默认保留2位小数"
