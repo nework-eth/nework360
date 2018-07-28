@@ -176,13 +176,12 @@ class Profile extends Component {
             <p className="rate">{ ave }</p>
             <p className="evaluation">({ count }条评价)</p>
           </div>
-          { description && <p className="introduce" style={ showAllIntroduce ? {height: 'auto'} : {} }>
+          { description && <p className="introduce">
             { description }
           </p> }
-          { description && !showAllIntroduce && <a onClick={ this.showAllIntroduce }>查看更多介绍</a> }
           <div className="information-container">
-            <div><i className="iconfont icon-hire"/>{ isPartyB ? '被' : '已' }雇佣 { isPartyB ? hireTimes : bossTimes } 次
-            </div>
+            <div><i className="iconfont icon-hire"/>已雇佣 { bossTimes } 次</div>
+            { isPartyB && <div><i className="iconfont icon-hire"/>被雇佣 { hireTimes } 次</div> }
             { checkStatus === 2 && <div><i className="iconfont icon-identified"/>实名认证</div> }
             <div><i className="iconfont icon-joined-time"/>已加入{ getRelativeTime(createTime) }</div>
             { phoneNumber && <div><i className="iconfont icon-identified-phone"/>手机认证</div> }
