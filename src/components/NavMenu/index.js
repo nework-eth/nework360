@@ -172,7 +172,7 @@ class NavMenu extends Component {
       return
     }
     if (action.startsWith('non')) {
-      browserHistory.push({pathname: '/profile'})
+      browserHistory.push({pathname: '/profile', state: {userId: this.props.userId}})
       await updateMessageStatus({id, status: -1})
       this.getMessage()
       return

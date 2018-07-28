@@ -149,8 +149,6 @@ class Profile extends Component {
         phoneNumber,
         description,
       },
-      skillList,
-      showAllIntroduce,
       secondarySkillList,
     } = this.state
     return (

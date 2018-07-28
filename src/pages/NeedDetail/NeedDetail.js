@@ -71,11 +71,12 @@ class NeedDetail extends Component {
       return
     }
     const res = await getUserAccount({userId: this.props.user.userId})
+    console.log(res)
     if (res.data.code !== 200) {
       return
     }
-    if (res.data.cule < 5) {
-      return this.showTipModal(res.data.cule)
+    if (res.data.data.cule < 5) {
+      return this.showTipModal(res.data.data.cule)
     }
     const {data: {code}} = await createQuote({needsId, amount: amount * 100, instruction})
     if (code === 200) {
