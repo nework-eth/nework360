@@ -94,10 +94,12 @@ class NavMenu extends Component {
       this.props.setCityName(data.city)
       this.props.setCityId(data.cityId)
       document.cookie = `cityId=${data.cityId}`
+      document.cookie = `cityName=${data.city}`
     } else {
       this.props.setCityName('北京')
       this.props.setCityId(110)
       document.cookie = `cityId=${data.cityId}`
+      document.cookie = `cityName=${data.city}`
     }
   }
   getMessage = async () => {
