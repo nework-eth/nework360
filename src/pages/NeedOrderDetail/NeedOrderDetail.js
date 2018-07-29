@@ -27,7 +27,7 @@ const statusMap = {
 }
 
 const generateButtonStatus = (orderStatus, selectedQuoteId, quotedId, quoteStatus, hasEvaluated) => {
-  if (quoteStatus === 2) {
+  if (quoteStatus === 2 || quoteStatus === 3 || quoteStatus === 4 || quoteStatus === 0) {
     return 'disabled'
   }
   if (statusMap[orderStatus] === '等待选择服务') {

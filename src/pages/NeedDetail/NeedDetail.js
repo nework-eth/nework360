@@ -38,14 +38,15 @@ class NeedDetail extends Component {
     if (code === 200) {
       this.setState({
         score: data.user.score.ave,
+        amount: data.amount,
         cancel: data.cancel,
         userId: data.user.userId,
         nickName: data.user.nickName,
+        hasQuoted: data.quote === 'yes',
         avatarSrc: data.user.photo,
         scoreCount: data.user.score.count,
         serviceName: data.serviceName,
         needDetailItemList: data.needsItem.pages,
-        hasQuoted: data.quote === 'yes',
       })
     }
   }
@@ -71,17 +72,16 @@ class NeedDetail extends Component {
       return
     }
     const res = await getUserAccount({userId: this.props.user.userId})
-    console.log(res)
     if (res.data.code !== 200) {
       return
     }
     if (res.data.data.cule < 5) {
       return this.showTipModal(res.data.data.cule)
     }
-    const {data: {code}} = await createQuote({needsId, amount: amount * 100, instruction})
+    const {data: {code, quoteId}} = await createQuote({needsId, amount: amount * 100, instruction})
     if (code === 200) {
       message.success('报价成功')
-      this.props.location.state = Object.assign({}, this.props.location.state, {amount: amount * 100})
+      this.props.location.state = Object.assign({}, this.props.location.state, {amount: amount * 100, quoteId})
       this.getNeedDetail()
       this.hideQuoteModal()
     }
@@ -182,9 +182,9 @@ class NeedDetail extends Component {
           handleCancel={ this.handleTipModalCancel }
         />
         { +userId !== +this.props.user.userId && <footer>
-          <div>{ hasQuoted && this.props.location.state && this.props.location.state.amount && <div>
+          <div>{ hasQuoted && <div>
             <p
-              className="quote-amount">¥ { ((this.props.location.state.amountFinal && this.props.location.state.amountFinal / 100) || this.props.location.state.amount / 100).toFixed(2) }</p>
+              className="quote-amount">¥ { ((this.props.location.state.amountFinal && this.props.location.state.amountFinal / 100) || this.state.amount / 100).toFixed(2) }</p>
             <p className="quote-amount-tip">您的报价</p>
           </div> }</div>
           {
