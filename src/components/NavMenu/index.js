@@ -93,9 +93,11 @@ class NavMenu extends Component {
     if (data !== '未知城市') {
       this.props.setCityName(data.city)
       this.props.setCityId(data.cityId)
+      document.cookie = `cityId=${data.cityId}`
     } else {
       this.props.setCityName('北京')
       this.props.setCityId(110)
+      document.cookie = `cityId=${data.cityId}`
     }
   }
   getMessage = async () => {
