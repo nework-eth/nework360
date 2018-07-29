@@ -138,7 +138,7 @@ class SearchPage extends Component {
       searchTipVisible: false,
       selectedServiceTypeId: '',
     }
-    this.getSearchResult = debounce(this.getSearchResult, 800)
+    this.getSearchResult = debounce(this.getSearchResult, 500)
   }
 
   componentDidMount () {

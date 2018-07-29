@@ -10,11 +10,10 @@ import { evaluate } from '../../service/list'
 import {
   cancelOrder,
   getNeedOrderDetail,
-  getPayInfo,
   getUserOnlineStatus,
   selectPartyB,
 } from '../../service/needOrderDetail/index'
-import { getRate } from '../../utils'
+import { getRate, getRelativeTime } from '../../utils'
 import { view as NeedOrderDetailListItem } from './NeedOrderDetailLIstItem'
 import './static/style/index.less'
 
@@ -65,6 +64,7 @@ class NeedOrderDetail extends Component {
     timerId: '',
     needsId: this.props.location.state.needsId,
     userIdArr: [],
+    amountFinal: '',
     orderStatus: '',
     hasEvaluated: '',
     IMModalAvatar: '',
@@ -90,6 +90,7 @@ class NeedOrderDetail extends Component {
         title: data.orders[0].serviceName,
         quotes: data.orders[0].quotes,
         userIdArr: data.orders[0].quotes.map(({user: {userId}}) => userId),
+        amountFinal: data.orders[0].amountFinal,
         orderStatus: data.orders[0].status,
         hasEvaluated: data.orders[0].evaluate === 'yes',
         selectedQuoteId: data.orders[0].quoteId,
@@ -111,18 +112,6 @@ class NeedOrderDetail extends Component {
     if (code === 200) {
       message.success('取消订单成功')
       this.getNeedOrderDetail()
-    }
-  }
-
-  pay = async () => {
-    const {data: {data, code}} = await getPayInfo({channel: 'wx_pub_qr', amount: 200, needsId: '222222'})
-    if (code === 200) {
-      /* eslint-disable no-undef */
-      pingpp.createPayment(data, function (result, err) {
-        if (err) {
-          console.log('error', err)
-        }
-      })
     }
   }
 
@@ -229,6 +218,7 @@ class NeedOrderDetail extends Component {
       userB,
       quotes,
       needsId,
+      amountFinal,
       orderStatus,
       hasEvaluated,
       IMModalAvatar,
@@ -278,8 +268,9 @@ class NeedOrderDetail extends Component {
                 jumpToPay={ this.jumpToPay({amount, needsId, userBName: nickName}) }
                 avatarSrc={ photo }
                 hireTimes={ hireTimes }
+                amountFinal={ amountFinal / 100 }
                 scoreCount={ score ? score.count : 0 }
-                joinedTime={ creatTime }
+                joinedTime={ getRelativeTime(creatTime) }
                 badgeStatus={ badgeStatusArr[index] }
                 showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickName, photo, this.state.title, instruction) }
                 cancelOrder={ this.cancelOrder }

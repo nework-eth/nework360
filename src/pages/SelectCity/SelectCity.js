@@ -42,7 +42,7 @@ class SelectCity extends Component {
   constructor (props) {
     super(props)
     this.lastFetchId = 0
-    this.getCityBySearch = debounce(this.getCityBySearch, 800)
+    this.getCityBySearch = debounce(this.getCityBySearch, 500)
   }
 
   state = {

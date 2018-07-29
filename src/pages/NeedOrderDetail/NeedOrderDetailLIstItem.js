@@ -11,6 +11,7 @@ function NeedOrderDetailLIstItem ({
                                     avatarSrc,
                                     scoreCount,
                                     joinedTime,
+                                    amountFinal,
                                     badgeStatus,
                                     showIMModal,
                                     cancelOrder,
@@ -31,7 +32,8 @@ function NeedOrderDetailLIstItem ({
           <span className="online-communicate" onClick={ showIMModal }><i
             className="iconfont icon-message"/> 在线沟通</span>
         </div>
-        <div className="amount">{ `¥ ${amount}` }</div>
+        <div
+          className="amount">{ `¥ ${buttonStatus !== 'disabled' && buttonStatus !== 'select' ? amountFinal : amount}` }</div>
       </div>
       <h3>
         { nickname }

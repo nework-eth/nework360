@@ -519,7 +519,7 @@ class SkillPage extends Component {
 
   constructor (props) {
     super(props)
-    this.getLocationOptions = debounce(this.getLocationOptions, 800)
+    this.getLocationOptions = debounce(this.getLocationOptions, 500)
   }
 
   handleUpload = (type) => (url) => {
