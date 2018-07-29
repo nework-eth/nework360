@@ -104,6 +104,7 @@ class NavMenu extends Component {
     const {data: {data, code, pageinfo}} = await getMessage({
       userId: this.props.user.userId,
       limit: this.state.messageLimit,
+      status: -1,
     })
     if (code === 200) {
       this.setState({
@@ -377,7 +378,7 @@ class NavMenu extends Component {
                 }
                 onClick={ this.changeMessageListType('all') }
               >
-                <span>全部消息</span>
+                <span>已读消息</span>
               </div>
             </div>
             {
