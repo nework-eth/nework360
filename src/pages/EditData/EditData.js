@@ -324,9 +324,6 @@ class EditData extends Component {
     this.setState({
       selectedItem: key,
     })
-    if (key === '我的技能') {
-      this.getServiceTree()
-    }
   }
 
   getSkillByUserId = async () => {
@@ -384,6 +381,7 @@ class EditData extends Component {
           country: value,
           province: Object.keys(this.state.tree[value])[0],
           city: cityOptions[0],
+          location: '',
         },
       },
       provinceOptions,
@@ -396,7 +394,7 @@ class EditData extends Component {
     const cityData = this.state.tree[this.state.data.country][value]
     const cityOptions = cityData.map(item => item.chinese)
     this.setState({
-      data: {...this.state.data, ...{province: value, city: cityOptions[0]}},
+      data: {...this.state.data, ...{province: value, city: cityOptions[0]}, location: ''},
       cityData,
       cityOptions,
     })
@@ -406,7 +404,7 @@ class EditData extends Component {
     this.setState({
       data: {
         ...this.state.data,
-        ...{city: value},
+        ...{city: value, location: ''},
       },
     })
   }
@@ -739,8 +737,8 @@ class EditData extends Component {
     const {data: {data, code}} = await getUserById({userId: this.state.userId})
     if (code === 200) {
       this.props.setUser(data)
-      this.getUserById()
     }
+    this.getServiceTree()
   }
 
   jumpToAuth = () => {
@@ -1017,9 +1015,9 @@ class EditData extends Component {
     this.setState({
       userId: this.props.user.userId,
     }, () => {
-      this.getSkillByUserId()
-      this.afterUpdate()
       this.mapInit()
+      this.afterUpdate()
+      this.getSkillByUserId()
       Promise.all([this.getCityTree(), this.getUserById()])
              .then(() => {
                  if (this.state.data && this.state.data.country) {
