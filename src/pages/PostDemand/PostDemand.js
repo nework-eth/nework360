@@ -287,6 +287,13 @@ class PostDemand extends Component {
     })
   }
 
+  handleRadioChange = ({pageNum, index}) => ({target: {value}}) => {
+    this.setState(({data}) => {
+      data[pageNum][index].resultValue = [value]
+      return {data}
+    })
+  }
+
   handleLocationChange = ({pageNum, index}) => (value) => {
     this.getLocationOptions(value)
     this.setState(({data}) => {
@@ -423,6 +430,7 @@ class PostDemand extends Component {
                         handleChange={ this.handleChange({pageNum: pageIndex, index: item.index}) }
                         locationOptions={ locationOptions }
                         handleDateChange={ this.handleDateChange({pageNum: pageIndex, index: item.index}) }
+                        handleRadioChange={ this.handleRadioChange({pageNum: pageIndex, index: item.index}) }
                         handleLocationChange={ this.handleLocationChange({pageNum: pageIndex, index: item.index}) }
                         handleSpecAddressChange={ this.handleSpecAddressChange({pageNum: pageIndex, index: item.index}) }
                       />)

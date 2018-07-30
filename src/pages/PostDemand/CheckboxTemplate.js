@@ -13,7 +13,7 @@ function CheckboxTemplates ({
   return (
     <div className="template-content">
       <h2>{ title }</h2>
-      { isMultiChoice && <p className="multi-tip">可选择多项</p> }
+      { !!isMultiChoice && <p className="multi-tip">可选择多项</p> }
       <div className="form-item-wrapper">
         <Group
           value={ value }
