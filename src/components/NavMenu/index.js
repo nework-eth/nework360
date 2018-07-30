@@ -423,6 +423,12 @@ class NavMenu extends Component {
               className="iconfont icon-load-more"/>加载更多</span>
             </div>
           }
+          {
+            (this.selectedMessageList()).length === 0 && <div className="empty-message-panel">
+              <img src="./images/notice-null.png" alt="无消息" width="100" height="100"/>
+              <p>暂无消息</p>
+            </div>
+          }
         </div> }
         { IMModalVisible && <IMModal
           userA={ this.props.user.userId }

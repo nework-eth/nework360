@@ -428,6 +428,19 @@ class List extends Component {
                   handleChangeDemand={ this.handleChangeDemand(needsId, serviceId) }
                 />)
           }
+          {
+            listType === 'service' && this.props.user.isPartyB && serviceOrderList.length === 0 &&
+            <div className="empty-list">
+              <img src="./images/list-null.png" alt="暂无列表" width="100" height="100"/>
+              <p>暂无订单</p>
+            </div>
+          }
+          {
+            listType === 'need' && needOrderList.length === 0 && <div className="empty-list">
+              <img src="./images/list-null.png" alt="暂无列表" width="100" height="100"/>
+              <p>暂无订单</p>
+            </div>
+          }
         </div>
         { this.loadMoreVisible() && <div className="list-page-load-more">
           <i className="iconfont icon-load-more" onClick={ this.loadMore }/>
