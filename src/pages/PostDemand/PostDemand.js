@@ -116,6 +116,7 @@ class PostDemand extends Component {
     templateId: '',
     serviceName: '',
     cityOptions: [],
+    focusedInput: moment(),
     progressStep: 0,
     selectedCity: undefined,
     countryOptions: [],

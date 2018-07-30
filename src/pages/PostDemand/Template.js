@@ -14,6 +14,8 @@ function Template ({
                      options,
                      addMoreDay,
                      handleChange,
+                     focusedInput,
+                     onFocusChange,
                      isMultiChoice,
                      locationOptions,
                      handleDateChange,

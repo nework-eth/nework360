@@ -185,9 +185,9 @@ class NeedOrderDetail extends Component {
     this.handleEvaluateModalCancel()
   }
 
-  jumpToPay = ({amount, needsId, userBName}) => () => browserHistory.push({
+  jumpToPay = ({amount, amountFinal, needsId, userBName}) => () => browserHistory.push({
     pathname: '/pay',
-    state: {amount, needsId, userBName},
+    state: {amount: amountFinal ? amountFinal : amount, needsId, userBName},
   })
   polling = async () => {
     if (this.state.timerId) {
@@ -265,7 +265,7 @@ class NeedOrderDetail extends Component {
                 score={ getRate(score ? score.ave : 0) }
                 amount={ amount / 100 }
                 nickname={ nickName }
-                jumpToPay={ this.jumpToPay({amount, needsId, userBName: nickName}) }
+                jumpToPay={ this.jumpToPay({amount, amountFinal, needsId, userBName: nickName}) }
                 avatarSrc={ photo }
                 hireTimes={ hireTimes }
                 amountFinal={ amountFinal / 100 }
