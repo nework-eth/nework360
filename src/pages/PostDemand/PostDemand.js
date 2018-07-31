@@ -116,7 +116,7 @@ class PostDemand extends Component {
     templateId: '',
     serviceName: '',
     cityOptions: [],
-    focusedInput: moment(),
+    focusedInput: 'startDate',
     progressStep: 0,
     selectedCity: undefined,
     countryOptions: [],
@@ -288,6 +288,18 @@ class PostDemand extends Component {
     })
   }
 
+  handleDateRangeChange = ({pageNum, index}) => (startDate, endDate) => {
+    this.setState(({data}) => {
+      data[pageNum][index].resultValue[0] = startDate
+      data[pageNum][index].resultValue[1] = endDate
+      return {data}
+    })
+  }
+
+  handleFocusedInputChange = (focusedInput) => {
+    this.setState({focusedInput: !focusedInput ? 'startDate' : focusedInput})
+  }
+
   handleRadioChange = ({pageNum, index}) => ({target: {value}}) => {
     this.setState(({data}) => {
       data[pageNum][index].resultValue = [value]
@@ -398,6 +410,7 @@ class PostDemand extends Component {
       location,
       pageIndex,
       serviceName,
+      focusedInput,
       locationOptions,
       progressPercent,
       showMatchResult,
@@ -428,12 +441,15 @@ class PostDemand extends Component {
                         key={ item.id }
                         value={ data[pageIndex][item.index].resultValue }
                         addMoreDay={ this.addMoreDay({pageNum: pageIndex, index: item.index}) }
+                        focusedInput={ focusedInput }
                         handleChange={ this.handleChange({pageNum: pageIndex, index: item.index}) }
                         locationOptions={ locationOptions }
                         handleDateChange={ this.handleDateChange({pageNum: pageIndex, index: item.index}) }
                         handleRadioChange={ this.handleRadioChange({pageNum: pageIndex, index: item.index}) }
                         handleLocationChange={ this.handleLocationChange({pageNum: pageIndex, index: item.index}) }
+                        handleDateRangeChange={ this.handleDateRangeChange({pageNum: pageIndex, index: item.index}) }
                         handleSpecAddressChange={ this.handleSpecAddressChange({pageNum: pageIndex, index: item.index}) }
+                        handleFocusedInputChange={ this.handleFocusedInputChange }
                       />)
                   }
                 </div>

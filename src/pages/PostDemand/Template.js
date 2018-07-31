@@ -21,7 +21,9 @@ function Template ({
                      handleDateChange,
                      handleRadioChange,
                      handleLocationChange,
+                     handleDateRangeChange,
                      handleSpecAddressChange,
+                     handleFocusedInputChange,
                    }) {
   switch (type) {
     case 'input':
@@ -68,7 +70,10 @@ function Template ({
           title={ title }
           value={ value }
           addMoreDay={ addMoreDay }
+          focusedInput={ focusedInput }
           handleDateChange={ handleDateChange }
+          handleDateRangeChange={ handleDateRangeChange }
+          handleFocusedInputChange={ handleFocusedInputChange }
         />
       )
     default:
