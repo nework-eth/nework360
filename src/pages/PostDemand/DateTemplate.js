@@ -1,8 +1,8 @@
+import moment from 'moment'
 import React from 'react'
 import { DayPickerRangeController } from 'react-dates'
 import 'react-dates/initialize'
 import 'react-dates/lib/css/_datepicker.css'
-
 // function DateTemplate ({
 //                           title,
 //                           value,
@@ -51,6 +51,7 @@ function DateTemplate ({
           onDatesChange={ ({startDate, endDate}) => handleDateRangeChange(startDate, endDate) }
           onFocusChange={ focusedInput => handleFocusedInputChange(focusedInput) }
           numberOfMonths={ 2 }
+          isDayBlocked={ (value) => !moment().isBefore(value) }
           hideKeyboardShortcutsPanel
         />
       </div>
