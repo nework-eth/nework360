@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { QuoteModal } from '../../components/QuoteModal/QuoteModal'
 import { TipModal } from '../../components/TipModal/TipModal'
+import { getClueCount } from '../../service/clueCard'
 import { createQuote, getNeedDetail, withdrawQuote } from '../../service/needDetail/index'
 import { getUserAccount } from '../../service/wallet'
 import { getRate } from '../../utils'
@@ -24,7 +25,9 @@ class NeedDetail extends Component {
     userId: '',
     needsId: '',
     nickName: '',
+    clueCount: 0,
     hasQuoted: true,
+    serviceId: '',
     avatarSrc: '',
     scoreCount: '',
     serviceName: '',
@@ -43,12 +46,14 @@ class NeedDetail extends Component {
         userId: data.user.userId,
         nickName: data.user.nickName,
         hasQuoted: data.quote === 'yes',
+        serviceId: data.serviceId,
         avatarSrc: data.user.photo,
         scoreCount: data.user.score.count,
         serviceName: data.serviceName,
         needDetailItemList: data.needsItem.pages,
       })
     }
+    this.getClueCount()
   }
   showQuoteModal = () => this.setState({
     quoteModalVisible: true,
@@ -112,6 +117,15 @@ class NeedDetail extends Component {
     })
   }
 
+  getClueCount = async () => {
+    const {data: {code, culeCount}} = await getClueCount({serviceId: this.state.serviceId})
+    if (code === 200) {
+      this.setState({
+        clueCount: culeCount,
+      })
+    }
+  }
+
   componentDidMount () {
     this.setState({
       needsId: this.props.location.state.needsId,
@@ -127,8 +141,10 @@ class NeedDetail extends Component {
       userId,
       needsId,
       nickName,
+      serviceId,
       hasQuoted,
       avatarSrc,
+      clueCount,
       scoreCount,
       serviceName,
       clueCardCount,
@@ -172,11 +188,13 @@ class NeedDetail extends Component {
         <QuoteModal
           visible={ quoteModalVisible }
           needsId={ needsId }
+          clueCount={ clueCount }
           handleSubmit={ this.handleQuoteModalSubmit(needsId) }
           handleCancel={ this.hideQuoteModal }
         />
         <TipModal
           count={ clueCardCount }
+          clueCount={ clueCount }
           visible={ tipModalVisible }
           handleConfirm={ this.handleConfirm }
           handleCancel={ this.handleTipModalCancel }

@@ -6,7 +6,7 @@ const {TextArea} = Input
 class QuoteModal extends Component {
   state = {
     value: '',
-    clueNumber: 0,
+    clueCount: 0,
     textAreaValue: '',
   }
 
@@ -21,6 +21,7 @@ class QuoteModal extends Component {
   render () {
     const {
       visible,
+      clueCount,
       handleCancel,
       handleSubmit,
     } = this.props
@@ -76,7 +77,7 @@ class QuoteModal extends Component {
             onChange={ this.handleTextAreaValueChange }
             placeholder="请输入"
           />
-          <p>本次报价需消耗 <span style={ {color: '#008bf7'} }>5</span> 张线索卡，提交报价后将自动扣除</p>
+          <p>本次报价需消耗 <span style={ {color: '#008bf7'} }>{ clueCount }</span> 张线索卡，提交报价后将自动扣除</p>
           <div style={ {marginTop: '20px'} }>
             <Button
               type="primary"
@@ -102,10 +103,6 @@ class QuoteModal extends Component {
         </div>
       </Modal>
     )
-  }
-
-  componentDidMount () {
-
   }
 
 }
