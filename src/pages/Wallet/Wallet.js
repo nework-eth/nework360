@@ -71,7 +71,7 @@ function Content ({
         key: 'amount',
         width: 130,
         render (value) {
-          return parseInt(value, 10) / 100
+          return `${parseInt(value, 10) / 100}元`
         },
       },
       {
