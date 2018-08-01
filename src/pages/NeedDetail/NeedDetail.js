@@ -52,6 +52,11 @@ class NeedDetail extends Component {
         serviceName: data.serviceName,
         needDetailItemList: data.needsItem.pages,
       })
+      if (data.quoteId) {
+        this.setState({
+          quoteId: data.quoteId,
+        })
+      }
     }
     this.getClueCount()
   }
@@ -98,7 +103,7 @@ class NeedDetail extends Component {
     })
   }
   withdrawQuote = async () => {
-    const {data: {code}} = await withdrawQuote({quoteId: this.props.location.state.quoteId})
+    const {data: {code}} = await withdrawQuote({quoteId: this.props.location.state.quoteId || this.state.quoteId})
     if (code === 200) {
       message.success('取消报价成功')
       this.getNeedDetail()
