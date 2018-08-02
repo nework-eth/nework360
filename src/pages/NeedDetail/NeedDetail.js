@@ -146,7 +146,6 @@ class NeedDetail extends Component {
       userId,
       needsId,
       nickName,
-      serviceId,
       hasQuoted,
       avatarSrc,
       clueCount,
