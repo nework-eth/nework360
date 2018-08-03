@@ -414,7 +414,25 @@ class EditData extends Component {
       message.error('姓名不能为空')
       return
     }
-    this.geoCoder([async () => {
+    if (this.props.user.isPartyB) {
+      this.geoCoder([async () => {
+        const {data: {code}} = await updateUser({
+          userId: this.props.user.userId,
+          nickname: this.state.data.nickname,
+          district: this.state.data.city ? (this.state.cityData.find(item => item.chinese === this.state.data.city).districtId) : '',
+          serviceTime: this.state.data.serviceTime.join(','),
+          description: this.state.data.description,
+          location: this.state.data.location,
+          specAddr: this.state.data.specAddr,
+          latitude: this.state.data.latitude,
+          longitude: this.state.data.longitude,
+        })
+        if (code === 200) {
+          message.success('更新资料成功')
+          this.afterUpdate()
+        }
+      }])
+    } else {
       const {data: {code}} = await updateUser({
         userId: this.props.user.userId,
         nickname: this.state.data.nickname,
@@ -430,7 +448,7 @@ class EditData extends Component {
         message.success('更新资料成功')
         this.afterUpdate()
       }
-    }])
+    }
   }
 
   handleShowAddSkillModal = () => {
