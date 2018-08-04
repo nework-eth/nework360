@@ -119,6 +119,7 @@ class PostDemand extends Component {
     focusedInput: 'startDate',
     progressStep: 0,
     selectedCity: undefined,
+    hasSetLocation: false,
     countryOptions: [],
     provinceOptions: [],
     specAddrTooLong: false,
@@ -363,7 +364,7 @@ class PostDemand extends Component {
     })
   }
   handleSubmit = () => {
-    this.geoCoder([this.updateUserPosition, this.goNextPage])
+    this.geoCoder([this.setLocaion, this.goNextPage])
   }
   updateUserPosition = async () => {
     const {data: {code}} = await updateUser({
@@ -403,6 +404,12 @@ class PostDemand extends Component {
     })
   }
 
+  setLocaion = () => {
+    this.setState({
+      hasSetLocation: true,
+    })
+  }
+
   render () {
     const {
       data,
@@ -411,6 +418,7 @@ class PostDemand extends Component {
       pageIndex,
       serviceName,
       focusedInput,
+      hasSetLocation,
       locationOptions,
       progressPercent,
       showMatchResult,
@@ -418,7 +426,7 @@ class PostDemand extends Component {
     } = this.state
     return (<div className="post-demand-container">
       {
-        this.props.user.latitude
+        hasSetLocation
           ? <div className="content-wrapper">
             <main>
               <h2 style={ {margin: '50px 0'} }>
