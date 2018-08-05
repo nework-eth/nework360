@@ -52,6 +52,7 @@ class WechatPay extends Component {
   handleGoBack = () => {
     browserHistory.go(-1)
   }
+
   continueToPay = () => {
     this.setState({
       result: '',
@@ -73,7 +74,7 @@ class WechatPay extends Component {
       return (
         <div className="wechat-pay-result">
           <img src="/images/pay-error.png" alt="支付失败" width='50' height='50'/>
-          <h2>支付成功</h2>
+          <h2>支付失败</h2>
           <p>返回 <Link to='/list'>我的订单</Link> 或 <span className="virtual-link" onClick={ this.continueToPay }>继续支付</span>
           </p>
         </div>

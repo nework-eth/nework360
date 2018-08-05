@@ -139,6 +139,16 @@ const getPay = async (nextState, callback) => callback(
   (await import(/* webpackChunkName: "Pay" */'./pages/Pay/Pay.js')).page,
 )
 
+const getPaySuccess = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "PaySuccess" */'./pages/Pay/PaySuccess.js')).page,
+)
+
+const getPayFail = async (nextState, callback) => callback(
+  null,
+  (await import(/* webpackChunkName: "PayFail" */'./pages/Pay/PayFail.js')).page,
+)
+
 const getWithdraw = async (nextState, callback) => callback(
   null,
   (await import(/* webpackChunkName: "Withdraw" */'./pages/Withdraw/Withdraw.js')).page,
@@ -221,6 +231,8 @@ const Routes = () => (
       <Route path="/need-detail" getComponent={ getNeedDetail }/>
       <Route path="/clue-card" getComponent={ getClueCard }/>
       <Route path="/pay" getComponent={ getPay }/>
+      <Route path="/pay-fail" getComponent={ getPayFail }/>
+      <Route path="/pay-success" getComponent={ getPaySuccess }/>
       <Route path="/withdraw" getComponent={ getWithdraw }/>
       <Route path="/wechat-pay" getComponent={ getWechatPay }/>
     </Route>

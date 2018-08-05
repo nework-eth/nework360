@@ -32,7 +32,9 @@ class Pay extends Component {
         })
         if (code === 200) {
           message.success('购买线索卡成功')
-          browserHistory.push('/wallet')
+          browserHistory.push('/pay-success')
+        } else {
+          browserHistory.push('/pay-fail')
         }
       } else {
         const {data: {data, code}} = await buyClueCard({
