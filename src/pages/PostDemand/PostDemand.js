@@ -540,7 +540,7 @@ class PostDemand extends Component {
               </div>
             </main>
             <div className="footer">
-              <Button type="primary" onClick={ this.handleSubmit }>下一步</Button>
+              <Button type="primary" onClick={ this.handleSubmit } disabled={ !location }>下一步</Button>
             </div>
           </div>
       }
