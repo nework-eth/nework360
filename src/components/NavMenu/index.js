@@ -166,11 +166,11 @@ class NavMenu extends Component {
     await this.ignoreMessage(id)()
     if (action.startsWith('needs')) {
       if (browserHistory.getCurrentLocation().pathname === '/need-detail') {
-        browserHistory.push('/')
         browserHistory.push({
           pathname: '/need-detail',
           state: {needsId: action.split('--')[1]},
         })
+        this.forceUpdate()
       } else {
         browserHistory.push({pathname: '/need-detail', state: {needsId: action.split('--')[1]}})
       }

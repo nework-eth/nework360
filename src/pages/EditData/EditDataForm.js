@@ -345,6 +345,7 @@ function EditDataForm ({
             </Upload>
             <Button
               onClick={ handleSave('avatar') }
+              type="primary"
             >
               保存
             </Button>
