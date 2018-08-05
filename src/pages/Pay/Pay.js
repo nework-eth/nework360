@@ -66,7 +66,9 @@ class Pay extends Component {
         })
         if (code === 200) {
           message.success('支付成功')
-          browserHistory.push('/list')
+          browserHistory.push('/pay-success')
+        } else {
+          browserHistory.push('/pay-fail')
         }
       } else {
         const {data: {data, code}} = await getPayInfo({
