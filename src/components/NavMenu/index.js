@@ -165,7 +165,15 @@ class NavMenu extends Component {
   seeDetails = (action, id) => async () => {
     await this.ignoreMessage(id)()
     if (action.startsWith('needs')) {
-      browserHistory.push({pathname: '/need-detail', state: {needsId: action.split('--')[1]}})
+      if (browserHistory.getCurrentLocation().pathname === '/need-detail') {
+        browserHistory.push('/')
+        browserHistory.push({
+          pathname: '/need-detail',
+          state: {needsId: action.split('--')[1]},
+        })
+      } else {
+        browserHistory.push({pathname: '/need-detail', state: {needsId: action.split('--')[1]}})
+      }
       await updateMessageStatus({id, status: -1})
       this.getMessage()
       return
