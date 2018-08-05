@@ -6,6 +6,7 @@ function Footer ({
                    pageData,
                    pageIndex,
                    goLastPage,
+                   createDemandDisable,
                    handleGoNextButtonClick,
                    handleCompleteButtonClick,
                  }) {
@@ -29,7 +30,7 @@ function Footer ({
             return !item.resultValue.length
           }
           return !item.resultValue
-        }) }
+        }) || createDemandDisable }
         onClick={ handleGoNextButtonClick }
       >
         下一步

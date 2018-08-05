@@ -129,6 +129,7 @@ class PostDemand extends Component {
     showMatchResult: false,
     matchResultList: [],
     selectedProvince: undefined,
+    createDemandDisable: false,
   }
 
   getTemplate = async () => {
@@ -238,6 +239,7 @@ class PostDemand extends Component {
         message.success('更新需求成功')
         this.setState({
           progressPercent: 100,
+          createDemandDisable: false,
         })
       }
     } else {
@@ -279,6 +281,7 @@ class PostDemand extends Component {
       return
     }
     this.createDemand()
+    this.setState({createDemandDisable: true})
   }
 
   handleChange = ({pageNum, index}) => (value) => {
@@ -370,7 +373,7 @@ class PostDemand extends Component {
     })
   }
   handleSubmit = () => {
-    this.geoCoder([this.setLocaion, this.goNextPage])
+    this.geoCoder([this.setLocation, this.goNextPage])
   }
   updateUserPosition = async () => {
     const {data: {code}} = await updateUser({
@@ -410,7 +413,7 @@ class PostDemand extends Component {
     })
   }
 
-  setLocaion = () => {
+  setLocation = () => {
     this.setState({
       hasSetLocation: true,
     })
@@ -429,6 +432,7 @@ class PostDemand extends Component {
       progressPercent,
       showMatchResult,
       matchResultList,
+      createDemandDisable,
     } = this.state
     return (<div className="post-demand-container">
       {
@@ -489,6 +493,7 @@ class PostDemand extends Component {
               pageData={ data[pageIndex] }
               pageIndex={ pageIndex }
               goLastPage={ this.goLastPage }
+              createDemandDisable={ createDemandDisable }
               handleGoNextButtonClick={ this.handleGoNextButtonClick }
               handleCompleteButtonClick={ this.handleCompleteButtonClick }
             />
