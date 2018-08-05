@@ -175,8 +175,10 @@ class PostDemand extends Component {
   getMatchResult = async (needsId) => {
     const {data: {code, data}} = await getMatchResult({
       userId: this.props.user.userId,
-      serviceId: this.state.serviceId,
       needsId: this.props.location.state.needsId || needsId,
+      latitude: this.state.latitude,
+      longitude: this.state.longitude,
+      serviceId: this.state.serviceId,
     })
     if (code === 200) {
       this.setState({
@@ -225,8 +227,10 @@ class PostDemand extends Component {
         },
         {
           needsId: this.props.location.state.needsId,
-          districtId: this.props.position.cityId,
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
           serviceId: this.state.serviceId,
+          districtId: this.props.position.cityId,
           templateId: this.state.templateId,
         },
       )
