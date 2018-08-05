@@ -246,6 +246,8 @@ class PostDemand extends Component {
           pages: filterNullDate(this.state.data),
         },
         {
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
           districtId: this.props.position.cityId,
           serviceId: this.state.serviceId,
           templateId: this.state.templateId,
