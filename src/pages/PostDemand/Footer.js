@@ -27,7 +27,7 @@ function Footer ({
         type="primary"
         disabled={ pageData.filter(item => item.isNessary).some(item => {
           if (Array.isArray(item.resultValue)) {
-            return !item.resultValue.length
+            return !item.resultValue.filter(item => item !== null).length
           }
           return !item.resultValue
         }) || createDemandDisable }
