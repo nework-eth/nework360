@@ -128,6 +128,7 @@ class RequirementHomePage extends Component {
             </div>
           </div>
           <div className="service-person-container">
+            { !this.state.totalCount && <h2>当前区域服务商正在招募中...</h2> }
             { !!this.state.totalCount && <h2>您附近有 { this.state.totalCount } 位{ serviceName }的服务人员</h2> }
             { !!this.state.totalCount && <p>他们离您的当前位置较近，可迅速到达服务地点，响应您的诉求...</p> }
             <div className="service-person-card-wrapper">
