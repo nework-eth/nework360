@@ -206,7 +206,7 @@ class NeedDetail extends Component {
         { +userId !== +this.props.user.userId && <footer>
           <div>{ hasQuoted && <div>
             <p
-              className="quote-amount">¥ { ((this.props.location.state.amountFinal && this.props.location.state.amountFinal / 100) || this.state.amount / 100).toFixed(2) }</p>
+              className="quote-amount">¥ { (this.state.amount / 100).toFixed(2) }</p>
             <p className="quote-amount-tip">您的报价</p>
           </div> }</div>
           {
