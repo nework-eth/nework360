@@ -472,10 +472,14 @@ class PostDemand extends Component {
                   }
                 </div>
                 : <div className="match-result-container">
-                  <h2>已为您匹配到{ matchResultList.length }位{ serviceName }服务人员请耐心等待报价...</h2>
+                  {
+                    matchResultList.length
+                      ? <h2>已为您匹配到{ matchResultList.length }位{ serviceName }服务人员请耐心等待报价...</h2>
+                      : <h2>当前区域服务商正在招募中...</h2>
+                  }
                   <div className="match-result-card-item-wrapper">
                     {
-                      matchResultList.map(({userBasicInfoVO}) =>
+                      !!matchResultList.length && matchResultList.map(({userBasicInfoVO}) =>
                         <MatchResultCardItem
                           key={ userBasicInfoVO.userId }
                           avatarSrc={ userBasicInfoVO.avatar }
