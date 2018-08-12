@@ -436,7 +436,7 @@ class PostDemand extends Component {
     } = this.state
     return (<div className="post-demand-container">
       {
-        hasSetLocation
+        hasSetLocation || (this.props.location.state && this.props.location.state.needsId)
           ? <div className="content-wrapper">
             <main>
               <h2 style={ {margin: '50px 0'} }>
