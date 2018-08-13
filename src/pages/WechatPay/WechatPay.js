@@ -39,7 +39,6 @@ class WechatPay extends Component {
           }
         }
       } catch (e) {
-        console.log(e)
         message.error('购买出错')
         clearInterval(timer)
       }

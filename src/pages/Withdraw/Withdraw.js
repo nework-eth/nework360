@@ -60,7 +60,7 @@ class Pay extends Component {
           }
         }
       } catch (e) {
-        console.log(e)
+        // console.log(e)
         message.error('认证出错')
         clearInterval(timer)
       }

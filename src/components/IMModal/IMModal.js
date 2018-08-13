@@ -221,10 +221,10 @@ class IMModal extends Component {
       },
     })
     connect.on('disconnect', () => {
-      console.log('disconnect')
+      // console.log('disconnect')
     })
     connect.on('message', (obj) => {
-      console.log('message')
+      // console.log('message')
       setTimeout(() => this.getIMDialog(), 100)
     })
     this.setState({

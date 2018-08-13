@@ -115,7 +115,7 @@ class Page extends Component {
       }
     }
     if (!/^1[3578]\d{9}$/.test(phoneNumber)) {
-      console.log('here')
+      // console.log('here')
       return {
         validateStatus: 'error',
         errorMsg: '手机号格式不正确',

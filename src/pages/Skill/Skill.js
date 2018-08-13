@@ -624,7 +624,7 @@ class SkillPage extends Component {
         progressPercent: 8 * 10 + 10,
       })
     }
-    console.log(this.props.user.checkStatus)
+    // console.log(this.props.user.checkStatus)
     this.getUserById()
     this.getCityTree()
     this.mapInit()
@@ -645,7 +645,6 @@ class SkillPage extends Component {
       selectedProvince,
       selectedCountry,
       location,
-      specAddr,
       selectedType,
       inputType,
       secondaryTypeList,

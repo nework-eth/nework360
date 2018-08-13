@@ -211,7 +211,7 @@ class PostDemand extends Component {
       })
       keyword && this.placeSearch.search(keyword, (status, result) => {
         if (status === 'complete' && result.info === 'OK') {
-          console.log(result.tips)
+          // console.log(result.tips)
           this.setState({
             locationOptions: result.tips.slice(0, 5),
           })
@@ -258,7 +258,7 @@ class PostDemand extends Component {
       if (code === 200) {
         message.success('发布需求成功')
         if (this.props.location.state && this.props.location.state.partyBId) {
-          console.log('here')
+          // console.log('here')
           await this.appointment(needsId)
           this.setState({
             showMatchResult: true,

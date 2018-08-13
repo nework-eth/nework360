@@ -162,7 +162,7 @@ class SelectCity extends Component {
       return message.error('网络连接失败，请检查网络后重试')
     }
     const tree = data
-    console.log(tree)
+    // console.log(tree)
     const countryList = Object.keys(tree)
     const provinceList = Object.keys(tree['中国'])
     const letterCityList = tree['中国']['北京'].map(item => item.chinese)

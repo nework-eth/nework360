@@ -21,7 +21,7 @@ axios.interceptors.response.use(res => {
   }
   return res
 }, err => {
-  console.log(err)
+  // console.log(err)
   message.error('网络连接失败，请检查网络后重试')
 })
 

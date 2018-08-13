@@ -321,7 +321,7 @@ function EditDataForm ({
                 }
                 if (info.file.status === 'done') {
                   if (info.file.response.code === 200) {
-                    console.log(info)
+                    // console.log(info)
                     handleAvatarChange(info.file.response.data.path)
                     message.success('上传头像成功')
                     return
