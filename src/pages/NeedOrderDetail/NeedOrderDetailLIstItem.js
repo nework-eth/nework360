@@ -17,6 +17,7 @@ function NeedOrderDetailLIstItem ({
                                     cancelOrder,
                                     selectPartyB,
                                     buttonStatus,
+                                    jumpToProfile,
                                     handleEvaluate,
                                     showEvaluateModal,
                                   }) {
@@ -27,7 +28,13 @@ function NeedOrderDetailLIstItem ({
       <div className="top-part">
         <div className="avatar-wrapper">
           <Badge dot={ badgeStatus }>
-            <img src={ avatarSrc || './images/headshot-default.png' } alt="头像" width={ 50 } height={ 50 }/>
+            <img
+              src={ avatarSrc || './images/headshot-default.png' }
+              alt="头像"
+              width={ 50 }
+              height={ 50 }
+              onClick={ jumpToProfile }
+            />
           </Badge>
           <span className="online-communicate" onClick={ showIMModal }><i
             className="iconfont icon-message"/> 在线沟通</span>

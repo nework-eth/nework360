@@ -49,6 +49,15 @@ const generateButtonStatus = (orderStatus, selectedQuoteId, quotedId, quoteStatu
   }
 }
 
+const jumpToProfile = (userId) => () => {
+  browserHistory.push({
+    pathname: '/profile',
+    state: {
+      userId,
+    },
+  })
+}
+
 const mapState = (state) => ({
   user: state.user,
 })
@@ -189,6 +198,7 @@ class NeedOrderDetail extends Component {
     pathname: '/pay',
     state: {amount: amountFinal ? amountFinal : amount, needsId, userBName},
   })
+
   polling = async () => {
     if (this.state.timerId) {
       return
@@ -272,6 +282,7 @@ class NeedOrderDetail extends Component {
                 scoreCount={ score ? score.count : 0 }
                 joinedTime={ getRelativeTime(creatTime) }
                 badgeStatus={ badgeStatusArr[index] }
+                jumpToProfile={ jumpToProfile(userId) }
                 showIMModal={ this.showIMModal(userId, phoneNum, needsId, quoteId, amount, nickName, photo, this.state.title, instruction) }
                 cancelOrder={ this.cancelOrder }
                 selectPartyB={ this.selectPartyB(needsId, quoteId) }
