@@ -10,6 +10,7 @@
       line-height: 24px;
       border: 1px solid #DDE6EC;
       box-shadow: 0 5px 20px 0 rgba(9, 34, 53, 0.10);
+      border-radius: 4px;
     }
     .ant-input-suffix {
       padding-right: 10px;
@@ -30,6 +31,9 @@
       &:nth-of-type(6n+6) {
         margin-right: 0;
       }
+      &:hover {
+        background-color: #f6f8f9;
+      }
     }
   }
   .search-input-container {
@@ -41,16 +45,17 @@
       border: 1px solid #edf1f4;
       border-radius: 2px;
       background: #fff;
+      z-index: 999;
       .search-input-tip-item {
         padding-left: 20px;
-        height: 70px;
-        line-height: 70px;
+        height: 50px;
+        line-height: 50px;
       }
     }
   }
   .introduce-container {
     display: flex;
-    padding-bottom: 50px;
+    padding-bottom: 100px;
     justify-content: space-between;
     .introduce-card {
       position: relative;

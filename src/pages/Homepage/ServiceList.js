@@ -105,7 +105,7 @@ class ServiceList extends Component {
         <div>
           <i
             className="iconfont icon-logo"
-            style={ {fontSize: '40px', lineHeight: '50px'} }
+            style={ {fontSize: '30px', lineHeight: '40px'} }
           />
         </div>
         <h1 style={ {marginBottom: '30px'} }>找到所有本地专业服务</h1>

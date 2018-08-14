@@ -305,7 +305,7 @@ class NavMenu extends Component {
           <div className="li-wrapper">
             <li className="li-item">
               <Link to="/" style={ {color: '#092235'} }>
-                <i className="iconfont icon-logo logo-item"/>
+                <i className="iconfont icon-logo"/>
               </Link>
             </li>
             <li className="vertical-line"/>

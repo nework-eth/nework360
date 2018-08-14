@@ -24,6 +24,21 @@
           color: #fff;
           text-align: center;
           border-radius: 50%;
+          &:first-of-type {
+            &:hover {
+              background-color: #0d9e3f !important;
+            }
+          }
+          &:nth-of-type(2) {
+            &:hover {
+              background-color: #1d8ed6 !important;
+            }
+          }
+          &:nth-of-type(3) {
+            &:hover {
+              background-color: #242424 !important;
+            }
+          }
         }
       }
     }
@@ -51,6 +66,9 @@
       a {
         color: #9ca6ae;
         text-decoration: none;
+        &:hover {
+          color: #008bf7;
+        }
       }
       p:not(:first-child) {
         margin-bottom: 21.5px;
