@@ -78,81 +78,81 @@ class SkillPage extends Component {
     switch (this.state.step) {
       case 0:
         return <InputPosition
-          selectedCountry={ this.state.selectedCountry }
-          countryOptions={ this.state.countryOptions }
-          selectedProvince={ this.state.selectedProvince }
-          provinceOptions={ this.state.provinceOptions }
-          selectedCity={ this.state.selectedCity }
-          cityOptions={ this.state.cityOptions }
-          handleCountryChange={ this.handleCountryChange }
-          handleProvinceChange={ this.handleProvinceChange }
-          handleCityChange={ this.handleCityChange }
-          location={ this.state.location }
-          handleLocationChange={ this.handleLocationChange }
-          specAddr={ this.state.specAddr }
-          handleSpecAddrChange={ this.handleSpecAddrChange }
-          locationOptions={ this.state.locationOptions }
-          specAddrTooLong={ this.state.specAddrTooLong }
+          selectedCountry={this.state.selectedCountry}
+          countryOptions={this.state.countryOptions}
+          selectedProvince={this.state.selectedProvince}
+          provinceOptions={this.state.provinceOptions}
+          selectedCity={this.state.selectedCity}
+          cityOptions={this.state.cityOptions}
+          handleCountryChange={this.handleCountryChange}
+          handleProvinceChange={this.handleProvinceChange}
+          handleCityChange={this.handleCityChange}
+          location={this.state.location}
+          handleLocationChange={this.handleLocationChange}
+          specAddr={this.state.specAddr}
+          handleSpecAddrChange={this.handleSpecAddrChange}
+          locationOptions={this.state.locationOptions}
+          specAddrTooLong={this.state.specAddrTooLong}
         />
       case 1:
         return <SelectType
-          firstServiceList={ this.state.firstServiceList }
-          handleSelectType={ this.handleSelectType }
-          handleInputType={ this.handleInputType }
-          selectedType={ this.state.selectedType }
-          inputType={ this.state.inputType }
-          inputTypeTooLong={ this.state.inputTypeTooLong }
+          firstServiceList={this.state.firstServiceList}
+          handleSelectType={this.handleSelectType}
+          handleInputType={this.handleInputType}
+          selectedType={this.state.selectedType}
+          inputType={this.state.inputType}
+          inputTypeTooLong={this.state.inputTypeTooLong}
         />
       case 2:
         return <SelectSecondaryType
-          secondServiceList={ this.state.secondServiceList }
-          selectedType={ this.state.selectedType }
-          secondaryTypeList={ this.state.secondaryTypeList }
-          handleSecondaryTypeClick={ this.handleSecondaryTypeClick }
-          secondaryInputType={ this.state.secondaryInputType }
-          handleSecondaryInputType={ this.handleSecondaryInputType }
-          secondaryInputTypeTooLong={ this.secondaryInputTypeTooLong }
+          secondServiceList={this.state.secondServiceList}
+          selectedType={this.state.selectedType}
+          secondaryTypeList={this.state.secondaryTypeList}
+          handleSecondaryTypeClick={this.handleSecondaryTypeClick}
+          secondaryInputType={this.state.secondaryInputType}
+          handleSecondaryInputType={this.handleSecondaryInputType}
+          secondaryInputTypeTooLong={this.secondaryInputTypeTooLong}
         />
       case 3:
         return <InputWorkTime
-          serviceTimeList={ this.state.serviceTimeList }
-          handleWorkTimeItemClick={ this.handleWorkTimeItemClick }
+          serviceTimeList={this.state.serviceTimeList}
+          handleWorkTimeItemClick={this.handleWorkTimeItemClick}
         />
       case 4:
         return <Introduce
-          introduce={ this.state.description }
-          handleDescriptionChange={ this.handleDescriptionChange }
+          introduce={this.state.description}
+          handleDescriptionChange={this.handleDescriptionChange}
         />
       case 5:
         return <UploadAvatar
-          avatarSrc={ this.state.avatarSrc }
-          userId={ this.props.userId }
-          uploadUrl={ uploadUrl }
-          handleUploadAvatar={ this.handleUploadAvatar }
-          updateImageSrc={ this.updateImageSrc }
+          avatarSrc={this.state.avatarSrc}
+          userId={this.props.userId}
+          uploadUrl={uploadUrl}
+          handleUploadAvatar={this.handleUploadAvatar}
+          updateImageSrc={this.updateImageSrc}
         />
       case 6:
         return <PartlyComplete
-          checkStatus={ this.props.user.checkStatus }
-          username={ this.props.user.nickname }
+          checkStatus={this.props.user.checkStatus}
+          username={this.props.user.nickname}
         />
       case 7:
         return <SelectCertificate
-          countryOptions={ this.state.countryOptions }
-          selectedCertification={ this.state.selectedCertification }
-          handleSelectedCertification={ this.handleSelectedCertification }
+          countryOptions={this.state.countryOptions}
+          selectedCertification={this.state.selectedCertification}
+          handleSelectedCertification={this.handleSelectedCertification}
         />
       case 8:
         return <UploadCertificate
-          selectedCertification={ this.state.selectedCertification }
-          userId={ this.props.userId }
-          uploadUrl={ uploadUrl }
-          passportSrc={ this.state.passportSrc }
-          photoSrc={ this.state.photoSrc }
-          idCardNegativeSrc={ this.state.idCardNegativeSrc }
-          idCardPositiveSrc={ this.state.idCardPositiveSrc }
-          handleUpload={ this.handleUpload }
-          updateImageSrc={ this.updateImageSrc }
+          selectedCertification={this.state.selectedCertification}
+          userId={this.props.userId}
+          uploadUrl={uploadUrl}
+          passportSrc={this.state.passportSrc}
+          photoSrc={this.state.photoSrc}
+          idCardNegativeSrc={this.state.idCardNegativeSrc}
+          idCardPositiveSrc={this.state.idCardPositiveSrc}
+          handleUpload={this.handleUpload}
+          updateImageSrc={this.updateImageSrc}
         />
       case 9:
         return <UploadComplete
@@ -637,6 +637,19 @@ class SkillPage extends Component {
     })
   }
 
+  generateButtonStatus = () => {
+    if (this.state.step === 9) {
+      return '完成'
+    }
+    if (this.state.step === 6) {
+      if (this.state.checkStatus < 1) {
+        return '继续'
+      }
+      return '完成'
+    }
+    return '下一步'
+  }
+
   render () {
     const {
       progressPercent,
@@ -660,17 +673,11 @@ class SkillPage extends Component {
     } = this.state
     return (
       <div className="skill-container">
-        <main style={ {width: '700px', margin: '0 auto'} }>
-          <h2 style={ {margin: '50px 0'} }>
-            <i
-              className="iconfont icon-logo"
-              style={ {fontSize: '30px', lineHeight: '40px'} }
-            />
-          </h2>
+        <main style={{width: '700px', margin: '0 auto'}}>
           <Progress
-            percent={ progressPercent }
-            showInfo={ false }
-            style={ {height: '5px'} }
+            percent={progressPercent}
+            showInfo={false}
+            style={{height: '5px', marginTop: '50px'}}
           />
           {
             this.StepView()
@@ -678,7 +685,7 @@ class SkillPage extends Component {
         </main>
         <footer>
           <p
-            onClick={ this.handleGoBack }
+            onClick={this.handleGoBack}
             style={
               step === 0
               || step === 6
@@ -691,8 +698,8 @@ class SkillPage extends Component {
             <i className="iconfont icon-return"/>
             返回
           </p>
-          <Button type="primary" onClick={ this.handleButtonClick }
-            disabled={ step === 0
+          <Button type="primary" onClick={this.handleButtonClick}
+            disabled={step === 0
               ? !selectedCountry || !selectedProvince || !selectedCity || !location
               : step === 1
                 ? (!selectedType || (selectedType === '其他' && !inputType))
@@ -712,9 +719,7 @@ class SkillPage extends Component {
             }
           >
             {
-              step !== 9 && (step !== 6 || this.props.checkStatus < 1)
-                ? '下一步'
-                : '完成'
+              this.generateButtonStatus()
             }
           </Button>
         </footer>
