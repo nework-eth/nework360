@@ -439,16 +439,10 @@ class PostDemand extends Component {
         hasSetLocation || (this.props.location.state && this.props.location.state.needsId)
           ? <div className="content-wrapper">
             <main>
-              <h2 style={ {margin: '50px 0'} }>
-                <i
-                  className="iconfont icon-logo"
-                  style={ {fontSize: '30px', lineHeight: '40px'} }
-                />
-              </h2>
               <Progress
                 percent={ progressPercent }
                 showInfo={ false }
-                style={ {height: '5px'} }
+                style={{height: '5px', marginTop: '50px'}}
               />
               { !showMatchResult ?
                 <div className="template-wrapper">
@@ -504,16 +498,10 @@ class PostDemand extends Component {
           </div>
           : <div className="content-wrapper">
             <main>
-              <h2 style={ {margin: '50px 0'} }>
-                <i
-                  className="iconfont icon-logo"
-                  style={ {fontSize: '30px', lineHeight: '40px'} }
-                />
-              </h2>
               <Progress
                 percent={ progressPercent }
                 showInfo={ false }
-                style={ {height: '5px'} }
+                style={{height: '5px', marginTop: '50px'}}
               />
               <div className="service-location-container">
                 <h2 style={ {

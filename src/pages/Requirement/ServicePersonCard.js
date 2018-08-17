@@ -60,7 +60,10 @@ function ServicePersonCard ({
           style={ {cursor: 'pointer'} }
           onClick={ jumpToProfile }
         />
-        <div className="operate" onClick={ appointment } style={ {cursor: 'pointer'} }>立即预约</div>
+        <div className="operate" onClick={appointment} style={{cursor: 'pointer', color: '#008bf7'}}>
+          <div><i className="iconfont icon-message"></i></div>
+          <div>立即预约</div>
+        </div>
       </div>
       <div>
         <div className="name">{ nickname }</div>

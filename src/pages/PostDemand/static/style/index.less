@@ -3,6 +3,12 @@
     display: flex;
     flex-flow: column;
     min-height: calc(100vh - 70px);
+    .ant-progress-bg {
+      height: 5px !important;
+    }
+    textarea.ant-input {
+      padding: 20px !important;
+    }
   }
   main {
     flex: 1;
@@ -31,6 +37,9 @@
         .ant-checkbox-group-item {
           margin-bottom: 20px;
           display: block;
+        }
+        .date-container {
+          width: 700px;
         }
       }
       .button-wrapper {
@@ -80,7 +89,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100px;
+    height: 70px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
     .ant-btn {
       width: 160px;
@@ -125,7 +134,7 @@
     flex-flow: row-reverse;
     justify-content: space-between;
     align-items: center;
-    height: 100px;
+    height: 70px;
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
     .ant-btn {
       width: 160px;
