@@ -1,6 +1,5 @@
 export const getRelativeTime = (createTime) => {
   const fromTimeStamp = typeof(createTime) === 'number' ? createTime : Date.parse(createTime)
-  console.log(typeof fromTimeStamp)
   const now = Date.now()
   const relativeTime = now - fromTimeStamp
   const month = Math.floor(relativeTime / (24 * 3600 * 30 * 1000))
