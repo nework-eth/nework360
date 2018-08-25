@@ -10,7 +10,6 @@ export const getRelativeTime = (createTime) => {
     return `${month}个月`
   }
   if (month > 12) {
-    console.log('here')
     const year = Math.floor(month / 12)
     const extraMonth = month % 12
     if (extraMonth) {
