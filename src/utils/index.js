@@ -1,5 +1,6 @@
 export const getRelativeTime = (createTime) => {
-  const fromTimeStamp = Date.parse(createTime)
+  const fromTimeStamp = typeof(createTime) === 'number' ? createTime : Date.parse(createTime)
+  console.log(typeof fromTimeStamp)
   const now = Date.now()
   const relativeTime = now - fromTimeStamp
   const month = Math.floor(relativeTime / (24 * 3600 * 30 * 1000))
@@ -10,6 +11,7 @@ export const getRelativeTime = (createTime) => {
     return `${month}个月`
   }
   if (month > 12) {
+    console.log('here')
     const year = Math.floor(month / 12)
     const extraMonth = month % 12
     if (extraMonth) {

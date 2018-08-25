@@ -44,7 +44,7 @@ function DateTemplate ({
   return (
     <div className="template-content">
       <h2>{ title }</h2>
-      <div className="form-item-wrapper">
+      <div className="form-item-wrapper date-template-wrapper">
         <DayPickerRangeController
           endDate={ value[1] }
           startDate={ value[0] }

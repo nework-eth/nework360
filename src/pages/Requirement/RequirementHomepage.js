@@ -130,9 +130,9 @@ class RequirementHomePage extends Component {
             </div>
           </div>
           <div className="service-person-container">
-            { !this.state.totalCount && <h2>当前区域服务商正在招募中...</h2> }
-            { !!this.state.totalCount && <h2>您附近有 { this.state.totalCount } 位{ serviceName }的服务人员</h2> }
-            { !!this.state.totalCount && <p>他们离您的当前位置较近，可迅速到达服务地点，响应您的诉求...</p> }
+            {!this.state.totalCount && <h2>当前区域服务商正在招募中...</h2>}
+            {!!this.state.totalCount && <h2>您附近有 {this.state.totalCount} 位{serviceName}的服务人员</h2>}
+            {!!this.state.totalCount && <p>他们离您的当前位置较近，可迅速到达服务地点，响应您的诉求...</p>}
             <div className="service-person-card-wrapper">
               {
                 !!this.state.totalCount && this.state.servicePersonList.map(({
@@ -142,23 +142,25 @@ class RequirementHomePage extends Component {
                                                                                userEvaluate,
                                                                              }) =>
                   <ServicePersonCard
-                    key={ userBasicInfoVO.userId }
-                    nickname={ userBasicInfoVO.nickname }
-                    hireTimes={ hireTimes }
-                    evaluateCount={ evaluateScore.count }
-                    evaluateScore={ evaluateScore.ave }
-                    joinedTime={ userBasicInfoVO.createTime }
-                    avatarUrl={ userBasicInfoVO.avatar }
-                    evaluation={ userEvaluate ? userEvaluate.content : '' }
-                    jumpToProfile={ this.jumpToProfile(userBasicInfoVO.userId, serviceId, serviceName) }
-                    appointment={ this.appointment(userBasicInfoVO.userId) }
+                    key={userBasicInfoVO.userId}
+                    nickname={userBasicInfoVO.nickname}
+                    hireTimes={hireTimes}
+                    evaluateCount={evaluateScore.count}
+                    evaluateScore={evaluateScore.ave}
+                    joinedTime={userBasicInfoVO.createTime}
+                    avatarUrl={userBasicInfoVO.avatar}
+                    evaluateTime={userEvaluate ? userEvaluate.createTime : ''}
+                    evaluator={userEvaluate ? userEvaluate.nickname : ''}
+                    evaluation={userEvaluate ? userEvaluate.content : ''}
+                    jumpToProfile={this.jumpToProfile(userBasicInfoVO.userId, serviceId, serviceName)}
+                    appointment={this.appointment(userBasicInfoVO.userId)}
                   />)
               }
             </div>
-            { this.state.totalCount > this.state.servicePersonList.length && <div className="service-person-load-more">
-              <i className="iconfont icon-load-more" onClick={ this.loadMore }/>
-              <span onClick={ this.loadMore }>加载更多</span>
-            </div> }
+            {this.state.totalCount > this.state.servicePersonList.length && <div className="service-person-load-more">
+              <i className="iconfont icon-load-more" onClick={this.loadMore}/>
+              <span onClick={this.loadMore}>加载更多</span>
+            </div>}
           </div>
         </main>
         <Footer/>

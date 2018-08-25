@@ -39,11 +39,13 @@ import './static/style/homepage.less'
 
 function ServicePersonCard ({
                               nickname,
+                              evaluator,
                               hireTimes,
                               avatarUrl,
                               joinedTime,
                               evaluation,
                               appointment,
+                              evaluateTime,
                               evaluateScore,
                               evaluateCount,
                               jumpToProfile,
@@ -53,12 +55,12 @@ function ServicePersonCard ({
     <div className="service-person-card">
       <div className="service-person-card-top">
         <img
-          src={ avatarUrl }
+          src={avatarUrl}
           alt="头像"
           width="50"
           height="50"
-          style={ {cursor: 'pointer'} }
-          onClick={ jumpToProfile }
+          style={{cursor: 'pointer'}}
+          onClick={jumpToProfile}
         />
         <div className="operate" onClick={appointment} style={{cursor: 'pointer', color: '#008bf7'}}>
           <div><i className="iconfont icon-message"></i></div>
@@ -66,31 +68,35 @@ function ServicePersonCard ({
         </div>
       </div>
       <div>
-        <div className="name">{ nickname }</div>
+        <div className="name">{nickname}</div>
         <div className="rate-wrapper">
           <Rate
             allowHalf
             disabled
-            defaultValue={ getRate(evaluateScore) }
-            character={ <i className="iconfont icon-rate-star-full"/> }
+            defaultValue={getRate(evaluateScore)}
+            character={<i className="iconfont icon-rate-star-full"/>}
           />
-          <p className="rate">{ evaluateScore }</p>
-          <p className="evaluation">（{ evaluateCount }条评价）</p>
+          <p className="rate">{evaluateScore}</p>
+          <p className="evaluation">（{evaluateCount}条评价）</p>
         </div>
       </div>
       <div className="information-wrapper">
         <div className="row">
-          <i className="iconfont icon-hire"/><span>被雇佣 { hireTimes } 次</span>
+          <i className="iconfont icon-hire"/><span>被雇佣 {hireTimes} 次</span>
         </div>
         <div className="row">
-          <i className="iconfont icon-joined-time"/><span>已加入{ getRelativeTime(joinedTime) }</span>
+          <i className="iconfont icon-joined-time"/><span>已加入{getRelativeTime(joinedTime)}</span>
         </div>
       </div>
       <div className="horizontal-line"/>
-      <p className="virtual-title">
-        { evaluation }
+      <div className="virtual-title-wrapper">
+        <p><span className="virtual-title">{evaluator}</span><span className="title-tip">的评论</span></p>
+        {evaluateTime && <p className="title-tip">{getRelativeTime(evaluateTime)}前</p>}
+      </div>
+      <p>
+        {evaluation}
       </p>
-      <div onClick={ jumpToProfile } className="profile-entry">查看更多</div>
+      <div onClick={jumpToProfile} className="profile-entry">查看更多</div>
     </div>
   )
 }

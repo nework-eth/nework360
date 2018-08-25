@@ -203,7 +203,6 @@ class Profile extends Component {
             <h3 className="location">营业时间与地点</h3>
             <div className="time-location-container">
               <DayPickerRangeController
-                style={{width: '340px'}}
                 disabled={true}
                 numberOfMonths={1}
                 hideKeyboardShortcutsPanel
