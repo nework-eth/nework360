@@ -1,5 +1,6 @@
 import { Button, Form, Input, message } from 'antd'
 import React, { Component } from 'react'
+import ReactGA from 'react-ga'
 import { connect } from 'react-redux'
 import { browserHistory, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
@@ -41,6 +42,7 @@ class Page extends Component {
       this.props.setUser(data)
       this.props.setUserId(data.userId)
       message.success('登录成功')
+      ReactGA.event({action: '登录'})
       browserHistory.push('/')
     }
 

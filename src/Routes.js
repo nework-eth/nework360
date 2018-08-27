@@ -1,5 +1,6 @@
 import cookie from 'cookie'
-import React from 'react'
+import React, { Component } from 'react'
+import ReactGA from 'react-ga'
 import { Provider } from 'react-redux'
 import { browserHistory, IndexRoute, Route, Router } from 'react-router'
 
@@ -17,8 +18,8 @@ import store from './Store'
 
 const createElement = (Component, props) => {
   return (
-    <Provider store={ store }>
-      <Component { ...props } />
+    <Provider store={store}>
+      <Component {...props} />
     </Provider>
   )
 }
@@ -205,38 +206,81 @@ const autoLogin = async (nextState, replaceState, callback) => {
   callback()
 }
 
-const Routes = () => (
-  <Router history={ history } createElement={ createElement }>
-    <Route component={ AuthPage }>
-      <Route path="counter" getComponent={ getCounterPage }/>
-      <Route path="/login" getComponent={ getLoginPage }/>
-      <Route path="/register" getComponent={ getRegisterPage }/>
-      <Route path="/forget-password" getComponent={ getForgetPassword }/>
-    </Route>
-    <Route path="/" component={ Homepage } onEnter={ autoLogin }>
-      <IndexRoute getComponent={ getSearchPage }/>
-      <Route path="select-city" getComponent={ getSelectCityPage }/>
-      <Route path="search" getComponent={ getSearchPage }/>
-      <Route path="service-list" getComponent={ getServiceList }/>
-    </Route>
-    <Route component={ Container } onEnter={ requireAuth }>
-      <Route path="/skill" getComponent={ getSkillPage }/>
-      <Route path="/profile" getComponent={ getProfilePage }/>
-      <Route path="/editData" getComponent={ getEditDataPage }/>
-      <Route path="/wallet" getComponent={ getWalletPage }/>
-      <Route path="/requirement-homepage" getComponent={ getRequirement }/>
-      <Route path="/post-demand" getComponent={ getPostDemand }/>
-      <Route path="/list" getComponent={ getList }/>
-      <Route path="/need-order-detail" getComponent={ getNeedOrderDetail }/>
-      <Route path="/need-detail" getComponent={ getNeedDetail }/>
-      <Route path="/clue-card" getComponent={ getClueCard }/>
-      <Route path="/pay" getComponent={ getPay }/>
-      <Route path="/pay-fail" getComponent={ getPayFail }/>
-      <Route path="/pay-success" getComponent={ getPaySuccess }/>
-      <Route path="/withdraw" getComponent={ getWithdraw }/>
-      <Route path="/wechat-pay" getComponent={ getWechatPay }/>
-    </Route>
-  </Router>
-)
+// const Routes = () => (
+//   <Router history={ history } createElement={ createElement }>
+//     <Route component={ AuthPage }>
+//       <Route path="counter" getComponent={ getCounterPage }/>
+//       <Route path="/login" getComponent={ getLoginPage }/>
+//       <Route path="/register" getComponent={ getRegisterPage }/>
+//       <Route path="/forget-password" getComponent={ getForgetPassword }/>
+//     </Route>
+//     <Route path="/" component={ Homepage } onEnter={ autoLogin }>
+//       <IndexRoute getComponent={ getSearchPage }/>
+//       <Route path="select-city" getComponent={ getSelectCityPage }/>
+//       <Route path="search" getComponent={ getSearchPage }/>
+//       <Route path="service-list" getComponent={ getServiceList }/>
+//     </Route>
+//     <Route component={ Container } onEnter={ requireAuth }>
+//       <Route path="/skill" getComponent={ getSkillPage }/>
+//       <Route path="/profile" getComponent={ getProfilePage }/>
+//       <Route path="/editData" getComponent={ getEditDataPage }/>
+//       <Route path="/wallet" getComponent={ getWalletPage }/>
+//       <Route path="/requirement-homepage" getComponent={ getRequirement }/>
+//       <Route path="/post-demand" getComponent={ getPostDemand }/>
+//       <Route path="/list" getComponent={ getList }/>
+//       <Route path="/need-order-detail" getComponent={ getNeedOrderDetail }/>
+//       <Route path="/need-detail" getComponent={ getNeedDetail }/>
+//       <Route path="/clue-card" getComponent={ getClueCard }/>
+//       <Route path="/pay" getComponent={ getPay }/>
+//       <Route path="/pay-fail" getComponent={ getPayFail }/>
+//       <Route path="/pay-success" getComponent={ getPaySuccess }/>
+//       <Route path="/withdraw" getComponent={ getWithdraw }/>
+//       <Route path="/wechat-pay" getComponent={ getWechatPay }/>
+//     </Route>
+//   </Router>
+// )
+
+class Routes extends Component {
+  componentDidMount () {
+    ReactGA.initialize('UA-77672852-13')
+    ReactGA.pageview(window.location.pathname)
+  }
+
+  render () {
+    return (
+      <Router history={history} createElement={createElement}>
+        <Route component={AuthPage}>
+          <Route path="counter" getComponent={getCounterPage}/>
+          <Route path="/login" getComponent={getLoginPage}/>
+          <Route path="/register" getComponent={getRegisterPage}/>
+          <Route path="/forget-password" getComponent={getForgetPassword}/>
+        </Route>
+        <Route path="/" component={Homepage} onEnter={autoLogin}>
+          <IndexRoute getComponent={getSearchPage}/>
+          <Route path="select-city" getComponent={getSelectCityPage}/>
+          <Route path="search" getComponent={getSearchPage}/>
+          <Route path="service-list" getComponent={getServiceList}/>
+        </Route>
+        <Route component={Container} onEnter={requireAuth}>
+          <Route path="/skill" getComponent={getSkillPage}/>
+          <Route path="/profile" getComponent={getProfilePage}/>
+          <Route path="/editData" getComponent={getEditDataPage}/>
+          <Route path="/wallet" getComponent={getWalletPage}/>
+          <Route path="/requirement-homepage" getComponent={getRequirement}/>
+          <Route path="/post-demand" getComponent={getPostDemand}/>
+          <Route path="/list" getComponent={getList}/>
+          <Route path="/need-order-detail" getComponent={getNeedOrderDetail}/>
+          <Route path="/need-detail" getComponent={getNeedDetail}/>
+          <Route path="/clue-card" getComponent={getClueCard}/>
+          <Route path="/pay" getComponent={getPay}/>
+          <Route path="/pay-fail" getComponent={getPayFail}/>
+          <Route path="/pay-success" getComponent={getPaySuccess}/>
+          <Route path="/withdraw" getComponent={getWithdraw}/>
+          <Route path="/wechat-pay" getComponent={getWechatPay}/>
+        </Route>
+      </Router>
+    )
+  }
+}
 
 export default Routes

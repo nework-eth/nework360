@@ -1,5 +1,6 @@
 import { Button, Form, Input, message, Select } from 'antd'
 import React, { Component } from 'react'
+import ReactGA from 'react-ga'
 import { connect } from 'react-redux'
 import { browserHistory, Link } from 'react-router'
 import { bindActionCreators } from 'redux'
@@ -90,6 +91,7 @@ class Page extends Component {
       this.props.setUser(data)
       this.props.setUserId(data.userId)
       message.success('注册成功')
+      ReactGA.event({action: '注册'})
       browserHistory.push('/')
     }
     // this.props.form.validateFields(async (err, { messageCode, password, phoneNumber, nickName }) => {
@@ -388,48 +390,48 @@ class Page extends Component {
       messageButton,
     } = this.state
     return (
-      <Form onSubmit={ this.handleSubmit } className="form-container">
+      <Form onSubmit={this.handleSubmit} className="form-container">
         <h2>创建账号</h2>
         <FormItem
           label="姓名"
           className="form-item"
-          colon={ false }
-          required={ false }
-          help={ nickName.errorMsg }
-          validateStatus={ nickName.validateStatus }
+          colon={false}
+          required={false}
+          help={nickName.errorMsg}
+          validateStatus={nickName.validateStatus}
         >
           <Input
             placeholder="姓名"
             className="form-input"
-            value={ nickName.value }
-            onChange={ this.handleNickNameChange }
-            onBlur={ this.handleNickNameBlur }
+            value={nickName.value}
+            onChange={this.handleNickNameChange}
+            onBlur={this.handleNickNameBlur}
           />
         </FormItem>
         <FormItem
           label="密码"
           className="form-item"
-          colon={ false }
-          required={ false }
-          help={ pwd.errorMsg }
-          validateStatus={ pwd.validateStatus }
+          colon={false}
+          required={false}
+          help={pwd.errorMsg}
+          validateStatus={pwd.validateStatus}
         >
           <Input
             type="password"
             placeholder="密码"
             className="form-input"
-            value={ pwd.value }
-            onChange={ this.handlePwdChange }
-            onBlur={ this.handlePwdBlur }
+            value={pwd.value}
+            onChange={this.handlePwdChange}
+            onBlur={this.handlePwdBlur}
           />
         </FormItem>
         <FormItem
           label="手机号码"
           className="form-item"
-          colon={ false }
-          required={ false }
-          help={ phoneNumber.errorMsg }
-          validateStatus={ phoneNumber.validateStatus }
+          colon={false}
+          required={false}
+          help={phoneNumber.errorMsg}
+          validateStatus={phoneNumber.validateStatus}
         >
           <InputGroup compact>
             <Select
@@ -442,39 +444,39 @@ class Page extends Component {
             <Input
               placeholder="输入手机号"
               className="form-input"
-              style={ {width: '69.2%'} }
-              value={ phoneNumber.value }
-              onChange={ this.handlePhoneNumberChange }
-              onBlur={ this.handlePhoneNumberBlur }
+              style={{width: '69.2%'}}
+              value={phoneNumber.value}
+              onChange={this.handlePhoneNumberChange}
+              onBlur={this.handlePhoneNumberBlur}
             />
           </InputGroup>
         </FormItem>
         <FormItem
           label="短信验证码"
           className="form-item"
-          colon={ false }
-          required={ false }
-          help={ messageCode.errorMsg }
-          validateStatus={ messageCode.validateStatus }
+          colon={false}
+          required={false}
+          help={messageCode.errorMsg}
+          validateStatus={messageCode.validateStatus}
         >
           <InputGroup compact>
             <Input
               placeholder="4位数字短信验证码"
               className="form-input"
-              style={ {
+              style={{
                 width: '70%',
                 borderRight: 'none',
-              } }
-              value={ messageCode.value }
-              onChange={ this.handleMessageCodeChange }
-              onBlur={ this.handleMessageCodeBlur }
+              }}
+              value={messageCode.value}
+              onChange={this.handleMessageCodeChange}
+              onBlur={this.handleMessageCodeBlur}
             />
             <Button
               className="get-message-button"
-              onClick={ this.handleMessageButtonClick }
-              disabled={ disabledTime || messageButton.disabled }
+              onClick={this.handleMessageButtonClick}
+              disabled={disabledTime || messageButton.disabled}
             >
-              { disabledTime ? `${disabledTime}S` : messageButton.value }
+              {disabledTime ? `${disabledTime}S` : messageButton.value}
             </Button>
           </InputGroup>
         </FormItem>
@@ -490,10 +492,10 @@ class Page extends Component {
             注册
           </Button>
         </FormItem>
-        <span className="captions">已经有账号了？<Link to={ {
+        <span className="captions">已经有账号了？<Link to={{
           pathname: '/login',
           state: {phoneNumber: phoneNumber.value},
-        } }>去登录</Link></span>
+        }}>去登录</Link></span>
       </Form>
     )
   }

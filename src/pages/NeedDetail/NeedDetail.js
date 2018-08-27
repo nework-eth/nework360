@@ -1,5 +1,6 @@
 import { Button, message, Rate } from 'antd'
 import React, { Component } from 'react'
+import ReactGA from 'react-ga'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { QuoteModal } from '../../components/QuoteModal/QuoteModal'
@@ -91,6 +92,7 @@ class NeedDetail extends Component {
     const {data: {code, quoteId}} = await createQuote({needsId, amount: amount * 100, instruction})
     if (code === 200) {
       message.success('报价成功')
+      ReactGA.event({action: '报价成功'})
       this.props.location.state = Object.assign({}, this.props.location.state, {amount: amount * 100, quoteId})
       this.getNeedDetail()
       this.hideQuoteModal()

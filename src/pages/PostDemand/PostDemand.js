@@ -1,6 +1,7 @@
 import { Button, message, Progress, Select } from 'antd'
 import moment from 'moment'
 import React, { Component } from 'react'
+import ReactGA from 'react-ga'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
 import { bindActionCreators } from 'redux'
@@ -257,6 +258,7 @@ class PostDemand extends Component {
       )
       if (code === 200) {
         message.success('发布需求成功')
+        ReactGA.event({action: '发布需求成功'})
         if (this.props.location.state && this.props.location.state.partyBId) {
           // console.log('here')
           await this.appointment(needsId)
