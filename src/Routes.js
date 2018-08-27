@@ -246,6 +246,10 @@ class Routes extends Component {
     ReactGA.pageview(window.location.pathname)
   }
 
+  componentWillReceiveProps () {
+    ReactGA.pageview(window.location.pathname)
+  }
+
   render () {
     return (
       <Router history={history} createElement={createElement}>
