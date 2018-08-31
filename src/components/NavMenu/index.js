@@ -90,17 +90,10 @@ class NavMenu extends Component {
   }
   getCityByIp = async () => {
     const {data: {data}} = await getCityByIp()
-    if (data !== '未知城市') {
-      this.props.setCityName(data.city)
-      this.props.setCityId(data.cityId)
-      document.cookie = `cityId=${data.cityId}`
-      document.cookie = `cityName=${data.city}`
-    } else {
-      this.props.setCityName('北京')
-      this.props.setCityId(110)
-      document.cookie = `cityId=${data.cityId}`
-      document.cookie = `cityName=${data.city}`
-    }
+    this.props.setCityName(data.city)
+    this.props.setCityId(data.cityId)
+    document.cookie = `cityId=${data.cityId}`
+    document.cookie = `cityName=${data.city}`
   }
   getMessage = async () => {
     const {data: {data, code, pageinfo}} = await getMessage({
@@ -304,34 +297,34 @@ class NavMenu extends Component {
         <ul>
           <div className="li-wrapper">
             <li className="li-item">
-              <Link to="/" style={ {color: '#092235'} }>
+              <Link to="/" style={{color: '#092235'}}>
                 <i className="iconfont icon-logo"/>
               </Link>
             </li>
             <li className="vertical-line"/>
-            <Link className="li-item" style={ {paddingRight: '10px', textDecoration: 'none', color: '#092235'} }
-              to="/select-city">{ cityName }</Link>
+            <Link className="li-item" style={{paddingRight: '10px', textDecoration: 'none', color: '#092235'}}
+              to="/select-city">{cityName}</Link>
           </div>
           {
             this.props.userId
               ? (
                 <div className="li-wrapper">
-                  { !this.props.user.isPartyB
+                  {!this.props.user.isPartyB
                   && <li className="li-item user-li-item">
-                    <Link to="/skill" style={ specialLinkStyle }>我要工作</Link>
+                    <Link to="/skill" style={specialLinkStyle}>我要工作</Link>
                   </li>
                   }
                   <li className="li-item user-li-item">
-                    <Link to="/list" style={ userLinkStyle }>我的订单</Link>
+                    <Link to="/list" style={userLinkStyle}>我的订单</Link>
                   </li>
-                  <li className="li-item user-li-item message-li" onClick={ this.toggleMessagePanelVisible }>
-                    <Badge dot={ !!unreadMessageList.length }><span className="message-span">消息中心</span></Badge>
+                  <li className="li-item user-li-item message-li" onClick={this.toggleMessagePanelVisible}>
+                    <Badge dot={!!unreadMessageList.length}><span className="message-span">消息中心</span></Badge>
                   </li>
                   <li className="li-item user-li-item">
                     <Dropdown overlay={
                       <Menu>
                         <Menu.Item className="nav-ant-menu-item">
-                          <Link to={ {pathname: '/profile', state: {userId: this.props.userId}} }>我的主页</Link>
+                          <Link to={{pathname: '/profile', state: {userId: this.props.userId}}}>我的主页</Link>
                         </Menu.Item>
                         <Menu.Item className="nav-ant-menu-item">
                           <Link to="/wallet">钱包</Link>
@@ -340,12 +333,12 @@ class NavMenu extends Component {
                           <Link to="/editData">设置</Link>
                         </Menu.Item>
                         <Menu.Item className="nav-ant-menu-item">
-                          <Link to="/" onClick={ this.handleSignOut }>退出登录</Link>
+                          <Link to="/" onClick={this.handleSignOut}>退出登录</Link>
                         </Menu.Item>
                       </Menu>
                     }>
                       <img
-                        src={ this.props.avatar || './images/headshot-default.png' }
+                        src={this.props.avatar || './images/headshot-default.png'}
                         alt="头像"
                         width="30"
                         height="30"
@@ -356,18 +349,18 @@ class NavMenu extends Component {
                 </div>
               )
               : <div className="li-wrapper">
-                <li style={ {paddingRight: '20px', cursor: 'pointer'} } className="li-item">帮助</li>
+                <li style={{paddingRight: '20px', cursor: 'pointer'}} className="li-item">帮助</li>
                 <li className="vertical-line"/>
-                <li className="li-item"><Link to="/login" style={ specialLinkStyle }>登录</Link></li>
+                <li className="li-item"><Link to="/login" style={specialLinkStyle}>登录</Link></li>
                 <li
-                  className="li-item" style={ {paddingLeft: '0'} }
+                  className="li-item" style={{paddingLeft: '0'}}
                 >
-                  <Link to="/register" style={ specialLinkStyle }>注册</Link>
+                  <Link to="/register" style={specialLinkStyle}>注册</Link>
                 </li>
               </div>
           }
         </ul>
-        { messagePanelVisible && <div className="message-panel-container">
+        {messagePanelVisible && <div className="message-panel-container">
           <div className="message-panel-header">
             <div className="message-type-select-wrapper">
               <div
@@ -376,7 +369,7 @@ class NavMenu extends Component {
                     ? 'selected-type message-type-select-item'
                     : 'message-type-select-item'
                 }
-                onClick={ this.changeMessageListType('unread') }
+                onClick={this.changeMessageListType('unread')}
               >
                 <span>未读消息</span>
               </div>
@@ -386,48 +379,48 @@ class NavMenu extends Component {
                     ? 'selected-type message-type-select-item'
                     : 'message-type-select-item'
                 }
-                onClick={ this.changeMessageListType('all') }
+                onClick={this.changeMessageListType('all')}
               >
                 <span>已读消息</span>
               </div>
             </div>
             {
               selectedType === 'unread'
-                ? <div className="ignore-all-operate" onClick={ this.ignoreAll }>全部忽略</div>
-                : <div className="ignore-all-operate" onClick={ this.deleteAll }>全部删除</div>
+                ? <div className="ignore-all-operate" onClick={this.ignoreAll}>全部忽略</div>
+                : <div className="ignore-all-operate" onClick={this.deleteAll}>全部删除</div>
             }
           </div>
           <div className="message-item-container-wrapper">
-            { this.selectedMessageList().map(({
-                                                id,
-                                                action,
-                                                status,
-                                                msgType,
-                                                seeDetails,
-                                                msgContent,
-                                                createTime,
-                                              }) =>
+            {this.selectedMessageList().map(({
+                                               id,
+                                               action,
+                                               status,
+                                               msgType,
+                                               seeDetails,
+                                               msgContent,
+                                               createTime,
+                                             }) =>
               <MessageItem
-                key={ id }
-                type={ msgType }
-                status={ status }
-                content={ msgContent }
-                seeDetails={ this.seeDetails(action, id) }
-                updateTime={ createTime }
-                ignoreMessage={ this.ignoreMessage(id) }
+                key={id}
+                type={msgType}
+                status={status}
+                content={msgContent}
+                seeDetails={this.seeDetails(action, id)}
+                updateTime={createTime}
+                ignoreMessage={this.ignoreMessage(id)}
               />)
             }
           </div>
-          { selectedType === 'unread' && (this.selectedMessageList()).length < unreadMessageCount &&
+          {selectedType === 'unread' && (this.selectedMessageList()).length < unreadMessageCount &&
           <div className="message-panel-footer">
-            <span onClick={ this.loadMore } className="virtual-button"><i
+            <span onClick={this.loadMore} className="virtual-button"><i
               className="iconfont icon-load-more"/>加载更多</span>
           </div>
           }
           {
             selectedType === 'all' && (this.selectedMessageList()).length < messageCount &&
             <div className="message-panel-footer">
-            <span onClick={ this.loadMore } className="virtual-button"><i
+            <span onClick={this.loadMore} className="virtual-button"><i
               className="iconfont icon-load-more"/>加载更多</span>
             </div>
           }
@@ -437,16 +430,16 @@ class NavMenu extends Component {
               <p>暂无消息</p>
             </div>
           }
-        </div> }
-        { IMModalVisible && <IMModal
-          userA={ this.props.user.userId }
-          userB={ userB }
-          visible={ IMModalVisible }
-          nickname={ IMModalNickname }
-          avatarUrl={ IMModalAvatar }
-          phoneNumber={ IMModalPhoneNumber }
-          handleCancel={ this.hideIMModal }
-        /> }
+        </div>}
+        {IMModalVisible && <IMModal
+          userA={this.props.user.userId}
+          userB={userB}
+          visible={IMModalVisible}
+          nickname={IMModalNickname}
+          avatarUrl={IMModalAvatar}
+          phoneNumber={IMModalPhoneNumber}
+          handleCancel={this.hideIMModal}
+        />}
       </div>
     )
   }
@@ -462,14 +455,14 @@ const MessageItem = function ({
                               }) {
   return (<div className="message-item-container">
     <div className="message-item-header">
-      <p className="message-item-virtual-title">{ type }</p>
-      <p className="message-item-date">{ updateTime }</p>
+      <p className="message-item-virtual-title">{type}</p>
+      <p className="message-item-date">{updateTime}</p>
     </div>
     <div className="message-item-content-wrapper">
-      <div className="message-item-content">{ content }</div>
+      <div className="message-item-content">{content}</div>
       <div className="message-item-operate">
-        { status === 0 && <span className="message-item-operate-item" onClick={ ignoreMessage }>忽略</span> }
-        < span className='message-item-operate-item' onClick={ seeDetails }>查看</span>
+        {status === 0 && <span className="message-item-operate-item" onClick={ignoreMessage}>忽略</span>}
+        < span className='message-item-operate-item' onClick={seeDetails}>查看</span>
       </div>
     </div>
   </div>)
