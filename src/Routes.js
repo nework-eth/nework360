@@ -69,23 +69,6 @@ const getSelectCityPage = async (nextState, callback) => {
     (await import(/* webpackChunkName: "SelectCity" */'./pages/SelectCity/SelectCity.js')).view,
   )
 }
-//
-// const getHome = async (nextState, callback) => {
-//   callback(
-//     null,
-//     (await import(/* webpackChunkName: "Home" */'./pages/Homepage/Home.js')).view,
-//   )
-// }
-//
-// const getTest = async (nextState, callback) => {
-//   callback(
-//     null,
-//     (await import(/* webpackChunkName: "Test" */'./components/Test/test.js')).view,
-//   )
-// }
-
-// const getSkillPage = async (nextState, callback) => callback(null, (await import(/* webpackChunkName: "Skill"
-// */'./pages/Skill/Skill.js')).page)
 
 const getSkillPage = async (nextState, callback) =>
   callback(null, (await import(/* webpackChunkName: "Skill" */'./pages/Skill/Skill.js')).page)
@@ -205,40 +188,6 @@ const autoLogin = async (nextState, replaceState, callback) => {
   }
   callback()
 }
-
-// const Routes = () => (
-//   <Router history={ history } createElement={ createElement }>
-//     <Route component={ AuthPage }>
-//       <Route path="counter" getComponent={ getCounterPage }/>
-//       <Route path="/login" getComponent={ getLoginPage }/>
-//       <Route path="/register" getComponent={ getRegisterPage }/>
-//       <Route path="/forget-password" getComponent={ getForgetPassword }/>
-//     </Route>
-//     <Route path="/" component={ Homepage } onEnter={ autoLogin }>
-//       <IndexRoute getComponent={ getSearchPage }/>
-//       <Route path="select-city" getComponent={ getSelectCityPage }/>
-//       <Route path="search" getComponent={ getSearchPage }/>
-//       <Route path="service-list" getComponent={ getServiceList }/>
-//     </Route>
-//     <Route component={ Container } onEnter={ requireAuth }>
-//       <Route path="/skill" getComponent={ getSkillPage }/>
-//       <Route path="/profile" getComponent={ getProfilePage }/>
-//       <Route path="/editData" getComponent={ getEditDataPage }/>
-//       <Route path="/wallet" getComponent={ getWalletPage }/>
-//       <Route path="/requirement-homepage" getComponent={ getRequirement }/>
-//       <Route path="/post-demand" getComponent={ getPostDemand }/>
-//       <Route path="/list" getComponent={ getList }/>
-//       <Route path="/need-order-detail" getComponent={ getNeedOrderDetail }/>
-//       <Route path="/need-detail" getComponent={ getNeedDetail }/>
-//       <Route path="/clue-card" getComponent={ getClueCard }/>
-//       <Route path="/pay" getComponent={ getPay }/>
-//       <Route path="/pay-fail" getComponent={ getPayFail }/>
-//       <Route path="/pay-success" getComponent={ getPaySuccess }/>
-//       <Route path="/withdraw" getComponent={ getWithdraw }/>
-//       <Route path="/wechat-pay" getComponent={ getWechatPay }/>
-//     </Route>
-//   </Router>
-// )
 
 class Routes extends Component {
   componentDidMount () {
