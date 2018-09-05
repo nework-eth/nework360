@@ -19,13 +19,13 @@ const MessageItem = ({
   if (type === 'left') {
     return (
       <div className="im-message-left-wrapper">
-        <img src={ avatarUrl } alt="头像" width="40" height="40"/>
+        <img src={avatarUrl} alt="头像" width="40" height="40"/>
         <div>
           <div className="im-message-top-info">
-            <div className="im-message-nickname">{ nickname }</div>
-            <div className="im-message-time">{ getRelativeMinutes(time) }</div>
+            <div className="im-message-nickname">{nickname}</div>
+            <div className="im-message-time">{getRelativeMinutes(time)}</div>
           </div>
-          <div className="im-message-content">{ msg }</div>
+          <div className="im-message-content">{msg}</div>
         </div>
       </div>
     )
@@ -33,8 +33,8 @@ const MessageItem = ({
   return (
     <div className="im-message-right-wrapper">
       <div>
-        <div className="im-message-time">{ getRelativeMinutes(time) }</div>
-        <div className="im-message-content">{ msg }</div>
+        <div className="im-message-time">{getRelativeMinutes(time)}</div>
+        <div className="im-message-content">{msg}</div>
       </div>
     </div>
   )
@@ -288,32 +288,33 @@ class IMModal extends Component {
     } = this.state
     return (
       <Modal
-        title={ <h2>{ nickname }</h2> }
-        visible={ visible }
-        style={ {
+        title={<h2>{nickname}</h2>}
+        visible={visible}
+        style={{
           top: '0',
           paddingBottom: '0',
           left: 'calc(50% - 260px)',
-        } }
-        maskStyle={ {
+        }}
+        maskStyle={{
           opacity: 0.9,
           backgroundColor: '#edf1f4',
-        } }
-        bodyStyle={ {
+        }}
+        bodyStyle={{
           height: 'calc(100vh - 72px)',
           borderRadius: '4px',
           boxShadow: '0 0 10px 0 rgba(9,34,53,0.10)',
-        } }
-        footer={ null }
-        onCancel={ handleCancel }
+        }}
+        footer={null}
+        onCancel={handleCancel}
       >
         <div className="im-container">
           <div className="im-top-wrapper">
-            <p>{ phoneNumber }</p>
-            <p><span onClick={ this.jumpToNeedDetail }
-              style={ {color: '#008bf7', marginRight: '10px', cursor: 'pointer'} }>查看需求</span><span>|</span><span
-              style={ {color: '#008bf7', marginLeft: '10px', cursor: 'pointer'} }
-              onClick={ this.showComplaintModal }>投诉</span></p>
+            <p>{phoneNumber}</p>
+            <p><span onClick={this.jumpToNeedDetail}
+              style={{color: '#008bf7', marginRight: '10px', cursor: 'pointer'}}>查看需求</span><span
+              style={{color: '#edf1f4'}}>|</span><span
+              style={{color: '#008bf7', marginLeft: '10px', cursor: 'pointer'}}
+              onClick={this.showComplaintModal}>投诉</span></p>
           </div>
           <div className="im-content-wrapper" id="imContentContainer">
             {
@@ -324,31 +325,31 @@ class IMModal extends Component {
                                                    createTime,
                                                  }) =>
                 <MessageItem
-                  msg={ bodies.msg }
-                  key={ id }
-                  type={ receiver === this.props.user.userId ? 'left' : 'right' }
-                  time={ createTime }
-                  avatarUrl={ this.props.avatarUrl || './images/headshot-default.png' }
+                  msg={bodies.msg}
+                  key={id}
+                  type={receiver === this.props.user.userId ? 'left' : 'right'}
+                  time={createTime}
+                  avatarUrl={this.props.avatarUrl || './images/headshot-default.png'}
                 />)
             }
           </div>
           <div className="im-input-wrapper">
             <TextArea
-              rows={ 5 }
-              value={ textAreaValue }
-              style={ {padding: '13px 20px', resize: 'none', marginBottom: '20px'} }
-              onChange={ this.handleTextAreaValueChange }
-              onPressEnter={ this.handleSubmit }
+              rows={5}
+              value={textAreaValue}
+              style={{padding: '13px 20px', resize: 'none', marginBottom: '20px'}}
+              onChange={this.handleTextAreaValueChange}
+              onPressEnter={this.handleSubmit}
               placeholder="在这里输入您要发送的消息…"
             />
             <div className="icon-wrapper">
-              <Icon type="enter" onClick={ this.handleSubmit }/>
+              <Icon type="enter" onClick={this.handleSubmit}/>
             </div>
           </div>
         </div>
         <ComplaintModal
-          visible={ complaintModalVisible }
-          handleCancel={ this.handleComplaintModalCancel }
+          visible={complaintModalVisible}
+          handleCancel={this.handleComplaintModalCancel}
         />
       </Modal>
     )
