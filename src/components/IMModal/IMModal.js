@@ -1,4 +1,4 @@
-import { Icon, Input, Modal } from 'antd'
+import { Drawer, Icon, Input } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
@@ -53,112 +53,6 @@ class IMModal extends Component {
     textAreaValue: '',
     complaintModalVisible: false,
   }
-
-  // IMInit = () => {
-  //   /* eslint-disable no-undef */
-  //   const conn = new WebIM.connection({
-  //     isMultiLoginSessions: WebIM.config.isMultiLoginSessions,
-  //     https: typeof WebIM.config.https === 'boolean' ? WebIM.config.https : window.location.protocol === 'https:',
-  //     url: WebIM.config.xmppURL,
-  //     heartBeatWait: WebIM.config.heartBeatWait,
-  //     autoReconnectNumMax: WebIM.config.autoReconnectNumMax,
-  //     autoReconnectInterval: WebIM.config.autoReconnectInterval,
-  //     apiUrl: WebIM.config.apiURL,
-  //     isAutoLogin: true,
-  //   })
-  //   conn.listen({
-  //     onOpened: function (message) {
-  //       console.log('open', message)
-  //       //连接成功回调
-  //       // 如果isAutoLogin设置为false，那么必须手动设置上线，否则无法收消息
-  //       // 手动上线指的是调用conn.setPresence(); 如果conn初始化时已将isAutoLogin设置为true
-  //       // 则无需调用conn.setPresence();
-  //     },
-  //     onClosed: function (message) {
-  //       console.log('close', message)
-  //     },         //连接关闭回调
-  //     onTextMessage: (message) => {
-  //       console.log(message)
-  //       this.getIMDialog()
-  //     },    //收到文本消息
-  //     onEmojiMessage: function (message) {},   //收到表情消息
-  //     onPictureMessage: function (message) {}, //收到图片消息
-  //     onCmdMessage: function (message) {},     //收到命令消息
-  //     onAudioMessage: function (message) {},   //收到音频消息
-  //     onLocationMessage: function (message) {},//收到位置消息
-  //     onFileMessage: function (message) {},    //收到文件消息
-  //     onVideoMessage: function (message) {},   //收到视频消息
-  //     onPresence: function (message) {},       //处理“广播”或“发布-订阅”消息，如联系人订阅请求、处理群组、聊天室被踢解散等消息
-  //     onRoster: function (message) {},         //处理好友申请
-  //     onInviteMessage: function (message) {},  //处理群组邀请
-  //     onOnline: function () {},                  //本机网络连接成功
-  //     onOffline: function () {},                 //本机网络掉线
-  //     onError: function (message) {
-  //       console.log('error', message)
-  //     },          //失败回调
-  //     onBlacklistUpdate: function (list) {       //黑名单变动
-  //       // 查询黑名单，将好友拉黑，将好友从黑名单移除都会回调这个函数，list则是黑名单现有的所有好友信息
-  //       console.log(list)
-  //     },
-  //     onReceivedMessage: function (message) {},    //收到消息送达服务器回执
-  //     onDeliveredMessage: function (message) {},   //收到消息送达客户端回执
-  //     onReadMessage: function (message) {},        //收到消息已读回执
-  //     onCreateGroup: function (message) {},        //创建群组成功回执（需调用createGroupNew）
-  //     onMutedMessage: function (message) {},        //如果用户在A群组被禁言，在A群发消息会走这个回调并且消息不会传递给群其它成员
-  //   })
-  //   const options = {
-  //     apiUrl: WebIM.config.apiURL,
-  //     user: `21`,
-  //     pwd: `21`,
-  //     nickname: 'nickname',
-  //     appKey: WebIM.config.appkey,
-  //   }
-  //   conn.open(options)
-  //   this.setState({
-  //     connect: conn,
-  //   })
-  //   // conn.registerUser({
-  //   //   username: '20',
-  //   //   password: '20',
-  //   //   nickname: 'mega',
-  //   //   appKey: WebIM.config.appkey,
-  //   //   success: function (msg) {console.log('success', msg) },
-  //   //   error: function (e) {console.log('error', e) },
-  //   //   apiUrl: WebIM.config.apiURL,
-  //   // })
-  //   // conn.close()
-  //   // conn.close()
-  //   // 生成本地消息id
-  //   // setTimeout(()=>{
-  //   //   var id = conn.getUniqueId()
-  //   //   var msg = new WebIM.message('txt', id)      // 创建文本消息
-  //   //   msg.set({
-  //   //     msg: 'this is a test',                  // 消息内容
-  //   //     to: '21',                          // 接收消息对象（用户id）
-  //   //     roomType: false,
-  //   //     success: function (id, serverMsgId) {
-  //   //       console.log('send private text Success')
-  //   //     },
-  //   //     fail: function (e) {
-  //   //       console.log('Send private text error')
-  //   //     },
-  //   //   })
-  //   //   msg.body.chatType = 'singleChat'
-  //   //   conn.send(msg.body)
-  //   // }, 1000)
-  // }
-
-  // getIMMsg = async () => {
-  //   const {data: {code, data}} = await getIMMsg({
-  //     sender: `${this.props.userB}`,
-  //     receiver: `${this.props.userA}`,
-  //   })
-  //   if (code === 200) {
-  //     this.setState({
-  //       msgList: data.reduce((pre, next) => [...pre, ...next.bodies], []),
-  //     })
-  //   }
-  // }
 
   getIMDialog = async () => {
     const {data: {code, data}} = await getIMDialog({
@@ -287,25 +181,17 @@ class IMModal extends Component {
       complaintModalVisible,
     } = this.state
     return (
-      <Modal
+      <Drawer
+        width="500"
+        height="100vh"
         title={<h2>{nickname}</h2>}
+        footer={null}
+        onClose={handleCancel}
         visible={visible}
-        style={{
-          top: '0',
-          paddingBottom: '0',
-          left: 'calc(50% - 260px)',
-        }}
         maskStyle={{
           opacity: 0.9,
-          backgroundColor: '#edf1f4',
+          backgroundColor: '#edf1f4'
         }}
-        bodyStyle={{
-          height: 'calc(100vh - 72px)',
-          borderRadius: '4px',
-          boxShadow: '0 0 10px 0 rgba(9,34,53,0.10)',
-        }}
-        footer={null}
-        onCancel={handleCancel}
       >
         <div className="im-container">
           <div className="im-top-wrapper">
@@ -351,7 +237,7 @@ class IMModal extends Component {
           visible={complaintModalVisible}
           handleCancel={this.handleComplaintModalCancel}
         />
-      </Modal>
+      </Drawer>
     )
   }
 
