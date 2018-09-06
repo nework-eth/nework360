@@ -85,22 +85,6 @@ class RequirementHomePage extends Component {
                 <h1>仅需一分钟</h1>
                 <h1>即可为您匹配专业的</h1>
                 <h1>{serviceName} 服务人员</h1>
-                <div className="stroke-1">
-                  <img
-                    src="./images/stroke-1.png"
-                    alt="stroke"
-                    width="176"
-                    height="7"
-                  />
-                </div>
-                <div className="stroke-2">
-                  <img
-                    src="./images/stroke-2.png"
-                    alt="stroke"
-                    width="131"
-                    height="9.3"
-                  />
-                </div>
                 <Button type="primary" onClick={this.jumpToPostDemand}>开始</Button>
               </div>
               <div className="qa">

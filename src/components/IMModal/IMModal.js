@@ -1,7 +1,8 @@
-import { Drawer, Icon, Input } from 'antd'
+import { Drawer, Icon, Input, Upload } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
+import { baseUrl } from '../../service/config'
 import { getIMDialog, insertMsg } from '../../service/im'
 import { getRelativeMinutes } from '../../utils'
 import { ComplaintModal } from '../ComplaintModal/ComplaintModal'
@@ -11,12 +12,14 @@ const {TextArea} = Input
 
 const MessageItem = ({
                        msg,
-                       type,
                        time,
+                       path,
+                       type,
                        nickname,
                        avatarUrl,
+                       styleType,
                      }) => {
-  if (type === 'left') {
+  if (styleType === 'left') {
     return (
       <div className="im-message-left-wrapper">
         <img src={avatarUrl} alt="头像" width="40" height="40"/>
@@ -25,7 +28,11 @@ const MessageItem = ({
             <div className="im-message-nickname">{nickname}</div>
             <div className="im-message-time">{getRelativeMinutes(time)}</div>
           </div>
-          <div className="im-message-content">{msg}</div>
+          {
+            type === 'text'
+              ? <div className="im-message-content">{msg}</div>
+              : <a href={path} download={msg} target="_blank"><i className="iconfont icon-attachment"/> {msg}</a>
+          }
         </div>
       </div>
     )
@@ -34,7 +41,11 @@ const MessageItem = ({
     <div className="im-message-right-wrapper">
       <div>
         <div className="im-message-time">{getRelativeMinutes(time)}</div>
-        <div className="im-message-content">{msg}</div>
+        {
+          type === 'text'
+            ? <div className="im-message-content">{msg}</div>
+            : <a href={path} download={msg} target="_blank"><i className="iconfont icon-attachment"/> {msg}</a>
+        }
       </div>
     </div>
   )
@@ -85,27 +96,17 @@ class IMModal extends Component {
     }
   }
 
-  // sendMessage = (originMsg) => {
-  //   const id = this.state.connect.getUniqueId()
-  //   const msg = new WebIM.message('txt', id)
-  //   msg.set({
-  //     msg: originMsg,
-  //     to: `${this.props.userB}`,
-  //     roomType: false,
-  //     success: async (id, serverMsgId) => {
-  //       await this.insertMsg({
-  //         type: 'text',
-  //         msg: originMsg,
-  //       })
-  //       this.getIMDialog()
-  //     },
-  //     fail (e) {
-  //       console.log(e)
-  //     },
-  //   })
-  //   msg.body.chatType = 'singleChat'
-  //   this.state.connect.send(msg.body)
-  // }
+  insertFileMessage = async (msg, path) => {
+    const {data: {code}} = await insertMsg({
+      bodies: JSON.stringify({type: 'file', msg, path}),
+      status: 0,
+      sender: `${this.props.userA}`,
+      receiver: `${this.props.userB}`,
+    })
+    if (code === 200) {
+      this.getIMDialog()
+    }
+  }
 
   IMInit = () => {
     /* eslint-disable no-undef */
@@ -139,6 +140,19 @@ class IMModal extends Component {
     })
   }
 
+  sendFileMessage = async (msg, path) => {
+    if (!this.state.connect) {
+      return
+    }
+    const connect = this.state.connect
+    await this.insertFileMessage(msg, path)
+    connect.emit('message', {
+      from: this.props.userA,
+      to: this.props.userB,
+      msg: {type: 'file', msg, path: path},
+    })
+  }
+
   handleTextAreaValueChange = (e) => {
     let str = e.target.value
     if (str.length > 500) {
@@ -147,6 +161,12 @@ class IMModal extends Component {
     this.setState({
       textAreaValue: str,
     })
+  }
+
+  handleUploadFile = async info => {
+    if (info.file.status === 'done') {
+      this.sendFileMessage(info.file.name, info.file.response.data.path)
+    }
   }
 
   handleSubmit = async () => {
@@ -213,8 +233,10 @@ class IMModal extends Component {
                 <MessageItem
                   msg={bodies.msg}
                   key={id}
-                  type={receiver === this.props.user.userId ? 'left' : 'right'}
+                  path={bodies.path}
+                  type={bodies.type}
                   time={createTime}
+                  styleType={receiver === this.props.user.userId ? 'left' : 'right'}
                   avatarUrl={this.props.avatarUrl || './images/headshot-default.png'}
                 />)
             }
@@ -230,6 +252,14 @@ class IMModal extends Component {
             />
             <div className="icon-wrapper">
               <Icon type="enter" onClick={this.handleSubmit}/>
+              <Upload
+                action={`${baseUrl}/qiniu/uploadImFile`}
+                onChange={this.handleUploadFile}
+                data={{userId: this.props.user.userId}}
+                showUploadList={false}
+              >
+                <i className="iconfont icon-send" style={{cursor: 'pointer'}}/>
+              </Upload>
             </div>
           </div>
         </div>
