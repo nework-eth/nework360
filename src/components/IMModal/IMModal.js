@@ -1,4 +1,4 @@
-import { Drawer, Icon, Input, Upload } from 'antd'
+import { Drawer, Input, Upload } from 'antd'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
@@ -251,14 +251,16 @@ class IMModal extends Component {
               placeholder="在这里输入您要发送的消息…"
             />
             <div className="icon-wrapper">
-              <Icon type="enter" onClick={this.handleSubmit}/>
+              <div className="circle-background">
+                <i className="iconfont icon-send" onClick={this.handleSubmit}/>
+              </div>
               <Upload
                 action={`${baseUrl}/qiniu/uploadImFile`}
                 onChange={this.handleUploadFile}
                 data={{userId: this.props.user.userId}}
                 showUploadList={false}
               >
-                <i className="iconfont icon-send" style={{cursor: 'pointer'}}/>
+                <i className="iconfont icon-attachment" style={{cursor: 'pointer'}}/>
               </Upload>
             </div>
           </div>
